@@ -386,6 +386,73 @@ input[type="date"].fi:valid{color:var(--text);}
 .cfp-save{padding:7px 14px;border-radius:var(--r-sm);border:none;background:var(--green);font-size:12px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;}
 .cfp-save:hover{background:var(--green-dark);}
 
+/* ══ FEATURE CONFIG DRAWER ══ */
+.fcd-overlay{position:fixed;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;}
+.fcd-overlay.open{opacity:1;pointer-events:all;}
+.fcd-drawer{position:absolute;top:0;right:0;bottom:0;width:520px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.fcd-overlay.open .fcd-drawer{transform:translateX(0);}
+.fcd-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.fcd-title{font-size:17px;font-weight:700;color:var(--text);}
+.fcd-close{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:18px;padding:4px;display:flex;align-items:center;}
+.fcd-close:hover{color:var(--text);}
+/* step tabs */
+.fcd-steps{display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--border);flex-shrink:0;gap:0;}
+.fcd-step{display:flex;align-items:center;gap:6px;padding:12px 0;font-size:12.5px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;}
+.fcd-step.active{color:var(--text);font-weight:600;}
+.fcd-step.done .fcd-step-n{background:var(--green);color:#fff;border-color:var(--green);}
+.fcd-step-n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D1D5DB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--text-muted);background:#fff;transition:all .15s;}
+.fcd-step.active .fcd-step-n{border-color:var(--green);color:var(--green);}
+.fcd-step-sep{color:#D1D5DB;margin:0 8px;font-size:14px;}
+/* body */
+.fcd-body{flex:1;overflow-y:auto;padding:20px 24px;}
+/* footer */
+.fcd-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.fcd-btn-cancel{padding:9px 20px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;}
+.fcd-btn-cancel:hover{background:var(--bg);}
+.fcd-btn-continue{padding:9px 24px;border-radius:8px;border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;}
+.fcd-btn-continue:hover{background:var(--green-dark);}
+/* panels */
+.fcd-panel{display:none;}
+.fcd-panel.active{display:block;}
+/* entry source */
+.fcd-select{width:100%;padding:10px 14px;border:1px solid var(--border-input);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239CA3AF' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;margin-bottom:16px;}
+.fcd-select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fcd-trigger-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.fcd-trigger-head{padding:14px 16px;}
+.fcd-trigger-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.fcd-trigger-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
+.fcd-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.fcd-tag{padding:3px 9px;border-radius:6px;background:#F4F6F8;border:1px solid var(--border);font-size:11.5px;color:var(--text-sub);}
+.fcd-coin-preview{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#F4F6F8;border-top:1px solid var(--border);}
+.fcd-coin-preview-icon{width:32px;height:32px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-coin-preview-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-coin-badge{padding:3px 10px;border-radius:20px;background:#EDE9FE;color:#6D28D9;font-size:11.5px;font-weight:600;}
+/* prizes */
+.fcd-prize-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.fcd-place-badge{min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.fcd-place-1{background:#FEF3C7;color:#92400E;}
+.fcd-place-2{background:#F1F5F9;color:#475569;}
+.fcd-place-3{background:#FEF2F2;color:#9F1239;}
+.fcd-place-n{background:#F4F6F8;color:var(--text-sub);}
+.fcd-prize-coin{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;background:#fff;}
+.fcd-prize-coin-icon{width:26px;height:26px;border-radius:6px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-prize-amt{width:70px;border:1px solid var(--border-input);border-radius:6px;padding:6px 8px;font-size:13px;font-family:inherit;outline:none;text-align:center;}
+.fcd-prize-amt:focus{border-color:var(--green);}
+.fcd-prize-del{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;border-radius:4px;}
+.fcd-prize-del:hover{color:var(--red);background:#FFF2EE;}
+.fcd-add-place{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed var(--border);border-radius:8px;width:100%;padding:9px;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;justify-content:center;transition:border-color .15s,color .15s;}
+.fcd-add-place:hover{border-color:var(--green);color:var(--green);}
+/* schedule */
+.fcd-radio-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;}
+.fcd-radio-card.active{border-color:var(--green);background:#F0FDF9;}
+.fcd-radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;margin-top:1px;transition:all .15s;}
+.fcd-radio-dot.active{border-color:var(--green);border-width:5px;}
+.fcd-radio-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.fcd-radio-sub{font-size:12px;color:var(--text-muted);}
+.fcd-renewal-opts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.fcd-renewal-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;transition:all .15s;}
+.fcd-renewal-btn.active{border-color:var(--green);background:var(--green-light);color:var(--green-dark);}
+
 /* ══ FOOTER ══ */
 .page-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;margin-bottom:24px;}
 .btn-draft{padding:8px 18px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
@@ -778,6 +845,84 @@ input[type="date"].fi:valid{color:var(--text);}
 </div><!-- /main -->
 
 <div class="toast" id="toastEl"></div>
+
+<!-- ══ FEATURE CONFIG DRAWER ══ -->
+<div class="fcd-overlay" id="fcdOverlay" onclick="handleFcdOverlayClick(event)">
+  <div class="fcd-drawer" id="fcdDrawer">
+    <div class="fcd-header">
+      <div class="fcd-title" id="fcdTitle">Leaderboard Configuration</div>
+      <button class="fcd-close" onclick="closeFcd()">✕</button>
+    </div>
+    <!-- Step tabs -->
+    <div class="fcd-steps">
+      <div class="fcd-step active" id="fcd-step-entry" onclick="goFcdStep('entry')">
+        <div class="fcd-step-n" id="fcd-sn-entry">1</div>
+        Entry Source
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-prizes" onclick="goFcdStep('prizes')">
+        <div class="fcd-step-n" id="fcd-sn-prizes">2</div>
+        Prizes
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-schedule" onclick="goFcdStep('schedule')">
+        <div class="fcd-step-n" id="fcd-sn-schedule">3</div>
+        Schedule
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="fcd-body" id="fcdBody">
+
+      <!-- PANEL 1: Entry Source -->
+      <div class="fcd-panel active" id="fcd-panel-entry">
+        <select class="fcd-select" id="fcdEntrySelect" onchange="onFcdEntryChange()">
+          <option value="">Select Entry Source</option>
+        </select>
+        <div id="fcdEntryPreview"></div>
+      </div>
+
+      <!-- PANEL 2: Prizes -->
+      <div class="fcd-panel" id="fcd-panel-prizes">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Define what each place wins. Select a coin and enter the amount.</p>
+        <div id="fcdPrizesList"></div>
+        <button class="fcd-add-place" onclick="addFcdPrize()">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Place
+        </button>
+      </div>
+
+      <!-- PANEL 3: Schedule -->
+      <div class="fcd-panel" id="fcd-panel-schedule">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Define when this leaderboard resets.</p>
+        <div class="fcd-radio-card active" id="fcd-sched-sync" onclick="selectFcdSchedule('sync')">
+          <div class="fcd-radio-dot active" id="fcd-rdot-sync"></div>
+          <div>
+            <div class="fcd-radio-title">Sync with Promotion</div>
+            <div class="fcd-radio-sub">Leaderboard runs for the full duration of the promotion (start & end dates from General Details)</div>
+          </div>
+        </div>
+        <div class="fcd-radio-card" id="fcd-sched-renew" onclick="selectFcdSchedule('renew')">
+          <div class="fcd-radio-dot" id="fcd-rdot-renew"></div>
+          <div style="flex:1;">
+            <div class="fcd-radio-title">Recurring Reset</div>
+            <div class="fcd-radio-sub">Leaderboard resets on a fixed schedule within the promotion period</div>
+            <div class="fcd-renewal-opts" id="fcdRenewalOpts" style="display:none;">
+              <button class="fcd-renewal-btn active" onclick="selectRenewal(event,'daily')">Daily</button>
+              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'weekly')">Weekly</button>
+              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'monthly')">Monthly</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- Footer -->
+    <div class="fcd-footer">
+      <button class="fcd-btn-cancel" onclick="closeFcd()">Cancel</button>
+      <button class="fcd-btn-continue" id="fcdContinueBtn" onclick="fcdContinue()">Continue</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══ COIN DRAWER ══ -->
 <div class="coin-drawer-overlay" id="coinDrawerOverlay" onclick="handleDrawerOverlayClick(event)">
@@ -1618,18 +1763,168 @@ function deleteFeature(id) {
 }
 
 function configureFeature(id) {
-  const stat = document.getElementById('fstat-' + id);
-  if (!stat) return;
-  const isConfigured = stat.classList.contains('configured');
-  if (isConfigured) {
-    stat.className = 'feature-card-status partial';
-    stat.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg> Not fully Configured`;
+  const card = document.getElementById(id);
+  if (!card) return;
+  const name = card.querySelector('.feature-card-name')?.textContent || 'Feature';
+  openFcd(id, name);
+}
+
+/* ══ Feature Config Drawer ══ */
+let _fcdFeatureId = null;
+let _fcdStep = 'entry';
+let _fcdStepsDone = {};
+let _fcdPrizeCount = 0;
+let _fcdSchedule = 'sync';
+let _fcdRenewal = 'daily';
+
+function openFcd(featureId, featureName) {
+  _fcdFeatureId = featureId;
+  _fcdStepsDone = {};
+  _fcdPrizeCount = 0;
+  document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
+  // populate entry source dropdown with current triggers
+  const sel = document.getElementById('fcdEntrySelect');
+  sel.innerHTML = '<option value="">Select Entry Source</option>';
+  selectedTriggers.forEach((tid, i) => {
+    const ruleEl = document.getElementById(tid);
+    const rname = ruleEl?.querySelector('.rule-name')?.textContent || ('Trigger ' + (i+1));
+    const opt = document.createElement('option');
+    opt.value = tid; opt.textContent = rname;
+    sel.appendChild(opt);
+  });
+  document.getElementById('fcdEntryPreview').innerHTML = '';
+  // reset prizes
+  document.getElementById('fcdPrizesList').innerHTML = '';
+  addFcdPrize(); addFcdPrize(); addFcdPrize(); // default 3 places
+  // reset schedule
+  selectFcdSchedule('sync');
+  // go to first step
+  goFcdStep('entry');
+  // position below sticky bar
+  const bar = document.querySelector('.steps-bar');
+  const top = bar ? bar.getBoundingClientRect().bottom : 0;
+  const overlay = document.getElementById('fcdOverlay');
+  overlay.style.top = top + 'px';
+  overlay.classList.add('open');
+}
+function closeFcd() {
+  document.getElementById('fcdOverlay').classList.remove('open');
+  _fcdFeatureId = null;
+}
+function handleFcdOverlayClick(e) {
+  if (e.target === document.getElementById('fcdOverlay')) closeFcd();
+}
+function goFcdStep(step) {
+  _fcdStep = step;
+  const steps = ['entry','prizes','schedule'];
+  steps.forEach(s => {
+    const btn = document.getElementById('fcd-step-' + s);
+    const panel = document.getElementById('fcd-panel-' + s);
+    const n = document.getElementById('fcd-sn-' + s);
+    const isDone = _fcdStepsDone[s];
+    const isActive = s === step;
+    btn.classList.toggle('active', isActive);
+    btn.classList.toggle('done', !isActive && isDone);
+    panel.classList.toggle('active', isActive);
+    if (isDone && !isActive) {
+      n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
+    } else {
+      n.textContent = String(steps.indexOf(s)+1);
+      n.style.background = ''; n.style.color = ''; n.style.border = '';
+    }
+  });
+  // update Continue btn label
+  document.getElementById('fcdContinueBtn').textContent = step === 'schedule' ? 'Save' : 'Continue';
+}
+function fcdContinue() {
+  const steps = ['entry','prizes','schedule'];
+  const idx = steps.indexOf(_fcdStep);
+  _fcdStepsDone[_fcdStep] = true;
+  if (idx < steps.length - 1) {
+    goFcdStep(steps[idx + 1]);
   } else {
-    stat.className = 'feature-card-status configured';
-    stat.innerHTML = `<svg width="12" height="12" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#059669" stroke="none"/><polyline points="8 12 11 15 16 9" stroke="white" stroke-width="2"/></svg> Configured`;
+    // all done — mark configured
+    const stat = document.getElementById('fstat-' + _fcdFeatureId);
+    if (stat) {
+      stat.className = 'feature-card-status configured';
+      stat.innerHTML = `<svg width="12" height="12" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#059669" stroke="none"/><polyline points="8 12 11 15 16 9" stroke="white" stroke-width="2"/></svg> Configured`;
+    }
+    validateFeatures();
+    closeFcd();
     toast('Feature configured ✓');
   }
-  validateFeatures();
+}
+function onFcdEntryChange() {
+  const sel = document.getElementById('fcdEntrySelect');
+  const tid = sel.value;
+  const preview = document.getElementById('fcdEntryPreview');
+  if (!tid) { preview.innerHTML = ''; return; }
+  const ruleEl = document.getElementById(tid);
+  if (!ruleEl) { preview.innerHTML = ''; return; }
+  const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
+  const rdesc = ruleEl.querySelector('.rule-desc')?.textContent || 'Description of what does this trigger do';
+  const tags = [...(ruleEl.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
+  const coinAttached = ruleEl.querySelector('.coin-gem-icon');
+  const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
+  const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
+  const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount'])
+    .map(t=>`<span class="fcd-tag">${t}</span>`).join('');
+  const coinHtml = coinName ? `
+    <div class="fcd-coin-preview">
+      <div class="fcd-coin-preview-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg></div>
+      <span class="fcd-coin-preview-name">${coinName}</span>
+      <span class="fcd-coin-badge">${coinBadge}</span>
+    </div>` : '';
+  preview.innerHTML = `
+    <div class="fcd-trigger-card">
+      <div class="fcd-trigger-head">
+        <div class="fcd-trigger-name">${rname}</div>
+        <div class="fcd-trigger-desc">${rdesc}</div>
+        <div class="fcd-tags">${tagsHtml}</div>
+      </div>
+      ${coinHtml}
+    </div>`;
+}
+const placeLabels = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
+const placeClasses = ['fcd-place-1','fcd-place-2','fcd-place-3'];
+function addFcdPrize() {
+  _fcdPrizeCount++;
+  const idx = _fcdPrizeCount;
+  const cls = placeClasses[idx-1] || 'fcd-place-n';
+  const label = placeLabels[idx-1] || (idx + 'th');
+  const div = document.createElement('div');
+  div.className = 'fcd-prize-row'; div.id = 'fcd-prize-' + idx;
+  div.innerHTML = `
+    <div class="fcd-place-badge ${cls}">${label}</div>
+    <div class="fcd-prize-coin">
+      <div class="fcd-prize-coin-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+      <select style="flex:1;border:none;outline:none;font-size:12.5px;font-family:inherit;color:var(--text);background:transparent;cursor:pointer;">
+        ${coinTemplates.map(c=>`<option>${c.name}</option>`).join('')}
+      </select>
+      <input class="fcd-prize-amt" type="number" value="100" min="1" placeholder="Amount" />
+    </div>
+    <button class="fcd-prize-del" onclick="removeFcdPrize(${idx})" title="Remove">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  document.getElementById('fcdPrizesList').appendChild(div);
+}
+function removeFcdPrize(idx) {
+  document.getElementById('fcd-prize-' + idx)?.remove();
+}
+function selectFcdSchedule(type) {
+  _fcdSchedule = type;
+  ['sync','renew'].forEach(t => {
+    document.getElementById('fcd-sched-' + t).classList.toggle('active', t===type);
+    document.getElementById('fcd-rdot-' + t).classList.toggle('active', t===type);
+  });
+  document.getElementById('fcdRenewalOpts').style.display = type==='renew' ? 'flex' : 'none';
+}
+function selectRenewal(e, val) {
+  e.stopPropagation();
+  _fcdRenewal = val;
+  document.querySelectorAll('.fcd-renewal-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
 }
 
 /* ── Toast ── */
