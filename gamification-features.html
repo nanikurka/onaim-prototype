@@ -613,8 +613,16 @@ let selectedTriggers = [];
 let ruleCounter = 0;
 
 /* ── Step scroll ── */
+const stepNumbers = {general:null, participation:'2', features:'3'};
+const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+
 function scrollTo(secId, tabKey) {
-  document.getElementById(secId)?.scrollIntoView({behavior:'smooth',block:'start'});
+  const sec = document.getElementById(secId);
+  const contentEl = document.querySelector('.content');
+  if (sec && contentEl) {
+    const offset = sec.offsetTop - contentEl.offsetTop;
+    contentEl.scrollTo({top: offset, behavior: 'smooth'});
+  }
   const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
   const order = ['general','participation','features'];
   Object.entries(map).forEach(([key, id]) => {
@@ -622,9 +630,17 @@ function scrollTo(secId, tabKey) {
     if (!pill) return;
     pill.classList.remove('active','done');
     const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
-    const n=pill.querySelector('.step-n');
-    if (idx < activeIdx) { pill.classList.add('done'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
-    else if (idx === activeIdx) { pill.classList.add('active'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
+    const n = pill.querySelector('.step-n');
+    if (idx < activeIdx) {
+      pill.classList.add('done');
+      if(n) n.innerHTML = checkSvg;
+    } else if (idx === activeIdx) {
+      pill.classList.add('active');
+      if(n) n.innerHTML = checkSvg;
+    } else {
+      // future step — restore number
+      if(n) n.textContent = stepNumbers[key] || '';
+    }
   });
 }
 
