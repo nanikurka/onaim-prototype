@@ -391,17 +391,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
   <!-- Sticky steps bar -->
   <div class="steps-bar">
     <div class="steps">
-      <div class="step-pill active" id="tab-general" onclick="scrollTo('sec-general','general')">
+      <div class="step-pill active" id="tab-general" onclick="goToStep('sec-general','general')">
         <span class="step-n"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
         General Details
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      <div class="step-pill" id="tab-participation" onclick="scrollTo('sec-participation','participation')">
+      <div class="step-pill" id="tab-participation" onclick="goToStep('sec-participation','participation')">
         <span class="step-n" id="spn-participation">2</span>
         Participation Rules
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      <div class="step-pill" id="tab-features" onclick="scrollTo('sec-features','features')">
+      <div class="step-pill" id="tab-features" onclick="goToStep('sec-features','features')">
         <span class="step-n">3</span>
         Promotion Features & prizes
       </div>
@@ -616,7 +616,7 @@ let ruleCounter = 0;
 const stepNumbers = {general:null, participation:'2', features:'3'};
 const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
 
-function scrollTo(secId, tabKey) {
+function goToStep(secId, tabKey) {
   const sec = document.getElementById(secId);
   const contentEl = document.querySelector('.content');
   if (sec && contentEl) {
