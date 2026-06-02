@@ -289,28 +289,48 @@ input[type="date"].fi:valid{color:var(--text);}
 /* ══ COIN DRAWER (right-side slide-in) ══ */
 .coin-drawer-overlay{position:fixed;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;}
 .coin-drawer-overlay.open{opacity:1;pointer-events:all;}
-.coin-drawer{position:absolute;top:0;right:0;bottom:0;width:400px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.coin-drawer{position:absolute;top:0;right:0;bottom:0;width:420px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
 .coin-drawer-overlay.open .coin-drawer{transform:translateX(0);}
-.coin-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.coin-drawer-title{font-size:15px;font-weight:700;color:var(--text);}
-.coin-drawer-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
-.coin-drawer-close:hover{background:var(--bg);}
-.coin-drawer-body{flex:1;overflow-y:auto;padding:20px;}
-.coin-drawer-body .coin-tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.coin-drawer-body .coin-tpl{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;cursor:pointer;background:var(--surface);transition:border-color .15s,background .12s;}
-.coin-drawer-body .coin-tpl:hover{border-color:var(--green);background:var(--green-light);}
-.coin-drawer-body .coin-tpl-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
-.coin-drawer-body .coin-tpl-em{width:30px;height:30px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-.coin-drawer-body .coin-tpl:hover .coin-tpl-em{background:rgba(0,195,127,.12);}
-.coin-drawer-body .coin-tpl-name{font-size:13px;font-weight:700;color:var(--text);}
-.coin-drawer-body .coin-tpl-desc{font-size:12px;color:var(--text-sub);line-height:1.4;margin-bottom:6px;}
-.coin-drawer-body .coin-tpl-rate{font-size:11px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:4px;display:inline-block;}
-.coin-drawer-body .cpp-div{display:flex;align-items:center;gap:8px;margin:14px 0;}
-.coin-drawer-body .cpp-div::before,.coin-drawer-body .cpp-div::after{content:'';flex:1;height:1px;background:var(--border);}
-.coin-drawer-body .cpp-div span{font-size:11px;color:var(--text-muted);white-space:nowrap;}
-.coin-drawer-body .cpp-scratch{width:100%;padding:10px;border-radius:var(--r-sm);border:1.5px dashed var(--border);background:none;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .15s,color .15s,background .12s;}
-.coin-drawer-body .cpp-scratch:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
-/* coin form inside drawer */
+/* header */
+.coin-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0;}
+.coin-drawer-title{font-size:17px;font-weight:700;color:var(--text);}
+.coin-drawer-close{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;font-size:18px;line-height:1;}
+.coin-drawer-close:hover{color:var(--text);}
+/* tabs */
+.cd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:14px 0 0;flex-shrink:0;padding:0 20px;}
+.cd-tab{padding:10px 0;margin-right:24px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:5px;white-space:nowrap;transition:color .15s;}
+.cd-tab.active{color:var(--text);font-weight:600;border-bottom-color:var(--text);}
+.cd-tab:hover:not(.active){color:var(--text-sub);}
+/* body */
+.coin-drawer-body{flex:1;overflow-y:auto;padding:16px 20px;}
+/* type toggle (Coin In / Promo Coin) */
+.cd-type-toggle{display:grid;grid-template-columns:1fr 1fr;background:#F4F6F8;border-radius:8px;padding:4px;margin-bottom:14px;}
+.cd-type-btn{padding:8px;border-radius:6px;border:none;background:none;font-size:13px;font-weight:500;font-family:inherit;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.cd-type-btn.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+/* info banner */
+.cd-info-banner{display:flex;gap:10px;background:#EFF6FF;border-radius:8px;padding:12px 14px;margin-bottom:14px;}
+.cd-info-icon{width:18px;height:18px;border-radius:50%;background:#3B82F6;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.cd-info-text{font-size:12.5px;color:#1D4ED8;line-height:1.5;}
+.cd-info-text strong{font-weight:700;}
+/* coin list */
+.cd-coin-list{display:flex;flex-direction:column;gap:8px;}
+.cd-coin-item{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .12s;position:relative;}
+.cd-coin-item:hover,.cd-coin-item.selected{border-color:#6366F1;background:#FAFAFF;}
+.cd-coin-item.selected{border-color:#6366F1;}
+.cd-coin-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#3B82F6,#6366F1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cd-coin-icon svg{width:18px;height:18px;}
+.cd-coin-info{flex:1;}
+.cd-coin-name{font-size:13px;font-weight:600;color:var(--text);}
+.cd-coin-badge{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:4px;background:#EDE9FE;color:#7C3AED;font-size:11px;font-weight:600;}
+.cd-coin-dots{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;border-radius:4px;}
+.cd-coin-dots:hover{background:var(--bg);}
+/* footer */
+.coin-drawer-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.cd-btn-cancel{padding:9px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;}
+.cd-btn-cancel:hover{background:var(--bg);}
+.cd-btn-attach{padding:9px 22px;border-radius:8px;border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;}
+.cd-btn-attach:hover{background:var(--green-dark);}
+/* form tab */
 .coin-drawer-form{display:none;}
 .coin-drawer-form.open{display:block;}
 .coin-drawer-picker{display:block;}
@@ -734,30 +754,38 @@ input[type="date"].fi:valid{color:var(--text);}
 <!-- ══ COIN DRAWER ══ -->
 <div class="coin-drawer-overlay" id="coinDrawerOverlay" onclick="handleDrawerOverlayClick(event)">
   <div class="coin-drawer" id="coinDrawer">
+    <!-- Header -->
     <div class="coin-drawer-header">
-      <div class="coin-drawer-title" id="coinDrawerTitle">Select a Coin Template</div>
-      <button class="coin-drawer-close" onclick="closeDrawerCoinPicker()">
-        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+      <div class="coin-drawer-title">Attach coin to trigger</div>
+      <button class="coin-drawer-close" onclick="closeDrawerCoinPicker()">✕</button>
     </div>
-    <div class="coin-drawer-body" id="coinDrawerBody">
-      <!-- picker view -->
-      <div class="coin-drawer-picker" id="coinDrawerPicker">
-        <div class="coin-tpl-grid" id="coinDrawerTplGrid"></div>
-        <div class="cpp-div"><span>or build your own</span></div>
-        <button class="cpp-scratch" onclick="openDrawerCoinForm()">
-          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Create Custom Coin from Scratch
-        </button>
+    <!-- Tabs -->
+    <div class="cd-tabs">
+      <div class="cd-tab active" id="cdTabTemplates" onclick="switchCoinDrawerTab('templates')">Select from icon templates</div>
+      <div class="cd-tab" id="cdTabNew" onclick="switchCoinDrawerTab('new')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create new coin
       </div>
-      <!-- form view -->
-      <div class="coin-drawer-form" id="coinDrawerForm">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-          <button onclick="backToDrawerPicker()" style="background:none;border:none;cursor:pointer;color:var(--text-sub);display:flex;align-items:center;gap:5px;font-size:13px;font-weight:500;padding:0;">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
-          </button>
-          <span style="font-size:14px;font-weight:700;color:var(--text);" id="coinDrawerFormTitle">Create Custom Coin</span>
+    </div>
+    <!-- Body -->
+    <div class="coin-drawer-body" id="coinDrawerBody">
+      <!-- Templates tab -->
+      <div class="coin-drawer-picker" id="coinDrawerPicker">
+        <!-- Coin In / Promo Coin toggle -->
+        <div class="cd-type-toggle">
+          <button class="cd-type-btn active" id="cdTypeCoinIn" onclick="switchCoinType('in')">Coin In</button>
+          <button class="cd-type-btn" id="cdTypePromo" onclick="switchCoinType('promo')">Promo Coin</button>
         </div>
+        <!-- Info banner -->
+        <div class="cd-info-banner" id="cdInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added more than once inside promotion.</div>
+        </div>
+        <!-- Coin list -->
+        <div class="cd-coin-list" id="coinDrawerTplGrid"></div>
+      </div>
+      <!-- Create new coin tab (form) -->
+      <div class="coin-drawer-form" id="coinDrawerForm">
         <div class="cfp-grid">
           <div>
             <span class="cfp-lbl">Icon</span>
@@ -785,14 +813,12 @@ input[type="date"].fi:valid{color:var(--text);}
           <div class="rate-sep">per €</div>
           <div><span class="cfp-lbl">Bet Amount (€)</span><input class="cfp-fi" id="drawerCfpPer" type="number" placeholder="1" /></div>
         </div>
-        <div class="cfp-actions">
-          <button class="cfp-cancel" onclick="closeDrawerCoinPicker()">Cancel</button>
-          <button class="cfp-save" onclick="saveDrawerCoin()">
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Attach Coin
-          </button>
-        </div>
       </div>
+    </div>
+    <!-- Footer -->
+    <div class="coin-drawer-footer">
+      <button class="cd-btn-cancel" onclick="closeDrawerCoinPicker()">Cancel</button>
+      <button class="cd-btn-attach" onclick="saveDrawerCoin()">Attach</button>
     </div>
   </div>
 </div>
@@ -1071,17 +1097,9 @@ let _coinDrawerRuleId = null;
 function openCoinPicker(id) {
   _coinDrawerRuleId = id;
   // populate templates
-  const grid = document.getElementById('coinDrawerTplGrid');
-  grid.innerHTML = coinTemplates.map(c=>`
-    <div class="coin-tpl" onclick="drawerSelectTpl('${c.em}','${c.name}','${c.desc}','${c.amt}','${c.per}')">
-      <div class="coin-tpl-row"><div class="coin-tpl-em">${c.em}</div><div class="coin-tpl-name">${c.name}</div></div>
-      <div class="coin-tpl-desc">${c.desc}</div>
-      <div class="coin-tpl-rate">${c.amt} ${c.em} / €${c.per} bet</div>
-    </div>`).join('');
-  // show picker view
-  document.getElementById('coinDrawerPicker').classList.remove('hidden');
-  document.getElementById('coinDrawerForm').classList.remove('open');
-  document.getElementById('coinDrawerTitle').textContent = 'Select a Coin Template';
+  renderCoinDrawerList();
+  // show picker view (templates tab)
+  switchCoinDrawerTab('templates');
   // position overlay below sticky bar
   const stickyBar = document.querySelector('.steps-bar');
   const topOffset = stickyBar ? stickyBar.getBoundingClientRect().bottom : 0;
@@ -1101,20 +1119,38 @@ function closeDrawerCoinPicker() {
 function handleDrawerOverlayClick(e) {
   if (e.target === document.getElementById('coinDrawerOverlay')) closeDrawerCoinPicker();
 }
-function drawerSelectTpl(em, name, desc, amt, per) {
-  document.getElementById('drawerCfpEm').textContent = em;
-  document.getElementById('drawerCfpName').value = name;
-  document.getElementById('drawerCfpDesc').value = desc;
-  document.getElementById('drawerCfpAmt').value = amt;
-  document.getElementById('drawerCfpPer').value = per;
-  openDrawerCoinForm(name);
+let _coinDrawerType = 'in'; // 'in' or 'promo'
+let _selectedCoinIdx = null;
+
+function renderCoinDrawerList() {
+  const grid = document.getElementById('coinDrawerTplGrid');
+  grid.innerHTML = coinTemplates.map((c, i) => `
+    <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
+      <div class="cd-coin-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="cd-coin-info">
+        <div class="cd-coin-name">${c.name}</div>
+        <span class="cd-coin-badge">${_coinDrawerType==='in'?'Coin In':'Promo Coin'}</span>
+      </div>
+      <button class="cd-coin-dots" onclick="event.stopPropagation()">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </button>
+    </div>`).join('');
 }
-function openDrawerCoinForm(title) {
-  document.getElementById('coinDrawerPicker').classList.add('hidden');
-  document.getElementById('coinDrawerForm').classList.add('open');
-  document.getElementById('coinDrawerTitle').textContent = 'Configure Coin';
-  document.getElementById('coinDrawerFormTitle').textContent = title || 'Create Custom Coin';
-  if (!title) {
+
+function selectCoinItem(idx) {
+  _selectedCoinIdx = idx;
+  renderCoinDrawerList();
+}
+
+function switchCoinDrawerTab(tab) {
+  const isTemplates = tab === 'templates';
+  document.getElementById('cdTabTemplates').classList.toggle('active', isTemplates);
+  document.getElementById('cdTabNew').classList.toggle('active', !isTemplates);
+  document.getElementById('coinDrawerPicker').classList.toggle('hidden', !isTemplates);
+  document.getElementById('coinDrawerForm').classList.toggle('open', !isTemplates);
+  if (!isTemplates) {
     document.getElementById('drawerCfpEm').textContent = '🪙';
     document.getElementById('drawerCfpName').value = '';
     document.getElementById('drawerCfpDesc').value = '';
@@ -1122,17 +1158,37 @@ function openDrawerCoinForm(title) {
     document.getElementById('drawerCfpPer').value = '1';
   }
 }
-function backToDrawerPicker() {
-  document.getElementById('coinDrawerPicker').classList.remove('hidden');
-  document.getElementById('coinDrawerForm').classList.remove('open');
-  document.getElementById('coinDrawerTitle').textContent = 'Select a Coin Template';
+
+function switchCoinType(type) {
+  _coinDrawerType = type;
+  document.getElementById('cdTypeCoinIn').classList.toggle('active', type==='in');
+  document.getElementById('cdTypePromo').classList.toggle('active', type==='promo');
+  renderCoinDrawerList();
 }
+
+function drawerSelectTpl(em, name, desc, amt, per) {
+  document.getElementById('drawerCfpEm').textContent = em;
+  document.getElementById('drawerCfpName').value = name;
+  document.getElementById('drawerCfpDesc').value = desc;
+  document.getElementById('drawerCfpAmt').value = amt;
+  document.getElementById('drawerCfpPer').value = per;
+}
+function openDrawerCoinForm() { switchCoinDrawerTab('new'); }
+function backToDrawerPicker() { switchCoinDrawerTab('templates'); }
 function saveDrawerCoin() {
-  const nameEl = document.getElementById('drawerCfpName');
-  const name = nameEl.value.trim();
-  if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
-  nameEl.style.borderColor = '';
-  const em = document.getElementById('drawerCfpEm').textContent;
+  const isNewTab = document.getElementById('coinDrawerForm').classList.contains('open');
+  let name, em;
+  if (isNewTab) {
+    const nameEl = document.getElementById('drawerCfpName');
+    name = nameEl.value.trim();
+    if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
+    nameEl.style.borderColor = '';
+    em = document.getElementById('drawerCfpEm').textContent;
+  } else {
+    if (_selectedCoinIdx === null) { toast('Please select a coin first'); return; }
+    const c = coinTemplates[_selectedCoinIdx];
+    name = c.name; em = c.em;
+  }
   const id = _coinDrawerRuleId;
   if (id) {
     document.getElementById(`coin-pill-name-${id}`).textContent = name;
@@ -1140,6 +1196,7 @@ function saveDrawerCoin() {
     document.getElementById(`coin-row-empty-${id}`).style.display = 'none';
   }
   document.getElementById('coinDrawerOverlay').classList.remove('open');
+  _selectedCoinIdx = null;
   _coinDrawerRuleId = null;
   toast(`${em} "${name}" attached`);
 }
