@@ -55,7 +55,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.steps-bar{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;margin:0 -28px;padding:0 28px;margin-bottom:24px;}
+.steps-bar{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:0;z-index:100;margin:0 -28px;padding:16px 28px 0;margin-bottom:24px;}
+.steps-bar .back{margin-bottom:6px;}
+.steps-bar .page-hdr{margin-bottom:12px;}
+.steps-bar-divider{height:1px;background:var(--border);margin:0 -28px;}
+.steps-inner{}
 .steps-bar .steps{margin-bottom:0;padding:10px 0;}
 .content{flex:1;overflow-y:auto;padding:20px 28px 48px;}
 .content-inner{max-width:1089px;width:100%;margin:0 auto;}
@@ -413,6 +417,8 @@ input[type="date"].fi:valid{color:var(--text);}
 <div class="content">
 <div class="content-inner">
 
+  <!-- Sticky header + steps bar -->
+  <div class="steps-bar">
   <div class="back" onclick="toast('Back to Promotions')">
     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
     Back to Promotions
@@ -426,8 +432,8 @@ input[type="date"].fi:valid{color:var(--text);}
     </div>
   </div>
 
-  <!-- Sticky steps bar -->
-  <div class="steps-bar">
+  <div class="steps-bar-divider"></div>
+  <div class="steps-inner">
     <div class="steps">
       <div class="step-pill active" id="tab-general" onclick="goToStep('sec-general','general')">
         <span class="step-n" id="spn-general">1</span>
@@ -444,6 +450,7 @@ input[type="date"].fi:valid{color:var(--text);}
         Promotion Features & prizes<span id="feat-count-badge" style="display:none;margin-left:5px;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;"></span>
       </div>
     </div>
+  </div>
   </div>
 
 
