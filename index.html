@@ -645,12 +645,23 @@ function goToStep(secId, tabKey) {
     pill.classList.remove('active','done');
     const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
     const n = pill.querySelector('.step-n');
+    const isValidated = pill.classList.contains('validated');
     if (idx < activeIdx) {
+      // past step — only show checkmark if actually validated
       pill.classList.add('done');
-      if(n) n.innerHTML = checkSvg;
+      if(isValidated) {
+        if(n) n.innerHTML = checkSvg;
+      } else {
+        if(n) n.textContent = stepNumbers[key] || (key==='general' ? '1' : '');
+      }
     } else if (idx === activeIdx) {
       pill.classList.add('active');
-      if(n) n.innerHTML = checkSvg;
+      // active step — show checkmark only if validated
+      if(isValidated) {
+        if(n) n.innerHTML = checkSvg;
+      } else {
+        if(n) n.textContent = stepNumbers[key] || (key==='general' ? '1' : '');
+      }
     } else {
       // future step — restore number
       if(n) n.textContent = stepNumbers[key] || '';
