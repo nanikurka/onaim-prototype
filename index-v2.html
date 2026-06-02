@@ -462,6 +462,12 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-coin-drop-name{font-size:13px;font-weight:600;color:var(--text);flex:1;}
 .fcd-coin-drop-create{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;border-top:1px solid var(--border);color:var(--green);font-size:13px;font-weight:600;transition:background .1s;}
 .fcd-coin-drop-create:hover{background:var(--green-light);}
+/* pool items */
+.fcd-pool-item{display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:7px;}
+.fcd-pool-em{font-size:20px;line-height:1;flex-shrink:0;}
+.fcd-pool-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.fcd-pool-remove{background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;justify-content:center;padding:2px;border-radius:4px;}
+.fcd-pool-remove:hover{color:var(--red);background:var(--red-light);}
 /* prize amount */
 .fcd-prize-bottom{display:flex;align-items:center;gap:10px;margin-top:10px;}
 .fcd-prize-amt-wrap{display:flex;align-items:center;gap:8px;border:1px solid var(--border-input);border-radius:8px;padding:8px 12px;flex:1;}
@@ -892,16 +898,21 @@ input[type="date"].fi:valid{color:var(--text);}
     <div class="fcd-steps">
       <div class="fcd-step active" id="fcd-step-entry" onclick="goFcdStep('entry')">
         <div class="fcd-step-n" id="fcd-sn-entry">1</div>
-        Entry Source
+        How to Enter
       </div>
       <span class="fcd-step-sep">›</span>
-      <div class="fcd-step" id="fcd-step-prizes" onclick="goFcdStep('prizes')">
-        <div class="fcd-step-n" id="fcd-sn-prizes">2</div>
-        Prizes
+      <div class="fcd-step" id="fcd-step-pool" onclick="goFcdStep('pool')">
+        <div class="fcd-step-n" id="fcd-sn-pool">2</div>
+        Prize Coins
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-rankings" onclick="goFcdStep('rankings')">
+        <div class="fcd-step-n" id="fcd-sn-rankings">3</div>
+        Rankings
       </div>
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-schedule" onclick="goFcdStep('schedule')">
-        <div class="fcd-step-n" id="fcd-sn-schedule">3</div>
+        <div class="fcd-step-n" id="fcd-sn-schedule">4</div>
         Schedule
       </div>
     </div>
@@ -916,17 +927,36 @@ input[type="date"].fi:valid{color:var(--text);}
         <div id="fcdEntryPreview"></div>
       </div>
 
-      <!-- PANEL 2: Prizes -->
-      <div class="fcd-panel" id="fcd-panel-prizes">
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Define what each place wins. You can set a single place or a range (e.g. 1–3), then pick a coin and amount.</p>
-        <div id="fcdPrizesList"></div>
-        <button class="fcd-add-place" onclick="addFcdPrize()">
+      <!-- PANEL 2: Prize Coins Pool -->
+      <div class="fcd-panel" id="fcd-panel-pool">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</p>
+        <div id="fcdPoolList"></div>
+        <div style="position:relative;margin-top:4px;">
+          <button class="fcd-add-place" id="fcdAddPoolCoinBtn" onclick="togglePoolCoinPicker()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Coin to Pool
+          </button>
+          <div class="fcd-coin-dropdown" id="fcdPoolPickerDrop" style="top:calc(100% + 4px);left:0;min-width:260px;">
+            <div id="fcdPoolPickerItems"></div>
+            <div class="fcd-coin-drop-create" onclick="openNewCoinFromPool()">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Create new coin
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Rankings -->
+      <div class="fcd-panel" id="fcd-panel-rankings">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Define what each rank wins. Coins are limited to your prize pool. You can set a single place or a range (e.g. 1–3).</p>
+        <div id="fcdRankingsList"></div>
+        <button class="fcd-add-place" onclick="addFcdRanking()">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Prize
+          Add Rank
         </button>
       </div>
 
-      <!-- PANEL 3: Schedule -->
+      <!-- PANEL 4: Schedule -->
       <div class="fcd-panel" id="fcd-panel-schedule">
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Define when this leaderboard resets.</p>
         <div class="fcd-radio-card active" id="fcd-sched-sync" onclick="selectFcdSchedule('sync')">
@@ -957,7 +987,7 @@ input[type="date"].fi:valid{color:var(--text);}
       <div class="fcd-coin-view-header">
         <button class="fcd-back-btn" onclick="closeFcdCoinView()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to Prizes
+          <span id="fcdCoinViewBackLabel">Back to Prize Coins</span>
         </button>
         <span class="fcd-coin-view-title">Create New Coin</span>
       </div>
@@ -1890,18 +1920,24 @@ function configureFeature(id) {
   openFcd(id, name);
 }
 
-/* ══ Feature Config Drawer ══ */
+/* ══ Feature Config Drawer (v2 — 4-step pool-first flow) ══ */
 let _fcdFeatureId = null;
 let _fcdStep = 'entry';
 let _fcdStepsDone = {};
-let _fcdPrizeCount = 0;
 let _fcdSchedule = 'sync';
 let _fcdRenewal = 'daily';
+// Pool state — coins selected for the prize pool this leaderboard
+let _fcdPool = []; // [{em, name, type, typeLabel}]
+// Rankings state
+let _fcdRankCount = 0;
+// Coin view context: 'pool' = adding to pool, 'ranking:{idx}' = selecting for a ranking row
+let _fcdCoinViewCtx = 'pool';
 
 function openFcd(featureId, featureName) {
   _fcdFeatureId = featureId;
   _fcdStepsDone = {};
-  _fcdPrizeCount = 0;
+  _fcdPool = [];
+  _fcdRankCount = 0;
   document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
   // populate entry source dropdown with current triggers
   const sel = document.getElementById('fcdEntrySelect');
@@ -1914,9 +1950,10 @@ function openFcd(featureId, featureName) {
     sel.appendChild(opt);
   });
   document.getElementById('fcdEntryPreview').innerHTML = '';
-  // reset prizes
-  document.getElementById('fcdPrizesList').innerHTML = '';
-  addFcdPrize(); addFcdPrize(); // default 2 prizes
+  // reset pool & rankings
+  renderPool();
+  document.getElementById('fcdRankingsList').innerHTML = '';
+  addFcdRanking(); addFcdRanking(); // default 2 rankings
   // reset schedule
   selectFcdSchedule('sync');
   // go to first step
@@ -1937,11 +1974,12 @@ function handleFcdOverlayClick(e) {
 }
 function goFcdStep(step) {
   _fcdStep = step;
-  const steps = ['entry','prizes','schedule'];
-  steps.forEach(s => {
+  const steps = ['entry','pool','rankings','schedule'];
+  steps.forEach((s, i) => {
     const btn = document.getElementById('fcd-step-' + s);
     const panel = document.getElementById('fcd-panel-' + s);
     const n = document.getElementById('fcd-sn-' + s);
+    if (!btn || !panel || !n) return;
     const isDone = _fcdStepsDone[s];
     const isActive = s === step;
     btn.classList.toggle('active', isActive);
@@ -1951,15 +1989,17 @@ function goFcdStep(step) {
       n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
       n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
     } else {
-      n.textContent = String(steps.indexOf(s)+1);
+      n.textContent = String(i + 1);
       n.style.background = ''; n.style.color = ''; n.style.border = '';
     }
   });
-  // update Continue btn label
+  // Update Continue btn label
   document.getElementById('fcdContinueBtn').textContent = step === 'schedule' ? 'Save' : 'Continue';
+  // When entering rankings, rebuild ranking coin dropdowns to reflect current pool
+  if (step === 'rankings') rebuildRankingCoinDrops();
 }
 function fcdContinue() {
-  const steps = ['entry','prizes','schedule'];
+  const steps = ['entry','pool','rankings','schedule'];
   const idx = steps.indexOf(_fcdStep);
   _fcdStepsDone[_fcdStep] = true;
   if (idx < steps.length - 1) {
@@ -1974,6 +2014,188 @@ function fcdContinue() {
     validateFeatures();
     closeFcd();
     toast('Feature configured ✓');
+  }
+}
+
+/* ── Prize Coins Pool (Step 2) ── */
+function renderPool() {
+  const list = document.getElementById('fcdPoolList');
+  if (!list) return;
+  if (_fcdPool.length === 0) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:12px 0 8px;">No coins added yet. Add coins to the pool to assign them to rankings.</div>';
+    return;
+  }
+  list.innerHTML = _fcdPool.map((c, i) => `
+    <div class="fcd-pool-item" id="fcd-pool-item-${i}">
+      <span class="fcd-pool-em">${c.em}</span>
+      <span class="fcd-pool-name">${c.name}</span>
+      <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
+      <button class="fcd-pool-remove" onclick="removePoolCoin(${i})" title="Remove from pool">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+function removePoolCoin(i) {
+  _fcdPool.splice(i, 1);
+  renderPool();
+}
+function togglePoolCoinPicker() {
+  const drop = document.getElementById('fcdPoolPickerDrop');
+  const isOpen = drop.classList.contains('open');
+  if (!isOpen) {
+    // Rebuild list: all template coins not already in pool
+    const items = document.getElementById('fcdPoolPickerItems');
+    const poolNames = _fcdPool.map(c => c.name);
+    const available = allPrizeCoins.filter(c => !poolNames.includes(c.name));
+    if (available.length === 0) {
+      items.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">All template coins added.</div>';
+    } else {
+      items.innerHTML = available.map((c, ci) => `
+        <div class="fcd-coin-drop-item" onclick="addPoolCoinByName('${c.name}')">
+          <span style="font-size:17px;margin-right:6px;">${c.em}</span>
+          <span class="fcd-coin-drop-name">${c.name}</span>
+          <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
+        </div>`).join('');
+    }
+  }
+  drop.classList.toggle('open', !isOpen);
+  // close on outside click
+  if (!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function h(e) {
+        if (!drop.contains(e.target) && e.target.id !== 'fcdAddPoolCoinBtn') {
+          drop.classList.remove('open');
+          document.removeEventListener('click', h);
+        }
+      });
+    }, 10);
+  }
+}
+function addPoolCoinByName(name) {
+  const c = allPrizeCoins.find(x => x.name === name);
+  if (!c) return;
+  if (!_fcdPool.find(x => x.name === name)) _fcdPool.push({...c});
+  document.getElementById('fcdPoolPickerDrop').classList.remove('open');
+  renderPool();
+}
+function openNewCoinFromPool() {
+  document.getElementById('fcdPoolPickerDrop').classList.remove('open');
+  _fcdCoinViewCtx = 'pool';
+  _prizeTargetIdx = null;
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
+  _openFcdCoinView();
+}
+
+/* ── Rankings (Step 3) ── */
+function addFcdRanking() {
+  _fcdRankCount++;
+  const idx = _fcdRankCount;
+  const poolCoin = _fcdPool[0] || allPrizeCoins[0];
+  const div = document.createElement('div');
+  div.className = 'fcd-prize-card'; div.id = 'fcd-rank-' + idx;
+  div.innerHTML = `
+    <div class="fcd-prize-card-header">
+      <div class="fcd-prize-place-row">
+        <div class="fcd-place-type-toggle">
+          <button class="fcd-place-type-btn active" id="fcd-rpt-single-${idx}" onclick="setRankType(${idx},'single')">Single</button>
+          <button class="fcd-place-type-btn" id="fcd-rpt-range-${idx}" onclick="setRankType(${idx},'range')">Range</button>
+        </div>
+        <div class="fcd-place-inputs" id="fcd-rank-place-inputs-${idx}">
+          <span class="fcd-place-sep" style="font-size:12px;color:var(--text-sub);">Place</span>
+          <input class="fcd-place-input" id="fcd-rfrom-${idx}" type="number" value="${idx}" min="1" placeholder="1" />
+          <span class="fcd-place-sep" id="fcd-rrange-sep-${idx}" style="display:none;">–</span>
+          <input class="fcd-place-input" id="fcd-rto-${idx}" type="number" value="${idx+2}" min="1" placeholder="3" style="display:none;" />
+        </div>
+      </div>
+      <button class="fcd-prize-del" onclick="removeFcdRanking(${idx})" title="Remove rank">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Coin selector (pool only) -->
+    <div style="position:relative;">
+      <div class="fcd-coin-selector" id="fcd-rcoin-sel-${idx}" onclick="toggleRankCoinDrop(${idx})">
+        <div class="fcd-coin-sel-icon" id="fcd-rcsel-icon-${idx}" style="font-size:17px;background:transparent;">
+          ${poolCoin.em}
+        </div>
+        <div class="fcd-coin-sel-info">
+          <div class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}">${poolCoin.name}</div>
+          <span class="fcd-coin-sel-type fcd-coin-type-${poolCoin.type}" id="fcd-rcsel-type-${idx}">${poolCoin.typeLabel}</span>
+        </div>
+        <svg class="fcd-coin-sel-chev" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fcd-coin-dropdown" id="fcd-rcoin-drop-${idx}">
+        <div id="fcd-rcoin-drop-items-${idx}"></div>
+      </div>
+    </div>
+    <!-- Amount -->
+    <div class="fcd-prize-bottom">
+      <div class="fcd-prize-amt-wrap">
+        <span>Amount</span>
+        <input class="fcd-prize-amt" type="number" value="100" min="1" id="fcd-ramt-${idx}" />
+        <span id="fcd-ramt-unit-${idx}" style="color:var(--text-muted);font-size:12px;">${poolCoin.em}</span>
+      </div>
+    </div>`;
+  document.getElementById('fcdRankingsList').appendChild(div);
+}
+function removeFcdRanking(idx) {
+  document.getElementById('fcd-rank-' + idx)?.remove();
+}
+function setRankType(idx, type) {
+  document.getElementById('fcd-rpt-single-' + idx).classList.toggle('active', type==='single');
+  document.getElementById('fcd-rpt-range-' + idx).classList.toggle('active', type==='range');
+  const toInput = document.getElementById('fcd-rto-' + idx);
+  const sep = document.getElementById('fcd-rrange-sep-' + idx);
+  toInput.style.display = type==='range' ? '' : 'none';
+  sep.style.display = type==='range' ? '' : 'none';
+}
+function rebuildRankingCoinDrops() {
+  // For each ranking row, auto-select first pool coin if current selection is invalid
+  const list = document.getElementById('fcdRankingsList');
+  if (!list) return;
+  list.querySelectorAll('.fcd-prize-card').forEach(card => {
+    const idx = card.id.replace('fcd-rank-','');
+    if (_fcdPool.length > 0) {
+      const curName = document.getElementById('fcd-rcsel-name-' + idx)?.textContent;
+      if (!_fcdPool.find(c => c.name === curName)) selectRankCoin(idx, 0, true);
+    }
+  });
+}
+function toggleRankCoinDrop(idx) {
+  // Rebuild items first
+  const itemsEl = document.getElementById('fcd-rcoin-drop-items-' + idx);
+  if (itemsEl) {
+    const poolHtml = _fcdPool.length > 0
+      ? _fcdPool.map((c, ci) => `
+          <div class="fcd-coin-drop-item" onclick="selectRankCoin('${idx}',${ci})">
+            <span style="font-size:17px;margin-right:6px;">${c.em}</span>
+            <span class="fcd-coin-drop-name">${c.name}</span>
+            <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
+          </div>`).join('')
+      : '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">No coins in pool. Go back to Prize Coins step.</div>';
+    itemsEl.innerHTML = poolHtml + `<div class="fcd-coin-drop-create" onclick="openNewCoinFromRanking(${idx})"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create new coin</div>`;
+  }
+  document.querySelectorAll('.fcd-coin-dropdown').forEach(d => {
+    if (d.id !== 'fcd-rcoin-drop-' + idx) { d.classList.remove('open'); }
+  });
+  const drop = document.getElementById('fcd-rcoin-drop-' + idx);
+  const sel = document.getElementById('fcd-rcoin-sel-' + idx);
+  drop.classList.toggle('open');
+  sel.classList.toggle('open');
+}
+function selectRankCoin(idx, coinIdx, silent) {
+  const c = _fcdPool[coinIdx];
+  if (!c) return;
+  const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
+  if (iconEl) iconEl.textContent = c.em;
+  const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
+  if (nameEl) nameEl.textContent = c.name;
+  const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
+  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; }
+  const unitEl = document.getElementById('fcd-ramt-unit-' + idx);
+  if (unitEl) unitEl.textContent = c.em;
+  if (!silent) {
+    document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
+    document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
   }
 }
 function onFcdEntryChange() {
@@ -2017,107 +2239,11 @@ const allPrizeCoins = [
   {em:'🏅', name:'Gold Medals',     type:'coin-in',    typeLabel:'Coin In'},
 ];
 
-function addFcdPrize() {
-  _fcdPrizeCount++;
-  const idx = _fcdPrizeCount;
-  const defaultCoin = allPrizeCoins[0];
-  const div = document.createElement('div');
-  div.className = 'fcd-prize-card'; div.id = 'fcd-prize-' + idx;
-  div.innerHTML = `
-    <div class="fcd-prize-card-header">
-      <div class="fcd-prize-place-row">
-        <div class="fcd-place-type-toggle">
-          <button class="fcd-place-type-btn active" id="fcd-pt-single-${idx}" onclick="setPrizeType(${idx},'single')">Single</button>
-          <button class="fcd-place-type-btn" id="fcd-pt-range-${idx}" onclick="setPrizeType(${idx},'range')">Range</button>
-        </div>
-        <div class="fcd-place-inputs" id="fcd-place-inputs-${idx}">
-          <span class="fcd-place-sep" style="font-size:12px;color:var(--text-sub);">Place</span>
-          <input class="fcd-place-input" id="fcd-from-${idx}" type="number" value="${idx}" min="1" placeholder="1" />
-          <span class="fcd-place-sep" id="fcd-range-sep-${idx}" style="display:none;">–</span>
-          <input class="fcd-place-input" id="fcd-to-${idx}" type="number" value="${idx+2}" min="1" placeholder="3" style="display:none;" />
-        </div>
-      </div>
-      <button class="fcd-prize-del" onclick="removeFcdPrize(${idx})" title="Remove prize">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <!-- Coin selector -->
-    <div style="position:relative;">
-      <div class="fcd-coin-selector" id="fcd-coin-sel-${idx}" onclick="togglePrizeCoinDrop(${idx})">
-        <div class="fcd-coin-sel-icon" id="fcd-csel-icon-${idx}">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="fcd-coin-sel-info">
-          <div class="fcd-coin-sel-name" id="fcd-csel-name-${idx}">${defaultCoin.name}</div>
-          <span class="fcd-coin-sel-type fcd-coin-type-${defaultCoin.type}" id="fcd-csel-type-${idx}">${defaultCoin.typeLabel}</span>
-        </div>
-        <svg class="fcd-coin-sel-chev" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="fcd-coin-dropdown" id="fcd-coin-drop-${idx}">
-        ${allPrizeCoins.map((c,ci)=>`
-          <div class="fcd-coin-drop-item" onclick="selectPrizeCoin(${idx},${ci})">
-            <div class="fcd-coin-drop-icon">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            </div>
-            <span class="fcd-coin-drop-name">${c.name}</span>
-            <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
-          </div>`).join('')}
-        <div class="fcd-coin-drop-create" onclick="openNewCoinFromPrize(${idx})">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Create new coin
-        </div>
-      </div>
-    </div>
-    <!-- Amount -->
-    <div class="fcd-prize-bottom">
-      <div class="fcd-prize-amt-wrap">
-        <span>Amount</span>
-        <input class="fcd-prize-amt" type="number" value="100" min="1" id="fcd-amt-${idx}" />
-        <span id="fcd-amt-unit-${idx}" style="color:var(--text-muted);font-size:12px;">${defaultCoin.em}</span>
-      </div>
-    </div>`;
-  document.getElementById('fcdPrizesList').appendChild(div);
-}
-
-function removeFcdPrize(idx) {
-  document.getElementById('fcd-prize-' + idx)?.remove();
-}
-function setPrizeType(idx, type) {
-  document.getElementById('fcd-pt-single-' + idx).classList.toggle('active', type==='single');
-  document.getElementById('fcd-pt-range-' + idx).classList.toggle('active', type==='range');
-  const toInput = document.getElementById('fcd-to-' + idx);
-  const sep = document.getElementById('fcd-range-sep-' + idx);
-  toInput.style.display = type==='range' ? '' : 'none';
-  sep.style.display = type==='range' ? '' : 'none';
-}
-function togglePrizeCoinDrop(idx) {
-  // close all others
-  document.querySelectorAll('.fcd-coin-dropdown').forEach(d => {
-    if (d.id !== 'fcd-coin-drop-' + idx) { d.classList.remove('open'); document.getElementById(d.id.replace('drop','sel'))?.classList.remove('open'); }
-  });
-  const drop = document.getElementById('fcd-coin-drop-' + idx);
-  const sel = document.getElementById('fcd-coin-sel-' + idx);
-  drop.classList.toggle('open');
-  sel.classList.toggle('open');
-}
-function selectPrizeCoin(idx, coinIdx) {
-  const c = allPrizeCoins[coinIdx];
-  document.getElementById('fcd-csel-name-' + idx).textContent = c.name;
-  const typeEl = document.getElementById('fcd-csel-type-' + idx);
-  typeEl.textContent = c.typeLabel;
-  typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`;
-  const unitEl = document.getElementById('fcd-amt-unit-' + idx);
-  if (unitEl) unitEl.textContent = c.em;
-  document.getElementById('fcd-coin-drop-' + idx).classList.remove('open');
-  document.getElementById('fcd-coin-sel-' + idx).classList.remove('open');
-}
-let _prizeTargetIdx = null;
+// (addFcdPrize removed — v2 uses pool + rankings flow)
+let _prizeTargetIdx = null; // ranking idx that triggered coin creation (null = from pool)
 let _fcdNewCoinType = 'in';
 
-function openNewCoinFromPrize(idx) {
-  document.getElementById('fcd-coin-drop-' + idx)?.classList.remove('open');
-  document.getElementById('fcd-coin-sel-' + idx)?.classList.remove('open');
-  _prizeTargetIdx = idx;
+function _openFcdCoinView() {
   // reset form
   document.getElementById('fcdCoinName').value = '';
   document.getElementById('fcdCoinEm').textContent = '';
@@ -2126,9 +2252,16 @@ function openNewCoinFromPrize(idx) {
   document.getElementById('fcdAdvancedBody')?.classList.remove('open');
   const chev = document.getElementById('fcdAdvChev'); if(chev) chev.style.transform = '';
   fcdSelectCoinType('in');
-  // slide in coin view within same drawer
   document.getElementById('fcdCoinView').classList.add('open');
   document.getElementById('fcdMainFooter').style.display = 'none';
+}
+function openNewCoinFromRanking(idx) {
+  document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
+  document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
+  _prizeTargetIdx = idx;
+  _fcdCoinViewCtx = 'ranking';
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Rankings';
+  _openFcdCoinView();
 }
 function closeFcdCoinView() {
   document.getElementById('fcdCoinView').classList.remove('open');
@@ -2170,18 +2303,35 @@ function saveFcdCoin() {
   const em = document.getElementById('fcdCoinEm').textContent || '🪙';
   const typeMap = {in:{type:'coin-in',label:'Coin In'}, promo:{type:'promo',label:'Promo Coin'}};
   const ct = typeMap[_fcdNewCoinType] || typeMap.in;
-  // add to allPrizeCoins pool
-  allPrizeCoins.push({em, name, type: ct.type, typeLabel: ct.label});
-  const newIdx = allPrizeCoins.length - 1;
-  // apply to the prize row that triggered this
-  if (_prizeTargetIdx !== null) selectPrizeCoin(_prizeTargetIdx, newIdx);
+  const newCoin = {em, name, type: ct.type, typeLabel: ct.label};
+  // Always add to allPrizeCoins global template list
+  allPrizeCoins.push(newCoin);
+  // Also add to current leaderboard pool if not already there
+  if (!_fcdPool.find(c => c.name === name)) {
+    _fcdPool.push({...newCoin});
+    renderPool();
+  }
+  // If triggered from a ranking row, select this coin there
+  if (_prizeTargetIdx !== null && _fcdCoinViewCtx === 'ranking') {
+    const poolIdx = _fcdPool.findIndex(c => c.name === name);
+    if (poolIdx >= 0) selectRankCoin(_prizeTargetIdx, poolIdx, true);
+    // force-update the selector display
+    const iconEl = document.getElementById('fcd-rcsel-icon-' + _prizeTargetIdx);
+    if (iconEl) iconEl.textContent = em;
+    const nameEl2 = document.getElementById('fcd-rcsel-name-' + _prizeTargetIdx);
+    if (nameEl2) nameEl2.textContent = name;
+    const typeEl2 = document.getElementById('fcd-rcsel-type-' + _prizeTargetIdx);
+    if (typeEl2) { typeEl2.textContent = ct.label; typeEl2.className = `fcd-coin-sel-type fcd-coin-type-${ct.type}`; }
+    const unitEl2 = document.getElementById('fcd-ramt-unit-' + _prizeTargetIdx);
+    if (unitEl2) unitEl2.textContent = em;
+  }
   closeFcdCoinView();
-  toast(`${em} "${name}" created & applied`);
+  toast(`${em} "${name}" created & added to pool`);
 }
 
 // close coin dropdowns when clicking outside
 document.addEventListener('click', e => {
-  if (!e.target.closest('.fcd-prize-card')) {
+  if (!e.target.closest('.fcd-prize-card') && !e.target.closest('.fcd-pool-item') && !e.target.closest('#fcdPoolPickerDrop')) {
     document.querySelectorAll('.fcd-coin-dropdown.open').forEach(d => {
       d.classList.remove('open');
       const sel = document.getElementById(d.id.replace('drop','sel'));
