@@ -132,6 +132,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 /* segment panels */
 .seg-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .seg-panel{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.seg-panel.disabled{opacity:0.4;pointer-events:none;}
 .seg-head{display:flex;align-items:center;gap:6px;padding:7px 10px;font-size:11.5px;font-weight:600;border-bottom:1px solid var(--border);}
 .seg-head.inc{background:#F0FDF4;color:#15803D;}
 .seg-head.exc{background:#FFF5F5;color:#B91C1C;}
@@ -443,7 +444,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
           </div>
 
           <div class="seg-panels" id="segPanels">
-            <div class="seg-panel">
+            <div class="seg-panel" id="includePanel">
               <div class="seg-head inc">
                 <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                 Include Segment
@@ -608,7 +609,8 @@ function setAudience(v){
   ['all','custom'].forEach(k=>{
     document.getElementById('ro-'+k).classList.toggle('sel',k===v);
   });
-  document.getElementById('segPanels').style.display=v==='custom'?'grid':'none';
+  // Always show both panels; disable Include when All Players is selected
+  document.getElementById('includePanel').classList.toggle('disabled', v==='all');
 }
 function toggleSeg(row){ row.querySelector('.seg-cb').classList.toggle('chk'); }
 function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
