@@ -1938,6 +1938,13 @@ function openFcd(featureId, featureName) {
   _fcdStepsDone = {};
   _fcdPool = [];
   _fcdRankCount = 0;
+  // Reset all step button classes and badge states
+  ['entry','pool','rankings','schedule'].forEach((s, i) => {
+    const btn = document.getElementById('fcd-step-' + s);
+    const n = document.getElementById('fcd-sn-' + s);
+    if (btn) { btn.classList.remove('active','done'); }
+    if (n) { n.textContent = '!'; n.style.background = ''; n.style.color = ''; n.style.border = ''; }
+  });
   document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
   // populate entry source dropdown with current triggers
   const sel = document.getElementById('fcdEntrySelect');
