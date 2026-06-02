@@ -392,7 +392,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
   <div class="steps-bar">
     <div class="steps">
       <div class="step-pill active" id="tab-general" onclick="goToStep('sec-general','general')">
-        <span class="step-n"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="step-n" id="spn-general">1</span>
         General Details
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
@@ -421,7 +421,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
           <div class="sec-lbl">Description</div>
           <div class="fg">
             <label class="fl">Promotion Name<sup>*</sup></label>
-            <input class="fi" placeholder="Value" />
+            <input class="fi" id="promoName" placeholder="Value" oninput="validateGeneral()" />
           </div>
           <div class="add-link" id="addDescBtn" onclick="toggleDesc()">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -440,8 +440,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
           <div class="divider"></div>
           <div class="sec-lbl">Schedule</div>
           <div class="date-row">
-            <div class="fg"><label class="fl">Start Date<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
-            <div class="fg"><label class="fl">End Date<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
+            <div class="fg"><label class="fl">Start Date<sup>*</sup></label><input class="fi cal" id="startDate" type="date" placeholder="dd/mm/yyyy" oninput="validateGeneral()" /></div>
+            <div class="fg"><label class="fl">End Date<sup>*</sup></label><input class="fi cal" id="endDate" type="date" placeholder="dd/mm/yyyy" oninput="validateGeneral()" /></div>
           </div>
 
           <div style="background:#F9FAFB;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:2px;">
@@ -460,18 +460,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
         <div class="form-col">
           <div class="sec-lbl">Target Audience</div>
           <div class="radio-opts">
-            <div class="radio-opt" id="ro-all" onclick="setAudience('all')">
+            <div class="radio-opt sel" id="ro-all" onclick="setAudience('all')">
               <div class="rdot" id="rd-all"></div>
               <div><div class="r-title">All Players</div><div class="r-desc">Include everyone by default. You can optionally exclude specific segments</div></div>
             </div>
-            <div class="radio-opt sel" id="ro-custom" onclick="setAudience('custom')">
+            <div class="radio-opt" id="ro-custom" onclick="setAudience('custom')">
               <div class="rdot" id="rd-custom"></div>
               <div><div class="r-title">Custom Segments</div><div class="r-desc">Include and exclude players based on selected segments</div></div>
             </div>
           </div>
 
           <div class="seg-panels" id="segPanels">
-            <div class="seg-panel" id="includePanel">
+            <div class="seg-panel disabled" id="includePanel">
               <div class="seg-head inc">
                 <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                 Include Segment
@@ -667,12 +667,30 @@ function toggleTest(){
   document.getElementById('testSw').classList.toggle('on',testOn);
   document.getElementById('testBody').style.display=testOn?'block':'none';
 }
+let currentAudience = 'all';
 function setAudience(v){
+  currentAudience = v;
   ['all','custom'].forEach(k=>{
     document.getElementById('ro-'+k).classList.toggle('sel',k===v);
   });
-  // Always show both panels; disable Include when All Players is selected
   document.getElementById('includePanel').classList.toggle('disabled', v==='all');
+  validateGeneral();
+}
+
+function validateGeneral(){
+  const name = document.getElementById('promoName')?.value?.trim();
+  const start = document.getElementById('startDate')?.value;
+  const end = document.getElementById('endDate')?.value;
+  const filled = name && start && end;
+  const n = document.getElementById('spn-general');
+  const pill = document.getElementById('tab-general');
+  if(filled){
+    if(n) n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    if(pill) { pill.dataset.validated = 'true'; }
+  } else {
+    if(n) n.textContent = '1';
+    if(pill) { pill.dataset.validated = 'false'; }
+  }
 }
 function toggleSeg(row){ row.querySelector('.seg-cb').classList.toggle('chk'); }
 function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
