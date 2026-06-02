@@ -1189,11 +1189,13 @@ const featureBgs = {
 };
 
 function validateFeatures() {
-  const cards = document.querySelectorAll('.feature-card');
-  const hasConfigured = [...cards].some(c => c.querySelector('.feature-card-status.configured'));
+  // Tab is checked ONLY when: at least 1 feature exists AND every feature is configured.
+  // If any feature is "Not fully Configured", the tab stays unchecked.
+  const cards = [...document.querySelectorAll('.feature-card')];
+  const allConfigured = cards.length > 0 && cards.every(c => c.querySelector('.feature-card-status.configured'));
   const pill = document.getElementById('tab-features');
   const n = document.getElementById('spn-features');
-  if (hasConfigured) {
+  if (allConfigured) {
     pill?.classList.add('validated');
     if (n) { n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; n.style.background = 'var(--green)'; n.style.color = '#fff'; }
   } else {
