@@ -1031,6 +1031,7 @@ function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
 function selectTrigger(tcIdx, name, desc, tags) {
   const id = 'rule-'+(++ruleCounter);
   selectedTriggers.push(id);
+  validateParticipation();
 
   // briefly flash "✓ Selected" feedback on the button then revert
   const card = document.getElementById('tc-'+tcIdx);
@@ -1167,7 +1168,23 @@ function deleteRule(id) {
   document.getElementById(id)?.remove();
   selectedTriggers = selectedTriggers.filter(x=>x!==id);
   if(!selectedTriggers.length) document.getElementById('selRulesLabel').style.display='none';
+  validateParticipation();
   toast('Rule removed');
+}
+
+function validateParticipation() {
+  // Tab is checked when at least 1 trigger is selected. Coin attachment is not required.
+  const hasRule = selectedTriggers.length > 0;
+  const pill = document.getElementById('tab-participation');
+  const n = document.getElementById('spn-participation');
+  const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  if (hasRule) {
+    pill?.classList.add('validated');
+    if (n) { n.innerHTML = checkSvg; n.style.background = 'var(--green)'; n.style.color = '#fff'; }
+  } else {
+    pill?.classList.remove('validated');
+    if (n) { n.textContent = '2'; n.style.background = ''; n.style.color = ''; }
+  }
 }
 
 /* ── Coin Drawer ── */
