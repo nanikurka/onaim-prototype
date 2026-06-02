@@ -716,6 +716,58 @@ input[type="date"].fi:valid{color:var(--text);}
 <script>
 /* ── State ── */
 let selectedTriggers = [];
+
+/* ── Scroll spy ── */
+function initScrollSpy() {
+  const contentEl = document.querySelector('.content');
+  const sections = [
+    {id:'sec-general',   key:'general'},
+    {id:'sec-participation', key:'participation'},
+    {id:'sec-features',  key:'features'},
+  ];
+  if (!contentEl) return;
+  contentEl.addEventListener('scroll', () => {
+    const stepsBarH = document.querySelector('.steps-bar')?.offsetHeight || 0;
+    const scrollTop = contentEl.scrollTop;
+    const viewportH = contentEl.clientHeight;
+    let current = sections[0].key;
+    for (const sec of sections) {
+      const el = document.getElementById(sec.id);
+      if (!el) continue;
+      let offsetTop = 0;
+      let node = el;
+      while (node && node !== contentEl) { offsetTop += node.offsetTop; node = node.offsetParent; }
+      if (scrollTop + stepsBarH + 32 >= offsetTop) current = sec.key;
+    }
+    activateTab(current);
+  }, {passive: true});
+}
+
+function activateTab(tabKey) {
+  const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
+  const order = ['general','participation','features'];
+  const checkSvgStr = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  const nums = {general:'1', participation:'2', features:'3'};
+  Object.entries(map).forEach(([key, id]) => {
+    const pill = document.getElementById(id);
+    if (!pill) return;
+    const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
+    const n = pill.querySelector('.step-n');
+    const isValidated = pill.classList.contains('validated');
+    pill.classList.remove('active','done');
+    if (idx === activeIdx) {
+      pill.classList.add('active');
+      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
+    } else if (idx < activeIdx) {
+      pill.classList.add('done');
+      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
+    } else {
+      if (n) n.textContent = nums[key];
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initScrollSpy);
 let ruleCounter = 0;
 
 /* ── Step scroll ── */
@@ -736,36 +788,7 @@ function goToStep(secId, tabKey) {
     }
     contentEl.scrollTo({top: offsetTop - stepsBarH - 16, behavior: 'smooth'});
   }
-  const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
-  const order = ['general','participation','features'];
-  Object.entries(map).forEach(([key, id]) => {
-    const pill = document.getElementById(id);
-    if (!pill) return;
-    pill.classList.remove('active','done');
-    const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
-    const n = pill.querySelector('.step-n');
-    const isValidated = pill.classList.contains('validated');
-    if (idx < activeIdx) {
-      // past step — only show checkmark if actually validated
-      pill.classList.add('done');
-      if(isValidated) {
-        if(n) n.innerHTML = checkSvg;
-      } else {
-        if(n) n.textContent = stepNumbers[key] || (key==='general' ? '1' : '');
-      }
-    } else if (idx === activeIdx) {
-      pill.classList.add('active');
-      // active step — show checkmark only if validated
-      if(isValidated) {
-        if(n) n.innerHTML = checkSvg;
-      } else {
-        if(n) n.textContent = stepNumbers[key] || (key==='general' ? '1' : '');
-      }
-    } else {
-      // future step — restore number
-      if(n) n.textContent = stepNumbers[key] || '';
-    }
-  });
+  activateTab(tabKey);
 }
 
 /* ── General Details ── */
