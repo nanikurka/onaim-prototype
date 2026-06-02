@@ -728,16 +728,14 @@ function initScrollSpy() {
   if (!contentEl) return;
   contentEl.addEventListener('scroll', () => {
     const stepsBarH = document.querySelector('.steps-bar')?.offsetHeight || 0;
-    const scrollTop = contentEl.scrollTop;
-    const viewportH = contentEl.clientHeight;
+    const contentRect = contentEl.getBoundingClientRect();
     let current = sections[0].key;
     for (const sec of sections) {
       const el = document.getElementById(sec.id);
       if (!el) continue;
-      let offsetTop = 0;
-      let node = el;
-      while (node && node !== contentEl) { offsetTop += node.offsetTop; node = node.offsetParent; }
-      if (scrollTop + stepsBarH + 32 >= offsetTop) current = sec.key;
+      const secRect = el.getBoundingClientRect();
+      const relTop = secRect.top - contentRect.top;
+      if (relTop <= stepsBarH + 48) current = sec.key;
     }
     activateTab(current);
   }, {passive: true});
