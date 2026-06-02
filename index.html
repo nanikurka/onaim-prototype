@@ -120,8 +120,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* radio */
 .radio-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.radio-opt{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);cursor:pointer;}
-.radio-opt.sel{border-color:var(--green);}
+.radio-opt{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1.5px solid #C5CAD3;border-radius:var(--r-sm);cursor:pointer;background:#fff;}
+.radio-opt.sel{border-color:var(--green);background:var(--green-light);}
 .rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-input);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;background:var(--surface);transition:border-color .15s;}
 .radio-opt.sel .rdot{border-color:var(--green);}
 .rdot::after{display:none;content:'';width:7px;height:7px;border-radius:50%;background:var(--green);}
