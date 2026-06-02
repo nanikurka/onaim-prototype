@@ -100,7 +100,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .feature-card-name{font-size:14px;font-weight:600;color:var(--text);}
 .feature-card-status{display:flex;align-items:center;gap:5px;font-size:12px;margin-top:2px;}
 .feature-card-status.configured{color:#059669;}
-.feature-card-status.partial{color:#D97706;}
+.feature-card-status.partial{color:#FF5630;}
 .feature-card-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
 .feature-card-actions button{background:none;border:none;cursor:pointer;padding:5px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;transition:background .1s,color .1s;}
 .feature-card-actions button:hover{background:var(--bg);color:var(--text);}
@@ -1167,13 +1167,13 @@ function addFeature(type, name, icon) {
     <div class="feature-card-info">
       <div class="feature-card-name">${name}</div>
       <div class="feature-card-status partial" id="fstat-${id}">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#D97706"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
         Not fully Configured
       </div>
     </div>
     <div class="feature-card-actions">
-      <button title="Duplicate" onclick="duplicateFeature('${id}','${type}','${name}','${icon}')">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <button title="Rename" onclick="renameFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
       </button>
       <button title="Configure" onclick="configureFeature('${id}')">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -1187,8 +1187,13 @@ function addFeature(type, name, icon) {
   toast(name + ' added');
 }
 
-function duplicateFeature(id, type, name, icon) {
-  addFeature(type, name, icon);
+function renameFeature(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  const nameEl = card.querySelector('.feature-card-name');
+  const current = nameEl.textContent;
+  const newName = prompt('Rename feature:', current);
+  if (newName && newName.trim()) nameEl.textContent = newName.trim();
 }
 
 function deleteFeature(id) {
@@ -1204,7 +1209,7 @@ function configureFeature(id) {
   const isConfigured = stat.classList.contains('configured');
   if (isConfigured) {
     stat.className = 'feature-card-status partial';
-    stat.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#D97706"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg> Not fully Configured`;
+    stat.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg> Not fully Configured`;
   } else {
     stat.className = 'feature-card-status configured';
     stat.innerHTML = `<svg width="12" height="12" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#059669" stroke="none"/><polyline points="8 12 11 15 16 9" stroke="white" stroke-width="2"/></svg> Configured`;
