@@ -479,6 +479,14 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-renewal-opts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
 .fcd-renewal-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;transition:all .15s;}
 .fcd-renewal-btn.active{border-color:var(--green);background:var(--green-light);color:var(--green-dark);}
+/* inline coin creation view inside drawer */
+.fcd-coin-view{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:10;}
+.fcd-coin-view.open{transform:translateX(0);}
+.fcd-coin-view-header{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.fcd-back-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;color:var(--text-sub);font-size:13px;font-weight:500;font-family:inherit;padding:0;}
+.fcd-back-btn:hover{color:var(--text);}
+.fcd-coin-view-title{font-size:14px;font-weight:700;color:var(--text);}
+.fcd-coin-view-body{flex:1;overflow-y:auto;padding:20px 24px;}
 
 /* ══ FOOTER ══ */
 .page-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;margin-bottom:24px;}
@@ -943,8 +951,94 @@ input[type="date"].fi:valid{color:var(--text);}
       </div>
 
     </div>
+
+    <!-- ── Inline coin creation view (drill-down, no second drawer) ── -->
+    <div class="fcd-coin-view" id="fcdCoinView">
+      <div class="fcd-coin-view-header">
+        <button class="fcd-back-btn" onclick="closeFcdCoinView()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Prizes
+        </button>
+        <span class="fcd-coin-view-title">Create New Coin</span>
+      </div>
+      <div class="fcd-coin-view-body">
+        <!-- SELECT COIN TYPE -->
+        <div class="cd-section-label">SELECT COIN TYPE</div>
+        <div class="cd-type-cards">
+          <div class="cd-type-card active" id="fcdNewTypeCoinIn" onclick="fcdSelectCoinType('in')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-in">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Coin In</div>
+                <div class="cd-type-card-sub">Entry currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio active" id="fcdNewRadioIn"></div>
+          </div>
+          <div class="cd-type-card" id="fcdNewTypePromo" onclick="fcdSelectCoinType('promo')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-promo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Promo Coin</div>
+                <div class="cd-type-card-sub">Inside promotion</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
+          </div>
+        </div>
+        <div class="cd-info-banner" id="fcdCoinInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text" id="fcdCoinInfoText"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.</div>
+        </div>
+        <div class="cd-form-divider"></div>
+        <!-- COIN DESCRIPTION -->
+        <div class="cd-section-label">COIN DESCRIPTION</div>
+        <div class="cd-desc-row">
+          <button class="cd-icon-picker" onclick="toggleFcdEmOpts()" style="width:56px;height:56px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+            <div class="em-opts" id="fcdEmOpts" style="z-index:600;">
+              <span class="em-o" onclick="pickFcdEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickFcdEm(event,'💎')">💎</span>
+              <span class="em-o" onclick="pickFcdEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickFcdEm(event,'🔥')">🔥</span>
+              <span class="em-o" onclick="pickFcdEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickFcdEm(event,'💰')">💰</span>
+              <span class="em-o" onclick="pickFcdEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickFcdEm(event,'🎁')">🎁</span>
+            </div>
+            <span id="fcdCoinEm" style="font-size:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;"></span>
+          </button>
+          <div class="cd-name-field">
+            <label class="cd-name-label">Coin Name <sup style="color:#F04438">*</sup></label>
+            <input class="cfp-fi" id="fcdCoinName" placeholder="Enter coin name" />
+          </div>
+        </div>
+        <div class="cd-form-divider"></div>
+        <!-- ADVANCED -->
+        <div class="cd-advanced" onclick="toggleFcdAdvanced()">
+          <span class="cd-section-label" style="margin:0;">ADVANCED SETTINGS</span>
+          <svg id="fcdAdvChev" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform .2s;color:var(--text-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="cd-advanced-body" id="fcdAdvancedBody">
+          <div style="margin-bottom:10px;">
+            <label class="cfp-lbl">Description</label>
+            <input class="cfp-fi" id="fcdCoinDesc" placeholder="Short description" />
+          </div>
+          <div class="rate-row">
+            <div><span class="cfp-lbl">Amount</span><input class="cfp-fi" id="fcdCoinAmt" type="number" placeholder="10" /></div>
+            <div class="rate-sep">per €</div>
+            <div><span class="cfp-lbl">Bet (€)</span><input class="cfp-fi" id="fcdCoinPer" type="number" placeholder="1" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="fcd-footer" style="border-top:1px solid var(--border);">
+        <button class="fcd-btn-cancel" onclick="closeFcdCoinView()">Cancel</button>
+        <button class="fcd-btn-continue" onclick="saveFcdCoin()">Add Coin</button>
+      </div>
+    </div>
+
     <!-- Footer -->
-    <div class="fcd-footer">
+    <div class="fcd-footer" id="fcdMainFooter">
       <button class="fcd-btn-cancel" onclick="closeFcd()">Cancel</button>
       <button class="fcd-btn-continue" id="fcdContinueBtn" onclick="fcdContinue()">Continue</button>
     </div>
@@ -2017,21 +2111,73 @@ function selectPrizeCoin(idx, coinIdx) {
   document.getElementById('fcd-coin-drop-' + idx).classList.remove('open');
   document.getElementById('fcd-coin-sel-' + idx).classList.remove('open');
 }
-function openNewCoinFromPrize(idx) {
-  document.getElementById('fcd-coin-drop-' + idx).classList.remove('open');
-  document.getElementById('fcd-coin-sel-' + idx).classList.remove('open');
-  // reuse the coin drawer flow
-  _coinDrawerRuleId = null;
-  _prizeTargetIdx = idx;
-  renderCoinDrawerList();
-  switchCoinDrawerTab('new');
-  const bar = document.querySelector('.steps-bar');
-  const top = bar ? bar.getBoundingClientRect().bottom : 0;
-  const overlay = document.getElementById('coinDrawerOverlay');
-  overlay.style.top = top + 'px';
-  overlay.classList.add('open');
-}
 let _prizeTargetIdx = null;
+let _fcdNewCoinType = 'in';
+
+function openNewCoinFromPrize(idx) {
+  document.getElementById('fcd-coin-drop-' + idx)?.classList.remove('open');
+  document.getElementById('fcd-coin-sel-' + idx)?.classList.remove('open');
+  _prizeTargetIdx = idx;
+  // reset form
+  document.getElementById('fcdCoinName').value = '';
+  document.getElementById('fcdCoinEm').textContent = '';
+  document.getElementById('fcdCoinEm').style.display = 'none';
+  const descEl = document.getElementById('fcdCoinDesc'); if(descEl) descEl.value = '';
+  document.getElementById('fcdAdvancedBody')?.classList.remove('open');
+  const chev = document.getElementById('fcdAdvChev'); if(chev) chev.style.transform = '';
+  fcdSelectCoinType('in');
+  // slide in coin view within same drawer
+  document.getElementById('fcdCoinView').classList.add('open');
+  document.getElementById('fcdMainFooter').style.display = 'none';
+}
+function closeFcdCoinView() {
+  document.getElementById('fcdCoinView').classList.remove('open');
+  document.getElementById('fcdMainFooter').style.display = '';
+}
+function fcdSelectCoinType(type) {
+  _fcdNewCoinType = type;
+  ['in','promo'].forEach(t => {
+    document.getElementById('fcdNewType' + (t==='in'?'CoinIn':'Promo')).classList.toggle('active', t===type);
+    document.getElementById('fcdNewRadio' + (t==='in'?'In':'Promo')).classList.toggle('active', t===type);
+  });
+  const info = document.getElementById('fcdCoinInfoText');
+  if (info) info.innerHTML = type==='in'
+    ? '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.'
+    : '<strong>Promo Coin</strong> is used as an internal promotion currency distributed as prizes within the promotion scope.';
+}
+function toggleFcdEmOpts() {
+  const opts = document.getElementById('fcdEmOpts');
+  opts.classList.toggle('open');
+  setTimeout(()=>{ document.addEventListener('click', function h(e){ if(!opts.contains(e.target)){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); }, 10);
+}
+function pickFcdEm(e, em) {
+  e.stopPropagation();
+  const el = document.getElementById('fcdCoinEm');
+  el.textContent = em; el.style.display = 'block';
+  document.getElementById('fcdEmOpts').classList.remove('open');
+}
+function toggleFcdAdvanced() {
+  const body = document.getElementById('fcdAdvancedBody');
+  const chev = document.getElementById('fcdAdvChev');
+  body?.classList.toggle('open');
+  if (chev) chev.style.transform = body?.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+function saveFcdCoin() {
+  const nameEl = document.getElementById('fcdCoinName');
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
+  nameEl.style.borderColor = '';
+  const em = document.getElementById('fcdCoinEm').textContent || '🪙';
+  const typeMap = {in:{type:'coin-in',label:'Coin In'}, promo:{type:'promo',label:'Promo Coin'}};
+  const ct = typeMap[_fcdNewCoinType] || typeMap.in;
+  // add to allPrizeCoins pool
+  allPrizeCoins.push({em, name, type: ct.type, typeLabel: ct.label});
+  const newIdx = allPrizeCoins.length - 1;
+  // apply to the prize row that triggered this
+  if (_prizeTargetIdx !== null) selectPrizeCoin(_prizeTargetIdx, newIdx);
+  closeFcdCoinView();
+  toast(`${em} "${name}" created & applied`);
+}
 
 // close coin dropdowns when clicking outside
 document.addEventListener('click', e => {
