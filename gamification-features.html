@@ -713,9 +713,14 @@ function selectTrigger(tcIdx, name, desc, tags) {
   const id = 'rule-'+(++ruleCounter);
   selectedTriggers.push(id);
 
-  // mark template as selected
+  // briefly flash "✓ Selected" feedback on the button then revert
   const card = document.getElementById('tc-'+tcIdx);
-  if(card){ card.style.borderColor='var(--green)'; card.style.background='#FAFFFE'; card.querySelector('.tpl-btn').textContent='✓ Selected'; card.querySelector('.tpl-btn').style.color='var(--green)'; card.querySelector('.tpl-btn').style.borderColor='var(--green)'; }
+  if(card){
+    const btn = card.querySelector('.tpl-btn');
+    btn.textContent='✓ Added!';
+    btn.style.cssText='color:var(--green);border-color:var(--green);background:var(--green-light);';
+    setTimeout(()=>{ btn.textContent='Select Trigger'; btn.style.cssText=''; }, 1200);
+  }
 
   document.getElementById('selRulesLabel').style.display='block';
 
