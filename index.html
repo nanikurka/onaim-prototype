@@ -68,14 +68,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .dots-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-sub);}
 
 /* ══ STEP PILLS ══ */
-.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:18px;}
-.step-pill{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);cursor:pointer;white-space:nowrap;transition:border-color .15s;}
-.step-pill:hover{border-color:var(--green);}
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:20px;}
+.step-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.step-pill:hover{color:var(--text-sub);}
 .step-pill.active{background:var(--green);border-color:var(--green);color:#fff;font-weight:600;}
-.step-pill.done{border-color:var(--green);color:var(--green);}
-.step-n{width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.1);color:inherit;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.step-pill.active .step-n{background:rgba(255,255,255,.25);}
-.step-sep{color:#CBD5E0;font-size:16px;padding:0 2px;line-height:1;}
+.step-pill.done{color:var(--green);}
+.step-n{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.08);color:inherit;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-pill.active .step-n{background:rgba(255,255,255,.3);}
+.step-pill.done .step-n{background:transparent;}
+.step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 2px;}
+.step-sep svg{width:14px;height:14px;}
 
 /* ══ CARD ══ */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:18px;}
@@ -387,12 +389,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       General Details
     </div>
-    <span class="step-sep">›</span>
+    <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
     <div class="step-pill" id="tab-participation" onclick="scrollTo('sec-participation','participation')">
       <span class="step-n" id="spn-participation">2</span>
       Participation Rules
     </div>
-    <span class="step-sep">›</span>
+    <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
     <div class="step-pill" id="tab-features" onclick="scrollTo('sec-features','features')">
       <span class="step-n">3</span>
       Promotion Features
