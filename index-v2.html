@@ -400,8 +400,8 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-step{display:flex;align-items:center;gap:6px;padding:12px 0;font-size:12.5px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;}
 .fcd-step.active{color:var(--text);font-weight:600;}
 .fcd-step.done .fcd-step-n{background:var(--green);color:#fff;border-color:var(--green);}
-.fcd-step-n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D1D5DB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--text-muted);background:#fff;transition:all .15s;}
-.fcd-step.active .fcd-step-n{border-color:var(--green);color:var(--green);}
+.fcd-step-n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D1D5DB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#9CA3AF;background:#E5E8EC;transition:all .15s;}
+.fcd-step.active .fcd-step-n{background:#E5E8EC;border-color:#D1D5DB;color:#6B7280;}
 .fcd-step-sep{color:#D1D5DB;margin:0 8px;font-size:14px;}
 /* body */
 .fcd-body{flex:1;overflow-y:auto;padding:20px 24px;}
@@ -897,22 +897,22 @@ input[type="date"].fi:valid{color:var(--text);}
     <!-- Step tabs -->
     <div class="fcd-steps">
       <div class="fcd-step active" id="fcd-step-entry" onclick="goFcdStep('entry')">
-        <div class="fcd-step-n" id="fcd-sn-entry">1</div>
+        <div class="fcd-step-n" id="fcd-sn-entry">!</div>
         How to Enter
       </div>
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-pool" onclick="goFcdStep('pool')">
-        <div class="fcd-step-n" id="fcd-sn-pool">2</div>
+        <div class="fcd-step-n" id="fcd-sn-pool">!</div>
         Prize Coins
       </div>
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-rankings" onclick="goFcdStep('rankings')">
-        <div class="fcd-step-n" id="fcd-sn-rankings">3</div>
+        <div class="fcd-step-n" id="fcd-sn-rankings">!</div>
         Rankings
       </div>
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-schedule" onclick="goFcdStep('schedule')">
-        <div class="fcd-step-n" id="fcd-sn-schedule">4</div>
+        <div class="fcd-step-n" id="fcd-sn-schedule">!</div>
         Schedule
       </div>
     </div>
@@ -1989,7 +1989,7 @@ function goFcdStep(step) {
       n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
       n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
     } else {
-      n.textContent = String(i + 1);
+      n.textContent = '!';
       n.style.background = ''; n.style.color = ''; n.style.border = '';
     }
   });
