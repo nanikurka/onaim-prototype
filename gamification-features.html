@@ -162,9 +162,12 @@ input[type="date"].fi:valid{color:var(--text);}
 .seg-head{display:flex;align-items:center;gap:6px;padding:7px 10px;font-size:11.5px;font-weight:600;border-bottom:1px solid var(--border);}
 .seg-head.inc{background:#F0FDF4;color:#15803D;}
 .seg-head.exc{background:#FFF5F5;color:#B91C1C;}
-.seg-search{padding:5px 8px;border-bottom:1px solid var(--border);}
-.seg-search input{width:100%;border:1px solid var(--border-input);border-radius:4px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;background:var(--surface);color:var(--text);}
+.seg-search{padding:5px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.seg-search input{flex:1;border:1px solid var(--border-input);border-radius:4px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;background:var(--surface);color:var(--text);}
 .seg-search input:focus{border-color:var(--green);}
+.seg-check-all{width:15px;height:15px;border:1.5px solid #CBD5E0;border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.seg-check-all.chk{background:var(--green);border-color:var(--green);}
+.seg-check-all.chk::after{content:'';display:block;width:8px;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat;}
 .seg-list{max-height:120px;overflow-y:auto;}
 .seg-row{display:flex;align-items:center;gap:7px;padding:6px 10px;border-bottom:1px solid #F4F6F8;cursor:pointer;}
 .seg-row:last-child{border-bottom:none;}
@@ -480,7 +483,7 @@ input[type="date"].fi:valid{color:var(--text);}
                 <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                 Include Segment
               </div>
-              <div class="seg-search"><input type="text" placeholder="Search" /></div>
+              <div class="seg-search"><div class="seg-check-all" onclick="toggleAllSegs(this)"></div><input type="text" placeholder="Search" /></div>
               <div class="seg-list">
                 <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
                 <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
@@ -493,7 +496,7 @@ input[type="date"].fi:valid{color:var(--text);}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#B91C1C" stroke-width="2"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="#B91C1C" stroke-width="2"/></svg>
                 Exclude Segment
               </div>
-              <div class="seg-search"><input type="text" placeholder="Search" /></div>
+              <div class="seg-search"><div class="seg-check-all" onclick="toggleAllSegs(this)"></div><input type="text" placeholder="Search" /></div>
               <div class="seg-list">
                 <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
                 <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
@@ -697,6 +700,12 @@ function validateGeneral(){
   }
 }
 function toggleSeg(row){ row.querySelector('.seg-cb').classList.toggle('chk'); }
+function toggleAllSegs(checkAllEl){
+  checkAllEl.classList.toggle('chk');
+  const checked = checkAllEl.classList.contains('chk');
+  const panel = checkAllEl.closest('.seg-panel');
+  panel.querySelectorAll('.seg-cb').forEach(cb => cb.classList.toggle('chk', checked));
+}
 function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
 
 /* ── Trigger selection ── */
