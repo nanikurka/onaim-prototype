@@ -620,11 +620,15 @@ function goToStep(secId, tabKey) {
   const sec = document.getElementById(secId);
   const contentEl = document.querySelector('.content');
   if (sec && contentEl) {
-    const secRect = sec.getBoundingClientRect();
-    const contentRect = contentEl.getBoundingClientRect();
     const stepsBarH = document.querySelector('.steps-bar')?.offsetHeight || 0;
-    const scrollTarget = contentEl.scrollTop + (secRect.top - contentRect.top) - stepsBarH - 16;
-    contentEl.scrollTo({top: scrollTarget, behavior: 'smooth'});
+    // Calculate offset of section relative to content scroll container
+    let offsetTop = 0;
+    let el = sec;
+    while (el && el !== contentEl) {
+      offsetTop += el.offsetTop;
+      el = el.offsetParent;
+    }
+    contentEl.scrollTo({top: offsetTop - stepsBarH - 16, behavior: 'smooth'});
   }
   const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
   const order = ['general','participation','features'];
