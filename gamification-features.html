@@ -69,14 +69,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* ══ STEP PILLS ══ */
 .steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:20px;}
-.step-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .15s;}
 .step-pill:hover{color:var(--text-sub);}
-.step-pill.active{background:var(--green);border-color:var(--green);color:#fff;font-weight:600;}
-.step-pill.done{color:var(--green);}
-.step-n{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.08);color:inherit;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.step-pill.active .step-n{background:rgba(255,255,255,.3);}
-.step-pill.done .step-n{background:transparent;}
-.step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 2px;}
+.step-pill.active{background:#fff;border:1px solid var(--border);color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.step-pill.done{color:var(--text-muted);}
+.step-n{width:20px;height:20px;border-radius:50%;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-pill.active .step-n{background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;}
+.step-pill.done .step-n{background:var(--green);color:#fff;}
+.step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 4px;}
 .step-sep svg{width:14px;height:14px;}
 
 /* ══ CARD ══ */
@@ -386,7 +386,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
   <!-- Steps -->
   <div class="steps">
     <div class="step-pill active" id="tab-general" onclick="scrollTo('sec-general','general')">
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="step-n"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
       General Details
     </div>
     <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
@@ -613,8 +613,9 @@ function scrollTo(secId, tabKey) {
     if (!pill) return;
     pill.classList.remove('active','done');
     const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
-    if (idx < activeIdx) { pill.classList.add('done'); const n=pill.querySelector('.step-n'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
-    else if (idx === activeIdx) pill.classList.add('active');
+    const n=pill.querySelector('.step-n');
+    if (idx < activeIdx) { pill.classList.add('done'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
+    else if (idx === activeIdx) { pill.classList.add('active'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
   });
 }
 
