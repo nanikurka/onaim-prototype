@@ -444,7 +444,7 @@ input[type="date"].fi:valid{color:var(--text);}
         <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
         <div class="step-pill" id="tab-features" onclick="goToStep('sec-features','features')">
           <span class="step-n" id="spn-features">3</span>
-          Promotion Features & prizes<span id="feat-count-badge" style="display:none;margin-left:5px;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;"></span>
+          Promotion Features & prizes
         </div>
       </div>
     </div>
@@ -761,12 +761,13 @@ function activateTab(tabKey) {
     pill.classList.remove('active','done');
     if (idx === activeIdx) {
       pill.classList.add('active');
-      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
     } else if (idx < activeIdx) {
       pill.classList.add('done');
-      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
-    } else {
-      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
+    }
+    if (n) {
+      n.innerHTML = isValidated ? checkSvgStr : nums[key];
+      n.style.background = isValidated ? 'var(--green)' : '';
+      n.style.color = isValidated ? '#fff' : '';
     }
   });
 }
@@ -829,10 +830,10 @@ function validateGeneral(){
   const n = document.getElementById('spn-general');
   const pill = document.getElementById('tab-general');
   if(filled){
-    if(n) n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    if(n){ n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; n.style.background='var(--green)'; n.style.color='#fff'; }
     pill?.classList.add('validated');
   } else {
-    if(n) n.textContent = '1';
+    if(n){ n.textContent = '1'; n.style.background=''; n.style.color=''; }
     pill?.classList.remove('validated');
   }
 }
@@ -1189,27 +1190,15 @@ const featureBgs = {
 
 function validateFeatures() {
   const cards = document.querySelectorAll('.feature-card');
-  const total = cards.length;
   const hasConfigured = [...cards].some(c => c.querySelector('.feature-card-status.configured'));
   const pill = document.getElementById('tab-features');
   const n = document.getElementById('spn-features');
-  const badge = document.getElementById('feat-count-badge');
-  // count badge
-  if (total > 0) {
-    badge.style.display = 'inline-block';
-    badge.textContent = total;
-    badge.style.background = hasConfigured ? '#DCFCE7' : '#E5E8EC';
-    badge.style.color = hasConfigured ? '#059669' : 'var(--text-muted)';
-  } else {
-    badge.style.display = 'none';
-  }
-  // tab validation
   if (hasConfigured) {
     pill?.classList.add('validated');
-    if (n) n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    if (n) { n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; n.style.background = 'var(--green)'; n.style.color = '#fff'; }
   } else {
     pill?.classList.remove('validated');
-    if (n) n.textContent = '3';
+    if (n) { n.textContent = '3'; n.style.background = ''; n.style.color = ''; }
   }
 }
 
