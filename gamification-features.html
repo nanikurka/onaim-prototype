@@ -268,18 +268,20 @@ input[type="date"].fi:valid{color:var(--text);}
 .r-icon-btn.del:hover{background:var(--red-light);}
 
 /* coin row inside rule */
-.coin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 16px;border-top:1px solid var(--border);background:#FAFBFC;}
-.coin-row-left{display:flex;align-items:center;gap:8px;}
-.coin-dot{width:22px;height:22px;border-radius:50%;background:#EFF6FF;border:1.5px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.coin-dot svg{color:#3B82F6;}
-.coin-row-label{font-size:12px;font-weight:500;color:var(--text-sub);}
-.coin-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:12px;font-size:11.5px;font-weight:600;background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE;}
+.coin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:#F4F6F8;border-radius:0 0 var(--r) var(--r);}
+.coin-row-left{display:flex;align-items:center;gap:10px;}
+.coin-gem-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.coin-dot{display:none;}
+.coin-row-name{font-size:13px;font-weight:600;color:var(--text);}
+.coin-pill{display:inline-flex;align-items:center;padding:3px 12px;border-radius:20px;font-size:11.5px;font-weight:600;background:#EDE9FE;color:#6D28D9;border:none;}
 .coin-row-empty{font-size:12px;color:var(--text-muted);}
 .coin-attach-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .coin-attach-btn:hover{color:var(--green-dark);}
-.coin-row-actions{display:flex;align-items:center;gap:3px;}
-.c-icon-btn{width:24px;height:24px;border-radius:4px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .12s,color .12s;}
-.c-icon-btn:hover{background:var(--bg);color:var(--text);}
+.coin-row-actions{display:flex;align-items:center;gap:6px;}
+.c-icon-btn{width:28px;height:28px;border-radius:6px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6B7280;transition:background .12s,color .12s;}
+.c-icon-btn:hover{background:#E5E7EB;color:var(--text);}
+.c-icon-btn-del{width:24px;height:24px;border-radius:50%;background:#4B5563;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .12s;}
+.c-icon-btn-del:hover{background:#374151;}
 
 /* ══ COIN PICKER PANEL (inline, hidden — content moved to drawer) ══ */
 .coin-picker-panel{display:none;}
@@ -998,18 +1000,20 @@ function selectTrigger(tcIdx, name, desc, tags) {
     <!-- Coin row: attached state -->
     <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
       <div class="coin-row-left">
-        <div class="coin-dot">
-          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <div class="coin-gem-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
         </div>
-        <span class="coin-row-label">Coin Name</span>
-        <span class="coin-pill" id="coin-pill-name-${id}">Promo Coin</span>
+        <div>
+          <div class="coin-row-name" id="coin-pill-name-${id}">Coin Name</div>
+          <span class="coin-pill" id="coin-pill-type-${id}">Promo Coin</span>
+        </div>
       </div>
       <div class="coin-row-actions">
         <button class="c-icon-btn" title="Edit coin" onclick="editCoin('${id}')">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
         </button>
-        <button class="c-icon-btn" title="Detach coin" onclick="detachCoin('${id}')">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        <button class="c-icon-btn-del" title="Detach coin" onclick="detachCoin('${id}')">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
     </div>
@@ -1127,7 +1131,7 @@ function renderCoinDrawerList() {
   grid.innerHTML = coinTemplates.map((c, i) => `
     <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
       <div class="cd-coin-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
       </div>
       <div class="cd-coin-info">
         <div class="cd-coin-name">${c.name}</div>
@@ -1192,6 +1196,8 @@ function saveDrawerCoin() {
   const id = _coinDrawerRuleId;
   if (id) {
     document.getElementById(`coin-pill-name-${id}`).textContent = name;
+    const typeEl = document.getElementById(`coin-pill-type-${id}`);
+    if (typeEl) typeEl.textContent = _coinDrawerType === 'in' ? 'Coin In' : 'Promo Coin';
     document.getElementById(`coin-row-attached-${id}`).style.display = 'flex';
     document.getElementById(`coin-row-empty-${id}`).style.display = 'none';
   }
