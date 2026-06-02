@@ -868,16 +868,22 @@ let pendingColorIdx = null;
 let pendingLabelName = null;
 
 function renderLabelChips(){
-  const row = document.getElementById('labelsRow');
-  row.querySelectorAll('.lchip').forEach(c=>c.remove());
-  const btn = document.getElementById('addLabelBtn');
+  let chips = document.getElementById('labelChipsContainer');
+  if(!chips){
+    chips = document.createElement('div');
+    chips.id = 'labelChipsContainer';
+    chips.style.cssText = 'display:flex;align-items:center;gap:7px;flex-wrap:wrap;';
+    const row = document.getElementById('labelsRow');
+    row.appendChild(chips);
+  }
+  chips.innerHTML = '';
   selectedLabels.forEach(lbl=>{
     const c = labelColors[lbl.colorIdx];
     const chip = document.createElement('div');
     chip.className='lchip';
     chip.style.cssText=`background:${c.bg};color:${c.color};border:1px solid ${c.border};`;
     chip.innerHTML=`${lbl.name}<span class="lchip-x" onclick="removeLabel('${lbl.name}',event)"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>`;
-    row.insertBefore(chip, btn);
+    chips.appendChild(chip);
   });
 }
 function removeLabel(name,e){
