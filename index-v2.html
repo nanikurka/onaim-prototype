@@ -1987,7 +1987,7 @@ function goFcdStep(step) {
     const panel = document.getElementById('fcd-panel-' + s);
     const n = document.getElementById('fcd-sn-' + s);
     if (!btn || !panel || !n) return;
-    const isDone = _fcdStepsDone[s];
+    const isDone = !!_fcdStepsDone[s];
     const isActive = s === step;
     btn.classList.toggle('active', isActive);
     btn.classList.toggle('done', !isActive && isDone);
