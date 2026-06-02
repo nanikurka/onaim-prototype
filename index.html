@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OnAim — Create New Promotion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --green:#00C37F;
+  --green-light:#E8F8F2;
+  --green-dark:#009E67;
+  --red:#F04438;
+  --red-light:#FFF2EE;
+  --blue:#1570EF;
+  --sidebar:#1B2A38;
+  --sidebar-text:#8A9BAD;
+  --sidebar-label:#4E6070;
+  --bg:#F4F6F8;
+  --surface:#FFFFFF;
+  --border:#E5E8EC;
+  --border-input:#D1D5DB;
+  --text:#111927;
+  --text-sub:#4B5563;
+  --text-muted:#9CA3AF;
+  --r:10px;
+  --r-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;display:flex;height:100vh;overflow:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:210px;flex-shrink:0;background:var(--sidebar);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.sidebar::-webkit-scrollbar{width:0;}
+
+.sb-logo{padding:16px 14px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:4px;}
+.sb-logo-icon{width:26px;height:26px;}
+.sb-logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px;}
+
+.sb-section{padding:8px 0 2px;}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--sidebar-label);padding:0 14px 3px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:12.5px;font-weight:400;color:var(--sidebar-text);cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;overflow:hidden;}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#C9D6E0;}
+.sb-item.active{color:#fff;}
+.sb-item svg{flex-shrink:0;opacity:.65;}
+.sb-item.active svg{opacity:1;}
+.sb-chev{margin-left:auto;opacity:.4;}
+.sb-div{height:1px;background:rgba(255,255,255,.06);margin:4px 0;}
+.sb-user{padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);margin-top:auto;}
+.sb-email{font-size:11px;color:var(--sidebar-text);margin-bottom:8px;}
+.sb-signout{width:100%;padding:6px;border-radius:5px;border:none;background:#C0392B;color:#fff;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.content{flex:1;overflow-y:auto;padding:20px 28px 48px;}
+
+/* back + header */
+.back{font-size:12.5px;color:var(--text-sub);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;}
+.back:hover{color:var(--text);}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.page-title{font-size:20px;font-weight:700;}
+.page-hdr-r{display:flex;align-items:center;gap:8px;}
+.tmpl-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:none;}
+.tmpl-link:hover{text-decoration:underline;}
+.dots-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-sub);}
+
+/* ══ STEP PILLS ══ */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:18px;}
+.step-pill{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);cursor:pointer;white-space:nowrap;transition:border-color .15s;}
+.step-pill:hover{border-color:var(--green);}
+.step-pill.active{background:var(--green);border-color:var(--green);color:#fff;font-weight:600;}
+.step-pill.done{border-color:var(--green);color:var(--green);}
+.step-n{width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.1);color:inherit;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-pill.active .step-n{background:rgba(255,255,255,.25);}
+.step-sep{color:#CBD5E0;font-size:16px;padding:0 2px;line-height:1;}
+
+/* ══ CARD ══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:18px;}
+.card-body{padding:22px 24px;}
+.card-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.card-sub{font-size:12.5px;color:var(--text-sub);margin-bottom:18px;}
+
+/* ══ FORM ══ */
+.form-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.form-col{padding-right:28px;}
+.form-col+.form-col{padding-right:0;padding-left:28px;border-left:1px solid var(--border);}
+.sec-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:12px;}
+.fg{margin-bottom:14px;}
+.fg:last-child{margin-bottom:0;}
+.fl{font-size:12.5px;font-weight:500;color:var(--text);margin-bottom:5px;display:block;}
+.fl sup{color:var(--red);}
+.fi,.fsel{width:100%;border:1px solid var(--border-input);border-radius:var(--r-sm);padding:8px 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.fi::placeholder{color:var(--text-muted);}
+.fi:focus,.fsel:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fi.cal{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E") no-repeat right 10px center var(--surface);padding-right:34px;}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.add-link{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--text-sub);cursor:pointer;margin-top:2px;}
+.add-link:hover{color:var(--text);}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+
+/* toggle */
+.sw-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.sw{width:38px;height:21px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;flex-shrink:0;margin-top:1px;transition:background .2s;}
+.sw.on{background:var(--green);}
+.sw::after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+.sw.on::after{transform:translateX(17px);}
+.sw-lbl{font-size:13px;font-weight:600;}
+.sw-desc{font-size:12px;color:var(--text-sub);margin-top:1px;}
+
+/* labels */
+.labels-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:14px 24px;border-top:1px solid var(--border);}
+.lchip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;}
+.lchip.green{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;}
+.lchip.purple{background:#F5F3FF;color:#7C3AED;border:1px solid #C4B5FD;}
+.lchip-x{cursor:pointer;opacity:.5;display:flex;align-items:center;}
+.lchip-x:hover{opacity:1;}
+
+/* radio */
+.radio-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.radio-opt{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);cursor:pointer;}
+.radio-opt.sel{border-color:var(--green);}
+.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-input);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;background:var(--surface);transition:border-color .15s;}
+.radio-opt.sel .rdot{border-color:var(--green);}
+.rdot::after{display:none;content:'';width:7px;height:7px;border-radius:50%;background:var(--green);}
+.radio-opt.sel .rdot::after{display:block;}
+.r-title{font-size:13px;font-weight:600;}
+.r-desc{font-size:11.5px;color:var(--text-sub);}
+
+/* segment panels */
+.seg-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.seg-panel{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.seg-head{display:flex;align-items:center;gap:6px;padding:7px 10px;font-size:11.5px;font-weight:600;border-bottom:1px solid var(--border);}
+.seg-head.inc{background:#F0FDF4;color:#15803D;}
+.seg-head.exc{background:#FFF5F5;color:#B91C1C;}
+.seg-search{padding:5px 8px;border-bottom:1px solid var(--border);}
+.seg-search input{width:100%;border:1px solid var(--border-input);border-radius:4px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;background:var(--surface);color:var(--text);}
+.seg-search input:focus{border-color:var(--green);}
+.seg-list{max-height:120px;overflow-y:auto;}
+.seg-row{display:flex;align-items:center;gap:7px;padding:6px 10px;border-bottom:1px solid #F4F6F8;cursor:pointer;}
+.seg-row:last-child{border-bottom:none;}
+.seg-row:hover{background:var(--bg);}
+.seg-cb{width:14px;height:14px;border:1.5px solid var(--border-input);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface);transition:all .12s;}
+.seg-cb.chk{background:var(--green);border-color:var(--green);}
+.seg-cb.chk::after{content:'';display:block;width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
+.seg-name{font-size:12px;font-weight:500;flex:1;}
+.seg-cnt{font-size:11px;color:var(--text-muted);}
+
+.lock-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:8px 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px;}
+.cb-row{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.cbox{width:15px;height:15px;border:1.5px solid var(--border-input);border-radius:3px;flex-shrink:0;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.cbox.chk{background:var(--green);border-color:var(--green);}
+.cbox.chk::after{content:'';display:block;width:8px;height:4.5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
+.cb-lbl{font-size:12.5px;color:var(--text);}
+
+/* ══ PARTICIPATION SECTION ══ */
+.sec-heading{font-size:15px;font-weight:700;margin-bottom:2px;}
+.sec-heading-sub{font-size:12.5px;color:var(--text-sub);margin-bottom:16px;}
+
+/* freq templates header */
+.freq-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;}
+
+/* trigger template cards */
+.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.tpl-card{border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:8px;transition:border-color .15s,box-shadow .15s;}
+.tpl-card:hover{border-color:var(--green);box-shadow:0 2px 8px rgba(0,195,127,.1);}
+.tpl-card-top{display:flex;align-items:center;justify-content:space-between;}
+.tpl-name{font-size:13px;font-weight:600;color:var(--text);}
+.tpl-eye{color:var(--text-muted);cursor:pointer;display:flex;align-items:center;}
+.tpl-eye:hover{color:var(--text);}
+.tpl-desc{font-size:12px;color:var(--text-sub);line-height:1.45;flex:1;}
+.tpl-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tpl-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;background:#F4F6F8;color:#4B5563;border:1px solid #E5E8EC;}
+.tpl-btn{width:100%;padding:7px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;transition:background .12s,border-color .12s,color .12s;text-align:center;}
+.tpl-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* bottom row */
+.tpl-bottom-row{display:flex;align-items:center;justify-content:space-between;padding-top:2px;}
+.browse-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:none;}
+.browse-link:hover{text-decoration:underline;}
+.create-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;}
+.create-btn:hover{background:var(--green-dark);}
+
+/* ══ SELECTED RULES ══ */
+.sel-rules-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:18px 0 10px;}
+
+/* rule card */
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow);}
+.rule-card-body{padding:14px 16px;}
+.rule-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px;}
+.rule-name{font-size:13px;font-weight:700;color:var(--text);}
+.rule-desc{font-size:12px;color:var(--text-sub);margin-bottom:8px;}
+.rule-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.rule-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;background:#F4F6F8;color:#4B5563;border:1px solid #E5E8EC;}
+.rule-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.r-icon-btn{width:28px;height:28px;border-radius:5px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .12s,color .12s;}
+.r-icon-btn:hover{background:var(--bg);color:var(--text);}
+.r-icon-btn.del svg{color:var(--red);}
+.r-icon-btn.del:hover{background:var(--red-light);}
+
+/* coin row inside rule */
+.coin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 16px;border-top:1px solid var(--border);background:#FAFBFC;}
+.coin-row-left{display:flex;align-items:center;gap:8px;}
+.coin-dot{width:22px;height:22px;border-radius:50%;background:#EFF6FF;border:1.5px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.coin-dot svg{color:#3B82F6;}
+.coin-row-label{font-size:12px;font-weight:500;color:var(--text-sub);}
+.coin-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:12px;font-size:11.5px;font-weight:600;background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE;}
+.coin-row-empty{font-size:12px;color:var(--text-muted);}
+.coin-attach-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
+.coin-attach-btn:hover{color:var(--green-dark);}
+.coin-row-actions{display:flex;align-items:center;gap:3px;}
+.c-icon-btn{width:24px;height:24px;border-radius:4px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .12s,color .12s;}
+.c-icon-btn:hover{background:var(--bg);color:var(--text);}
+
+/* ══ COIN PICKER PANEL ══ */
+.coin-picker-panel{display:none;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface);animation:slideDown .15s ease;}
+.coin-picker-panel.open{display:block;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.cpp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cpp-title{font-size:12.5px;font-weight:700;color:var(--text);}
+.cpp-close{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.cpp-close:hover{background:var(--bg);}
+.coin-tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.coin-tpl{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 12px;cursor:pointer;background:var(--surface);transition:border-color .15s,background .12s;}
+.coin-tpl:hover{border-color:var(--green);background:var(--green-light);}
+.coin-tpl-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.coin-tpl-em{width:28px;height:28px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.coin-tpl:hover .coin-tpl-em{background:rgba(0,195,127,.12);}
+.coin-tpl-name{font-size:12px;font-weight:700;color:var(--text);}
+.coin-tpl-desc{font-size:11px;color:var(--text-sub);line-height:1.4;margin-bottom:5px;}
+.coin-tpl-rate{font-size:10.5px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:4px;display:inline-block;}
+.cpp-div{display:flex;align-items:center;gap:8px;margin:10px 0;}
+.cpp-div::before,.cpp-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.cpp-div span{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+.cpp-scratch{width:100%;padding:8px;border-radius:var(--r-sm);border:1.5px dashed var(--border);background:none;font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .15s,color .15s,background .12s;}
+.cpp-scratch:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* ══ COIN FORM ══ */
+.coin-form-panel{display:none;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface);animation:slideDown .15s ease;}
+.coin-form-panel.open{display:block;}
+.cfp-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.cfp-grid{display:grid;grid-template-columns:56px 1fr 1fr;gap:10px;align-items:end;margin-bottom:10px;}
+.cfp-lbl{font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:4px;display:block;}
+.cfp-fi{width:100%;border:1px solid var(--border-input);border-radius:var(--r-sm);padding:7px 10px;font-size:12.5px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;}
+.cfp-fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.cfp-em-btn{width:44px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border-input);background:var(--surface);font-size:21px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .15s;}
+.cfp-em-btn:hover{border-color:var(--green);}
+.em-opts{display:none;flex-wrap:wrap;gap:3px;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px;z-index:30;box-shadow:0 4px 16px rgba(0,0,0,.12);width:190px;}
+.em-opts.open{display:flex;}
+.em-o{font-size:18px;cursor:pointer;padding:3px;border-radius:4px;line-height:1;}
+.em-o:hover{background:var(--bg);}
+.rate-row{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-bottom:12px;}
+.rate-sep{font-size:12px;color:var(--text-muted);text-align:center;padding-top:16px;}
+.cfp-actions{display:flex;gap:7px;justify-content:flex-end;}
+.cfp-back{padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.cfp-back:hover{background:var(--bg);}
+.cfp-cancel{padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.cfp-cancel:hover{background:var(--bg);}
+.cfp-save{padding:7px 14px;border-radius:var(--r-sm);border:none;background:var(--green);font-size:12px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.cfp-save:hover{background:var(--green-dark);}
+
+/* ══ FOOTER ══ */
+.page-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;margin-bottom:24px;}
+.btn-draft{padding:8px 18px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.btn-draft:hover{background:var(--bg);}
+.btn-next{padding:8px 18px;border-radius:var(--r-sm);border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-next:hover{background:var(--green-dark);}
+
+/* toast */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);background:#1B2A38;color:#fff;padding:9px 16px;border-radius:8px;font-size:12.5px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:all .22s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="sb-logo">
+    <svg class="sb-logo-icon" viewBox="0 0 26 26" fill="none">
+      <circle cx="13" cy="13" r="12" fill="#00C37F" opacity=".15"/>
+      <circle cx="13" cy="8" r="3" fill="#00C37F"/>
+      <circle cx="8" cy="18" r="3" fill="#00C37F"/>
+      <circle cx="18" cy="18" r="3" fill="#00C37F"/>
+      <line x1="13" y1="8" x2="8" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+      <line x1="13" y1="8" x2="18" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+      <line x1="8" y1="18" x2="18" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+    </svg>
+    <span class="sb-logo-text">OnAim</span>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>Dashboard</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>Transactions</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Player Management</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Player list</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Games</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Balance Bo...</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Segments</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Configurations</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Promotion...</div>
+    <div class="sb-item active"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Promoti...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Missions<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Games</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Leader...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Reward...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Raffle</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Milesto...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Coins<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Withdra...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Aggreg...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">User Management</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Users</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Action Logs</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>Roles</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Permission...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 2H3v16h5l3 3 3-3h7V2z"/></svg>Domains</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Other</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-email">Superadmin@test.com</div>
+    <button class="sb-signout">Sign out</button>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+<div class="content">
+
+  <div class="back" onclick="toast('Back to Promotions')">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Promotions
+  </div>
+
+  <div class="page-hdr">
+    <div class="page-title">Create New Promotion</div>
+    <div class="page-hdr-r">
+      <a class="tmpl-link">Braws Promotion Templates</a>
+      <button class="dots-btn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step-pill active" id="tab-general" onclick="scrollTo('sec-general','general')">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      General Details
+    </div>
+    <span class="step-sep">›</span>
+    <div class="step-pill" id="tab-participation" onclick="scrollTo('sec-participation','participation')">
+      <span class="step-n" id="spn-participation">2</span>
+      Participation Rules
+    </div>
+    <span class="step-sep">›</span>
+    <div class="step-pill" id="tab-features" onclick="scrollTo('sec-features','features')">
+      <span class="step-n">3</span>
+      Promotion Features
+    </div>
+  </div>
+
+  <!-- ══ GENERAL DETAILS ══ -->
+  <div class="card" id="sec-general">
+    <div class="card-body">
+      <div class="card-title">General Details</div>
+      <div class="card-sub">Configure name, schedule, audience, and labels for this promotion</div>
+
+      <div class="form-cols">
+        <!-- LEFT -->
+        <div class="form-col">
+          <div class="sec-lbl">Description</div>
+          <div class="fg">
+            <label class="fl">Promotion Name<sup>*</sup></label>
+            <input class="fi" placeholder="Value" />
+          </div>
+          <div class="add-link" id="addDescBtn" onclick="toggleDesc()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add description
+          </div>
+          <div id="descField" style="display:none;margin-top:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <label class="fl" style="margin-bottom:0;">Description</label>
+              <span onclick="removeDesc()" style="font-size:11.5px;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:3px;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Remove
+              </span>
+            </div>
+            <textarea class="fi" id="descTa" rows="3" placeholder="Enter description…" style="resize:vertical;"></textarea>
+          </div>
+
+          <div class="divider"></div>
+          <div class="sec-lbl">Schedule</div>
+          <div class="date-row">
+            <div class="fg"><label class="fl">Start Date<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
+            <div class="fg"><label class="fl">End Date<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
+          </div>
+
+          <div style="background:#F9FAFB;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:2px;">
+            <div class="sw-row">
+              <div class="sw on" id="testSw" onclick="toggleTest()"></div>
+              <div><div class="sw-lbl">Request Testing</div></div>
+            </div>
+            <div id="testBody" style="margin-left:48px;margin-top:-4px;">
+              <div class="sw-desc" style="margin-bottom:10px;">Run a testing window before public launch. Only testers will see the promotion during this period</div>
+              <div class="fg" style="margin-bottom:0;"><label class="fl">Test Ends (go live)<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="form-col">
+          <div class="sec-lbl">Target Audience</div>
+          <div class="radio-opts">
+            <div class="radio-opt" id="ro-all" onclick="setAudience('all')">
+              <div class="rdot" id="rd-all"></div>
+              <div><div class="r-title">All Players</div><div class="r-desc">Include everyone by default. You can optionally exclude specific segments</div></div>
+            </div>
+            <div class="radio-opt sel" id="ro-custom" onclick="setAudience('custom')">
+              <div class="rdot" id="rd-custom"></div>
+              <div><div class="r-title">Custom Segments</div><div class="r-desc">Include and exclude players based on selected segments</div></div>
+            </div>
+          </div>
+
+          <div class="seg-panels" id="segPanels">
+            <div class="seg-panel">
+              <div class="seg-head inc">
+                <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Include Segment
+              </div>
+              <div class="seg-search"><input type="text" placeholder="Search" /></div>
+              <div class="seg-list">
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+              </div>
+            </div>
+            <div class="seg-panel">
+              <div class="seg-head exc">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#B91C1C" stroke-width="2"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="#B91C1C" stroke-width="2"/></svg>
+                Exclude Segment
+              </div>
+              <div class="seg-search"><input type="text" placeholder="Search" /></div>
+              <div class="seg-list">
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lock-row">
+            <div>
+              <div style="font-size:12.5px;font-weight:600;">Lock Audience</div>
+              <div style="font-size:11.5px;color:var(--text-sub);">Lock the audience at launch. Players who change segments later won't be added or removed</div>
+            </div>
+            <div class="sw" onclick="this.classList.toggle('on')" style="margin-top:2px;"></div>
+          </div>
+
+          <div class="cb-row" onclick="toggleCb(this)">
+            <div class="cbox"></div>
+            <span class="cb-lbl">Require players to opt-in to engage in this promotion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="labels-row">
+      <div class="add-link" onclick="toast('Add label')">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Labels
+      </div>
+      <div class="lchip green">Label <span class="lchip-x" onclick="this.parentElement.remove()"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
+      <div class="lchip purple">Label <span class="lchip-x" onclick="this.parentElement.remove()"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <button class="btn-draft" onclick="toast('Draft saved')">Save as Draft</button>
+    <button class="btn-next" onclick="scrollTo('sec-participation','participation')">
+      Next: Participation Rules
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+
+  <!-- ══ PARTICIPATION RULES ══ -->
+  <div id="sec-participation">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">Participation Rules (Triggers)</div>
+        <div class="card-sub">Define how players earn points from external events like bets, deposits, or game actions</div>
+
+        <div class="freq-label">Frequently Used Templates</div>
+
+        <div class="tpl-grid">
+          <div class="tpl-card" id="tc-0">
+            <div class="tpl-card-top">
+              <div class="tpl-name">Trigger Name</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Trigger description</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Bet</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Bet amount</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(0,'Trigger Name','Trigger description',['External','Bet','Sum','Bet amount'])">Select Trigger</button>
+          </div>
+          <div class="tpl-card" id="tc-1">
+            <div class="tpl-card-top">
+              <div class="tpl-name">Trigger Name</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Trigger description</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Bet</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Bet amount</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(1,'Trigger Name','Trigger description',['External','Bet','Sum','Bet amount'])">Select Trigger</button>
+          </div>
+          <div class="tpl-card" id="tc-2">
+            <div class="tpl-card-top">
+              <div class="tpl-name">Trigger Name</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Trigger description</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Bet</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Bet amount</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(2,'Trigger Name','Trigger description',['External','Bet','Sum','Bet amount'])">Select Trigger</button>
+          </div>
+        </div>
+
+        <div class="tpl-bottom-row">
+          <a class="browse-link" onclick="toast('Browsing all templates…')">Browse All Templates</a>
+          <button class="create-btn" onclick="toast('Opening rule builder…')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create From Scratch
+          </button>
+        </div>
+      </div>
+
+      <!-- Selected Rules -->
+      <div style="padding:0 24px 20px;" id="selectedRulesSection">
+        <div class="sel-rules-label" id="selRulesLabel" style="display:none;">Selected Rules</div>
+        <div id="rulesList"></div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <button class="btn-draft" onclick="toast('Draft saved')">Save as Draft</button>
+      <button class="btn-next" onclick="toast('Moving to Promotion Features…')">
+        Next: Promotion Features
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+/* ── State ── */
+let selectedTriggers = [];
+let ruleCounter = 0;
+
+/* ── Step scroll ── */
+function scrollTo(secId, tabKey) {
+  document.getElementById(secId)?.scrollIntoView({behavior:'smooth',block:'start'});
+  const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
+  const order = ['general','participation','features'];
+  Object.entries(map).forEach(([key, id]) => {
+    const pill = document.getElementById(id);
+    if (!pill) return;
+    pill.classList.remove('active','done');
+    const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
+    if (idx < activeIdx) { pill.classList.add('done'); const n=pill.querySelector('.step-n'); if(n) n.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; }
+    else if (idx === activeIdx) pill.classList.add('active');
+  });
+}
+
+/* ── General Details ── */
+function toggleDesc() {
+  const f=document.getElementById('descField'), b=document.getElementById('addDescBtn');
+  f.style.display='block'; b.style.display='none';
+}
+function removeDesc() {
+  document.getElementById('descField').style.display='none';
+  document.getElementById('addDescBtn').style.display='inline-flex';
+  document.getElementById('descTa').value='';
+}
+let testOn=true;
+function toggleTest(){
+  testOn=!testOn;
+  document.getElementById('testSw').classList.toggle('on',testOn);
+  document.getElementById('testBody').style.display=testOn?'block':'none';
+}
+function setAudience(v){
+  ['all','custom'].forEach(k=>{
+    document.getElementById('ro-'+k).classList.toggle('sel',k===v);
+  });
+  document.getElementById('segPanels').style.display=v==='custom'?'grid':'none';
+}
+function toggleSeg(row){ row.querySelector('.seg-cb').classList.toggle('chk'); }
+function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
+
+/* ── Trigger selection ── */
+function selectTrigger(tcIdx, name, desc, tags) {
+  const id = 'rule-'+(++ruleCounter);
+  selectedTriggers.push(id);
+
+  // mark template as selected
+  const card = document.getElementById('tc-'+tcIdx);
+  if(card){ card.style.borderColor='var(--green)'; card.style.background='#FAFFFE'; card.querySelector('.tpl-btn').textContent='✓ Selected'; card.querySelector('.tpl-btn').style.color='var(--green)'; card.querySelector('.tpl-btn').style.borderColor='var(--green)'; }
+
+  document.getElementById('selRulesLabel').style.display='block';
+
+  const list = document.getElementById('rulesList');
+  const wrap = document.createElement('div');
+  wrap.className='rule-card'; wrap.id=id;
+  wrap.innerHTML=`
+    <div class="rule-card-body">
+      <div class="rule-top">
+        <div>
+          <div class="rule-name">${name}</div>
+          <div class="rule-desc">Description of what does this trigger do</div>
+          <div class="rule-tags">${tags.map(t=>`<span class="rule-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="rule-actions">
+          <button class="r-icon-btn" title="Edit" onclick="toast('Opening editor…')">
+            <svg width="13" height="13" fill="none" stroke="#6B7280" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="r-icon-btn del" title="Delete" onclick="deleteRule('${id}')">
+            <svg width="13" height="13" fill="none" stroke="#F04438" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Coin row: empty state -->
+    <div class="coin-row" id="coin-row-empty-${id}">
+      <span class="coin-row-empty">No coin attached yet. Players will not earn collectible points from this rule</span>
+      <button class="coin-attach-btn" onclick="openCoinPicker('${id}')">
+        + Attach coin to the rule
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </button>
+    </div>
+    <!-- Coin row: attached state -->
+    <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
+      <div class="coin-row-left">
+        <div class="coin-dot">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
+        <span class="coin-row-label">Coin Name</span>
+        <span class="coin-pill" id="coin-pill-name-${id}">Promo Coin</span>
+      </div>
+      <div class="coin-row-actions">
+        <button class="c-icon-btn" title="Edit coin" onclick="editCoin('${id}')">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="c-icon-btn" title="Detach coin" onclick="detachCoin('${id}')">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Coin picker panel -->
+    <div class="coin-picker-panel" id="coin-picker-${id}">
+      <div class="cpp-head">
+        <div class="cpp-title">Select a Coin Template</div>
+        <button class="cpp-close" onclick="closeCoinPicker('${id}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="coin-tpl-grid">
+        ${coinTemplates.map(c=>`
+          <div class="coin-tpl" onclick="selectCoinTpl('${id}','${c.em}','${c.name}','${c.desc}','${c.amt}','${c.per}')">
+            <div class="coin-tpl-row"><div class="coin-tpl-em">${c.em}</div><div class="coin-tpl-name">${c.name}</div></div>
+            <div class="coin-tpl-desc">${c.desc}</div>
+            <div class="coin-tpl-rate">${c.amt} ${c.em} / €${c.per} bet</div>
+          </div>`).join('')}
+      </div>
+      <div class="cpp-div"><span>or build your own</span></div>
+      <button class="cpp-scratch" onclick="openCoinFormBlank('${id}')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Custom Coin from Scratch
+      </button>
+    </div>
+    <!-- Coin form panel -->
+    <div class="coin-form-panel" id="coin-form-${id}">
+      <div class="cfp-title">Create &amp; Attach Coin</div>
+      <div class="cfp-grid">
+        <div style="position:relative;">
+          <label class="cfp-lbl">Icon</label>
+          <button class="cfp-em-btn" id="cfp-em-${id}" onclick="toggleEmoji('${id}')">🪙</button>
+          <div class="em-opts" id="em-opts-${id}">
+            ${['🪙','💎','🔮','⭐','🌟','🔥','💰','🏅','✨','🎖️','🟡','🔵'].map(e=>`<span class="em-o" onclick="pickEm('${id}','${e}')">${e}</span>`).join('')}
+          </div>
+        </div>
+        <div>
+          <label class="cfp-lbl">Coin Name <span style="color:var(--red)">*</span></label>
+          <input class="cfp-fi" id="cfp-name-${id}" placeholder="e.g. Crystal Coins" />
+        </div>
+        <div>
+          <label class="cfp-lbl">Description</label>
+          <input class="cfp-fi" id="cfp-desc-${id}" placeholder="Optional" />
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label class="cfp-lbl">Earn Rate <span style="color:var(--red)">*</span></label>
+        <div class="rate-row">
+          <div><input class="cfp-fi" id="cfp-amt-${id}" type="number" value="1" min="1" style="text-align:center;" /><div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:2px;">coins</div></div>
+          <div class="rate-sep">per</div>
+          <div><input class="cfp-fi" id="cfp-per-${id}" type="number" value="1" min="0.01" step="0.01" style="text-align:center;" /><div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:2px;">€ bet</div></div>
+        </div>
+      </div>
+      <div class="cfp-actions">
+        <button class="cfp-back" onclick="backToPicker('${id}')">← Back</button>
+        <button class="cfp-cancel" onclick="closeCoinZone('${id}')">Cancel</button>
+        <button class="cfp-save" onclick="saveCoin('${id}')">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Save &amp; Attach
+        </button>
+      </div>
+    </div>
+  `;
+  list.appendChild(wrap);
+  toast(`Rule added`);
+}
+
+const coinTemplates = [
+  {em:'🪙',name:'Crystal Coins',desc:'General-purpose coin for slot bets',amt:'1',per:'1'},
+  {em:'💎',name:'Diamond Points',desc:'Premium points for high-value bets',amt:'2',per:'1'},
+  {em:'⭐',name:'Lucky Stars',desc:'Stars earned per qualifying round',amt:'1',per:'0.50'},
+  {em:'🔮',name:'Mystic Gems',desc:'Rare gems from jackpot activity',amt:'3',per:'1'},
+  {em:'🔥',name:'Flame Tokens',desc:'Tokens from live casino tables',amt:'1',per:'2'},
+  {em:'🏅',name:'Gold Medals',desc:'Medals for sports pre-match bets',amt:'1',per:'5'},
+];
+
+function deleteRule(id) {
+  document.getElementById(id)?.remove();
+  selectedTriggers = selectedTriggers.filter(x=>x!==id);
+  if(!selectedTriggers.length) document.getElementById('selRulesLabel').style.display='none';
+  toast('Rule removed');
+}
+
+/* ── Coin picker ── */
+function openCoinPicker(id) {
+  document.getElementById(`coin-row-empty-${id}`).style.display='none';
+  document.getElementById(`coin-picker-${id}`).classList.add('open');
+}
+function closeCoinPicker(id) {
+  document.getElementById(`coin-picker-${id}`).classList.remove('open');
+  if(document.getElementById(`coin-row-attached-${id}`).style.display==='none')
+    document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+}
+function selectCoinTpl(id,em,name,desc,amt,per) {
+  document.getElementById(`coin-picker-${id}`).classList.remove('open');
+  document.getElementById(`cfp-em-${id}`).textContent=em;
+  document.getElementById(`cfp-name-${id}`).value=name;
+  document.getElementById(`cfp-desc-${id}`).value=desc;
+  document.getElementById(`cfp-amt-${id}`).value=amt;
+  document.getElementById(`cfp-per-${id}`).value=per;
+  document.getElementById(`coin-form-${id}`).classList.add('open');
+}
+function openCoinFormBlank(id) {
+  document.getElementById(`coin-picker-${id}`).classList.remove('open');
+  document.getElementById(`cfp-em-${id}`).textContent='🪙';
+  ['cfp-name-','cfp-desc-'].forEach(p=>{ document.getElementById(p+id).value=''; });
+  document.getElementById(`cfp-amt-${id}`).value='1';
+  document.getElementById(`cfp-per-${id}`).value='1';
+  document.getElementById(`coin-form-${id}`).classList.add('open');
+}
+function backToPicker(id) {
+  document.getElementById(`coin-form-${id}`).classList.remove('open');
+  document.getElementById(`coin-picker-${id}`).classList.add('open');
+}
+function closeCoinZone(id) {
+  document.getElementById(`coin-form-${id}`).classList.remove('open');
+  document.getElementById(`coin-picker-${id}`).classList.remove('open');
+  if(document.getElementById(`coin-row-attached-${id}`).style.display==='none')
+    document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+}
+function saveCoin(id) {
+  const nameEl=document.getElementById(`cfp-name-${id}`);
+  const name=nameEl.value.trim();
+  if(!name){ nameEl.style.borderColor='var(--red)'; nameEl.focus(); return; }
+  nameEl.style.borderColor='';
+  const em=document.getElementById(`cfp-em-${id}`).textContent;
+  document.getElementById(`coin-pill-name-${id}`).textContent=name;
+  document.getElementById(`coin-pill-name-${id}`).previousElementSibling.textContent='Coin Name';
+  const dot=document.querySelector(`#coin-row-attached-${id} .coin-dot svg`);
+  document.getElementById(`coin-form-${id}`).classList.remove('open');
+  document.getElementById(`coin-row-attached-${id}`).style.display='flex';
+  toast(`${em} "${name}" attached`);
+}
+function editCoin(id) {
+  document.getElementById(`coin-row-attached-${id}`).style.display='none';
+  document.getElementById(`coin-form-${id}`).classList.add('open');
+}
+function detachCoin(id) {
+  document.getElementById(`coin-row-attached-${id}`).style.display='none';
+  document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+  ['cfp-name-','cfp-desc-'].forEach(p=>{ document.getElementById(p+id).value=''; });
+  document.getElementById(`cfp-em-${id}`).textContent='🪙';
+  toast('Coin detached');
+}
+function toggleEmoji(id) {
+  const opts=document.getElementById(`em-opts-${id}`);
+  opts.classList.toggle('open');
+  setTimeout(()=>{ document.addEventListener('click',function h(e){ if(!opts.contains(e.target)&&e.target.id!==`cfp-em-${id}`){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); },10);
+}
+function pickEm(id,em) {
+  document.getElementById(`cfp-em-${id}`).textContent=em;
+  document.getElementById(`em-opts-${id}`).classList.remove('open');
+}
+
+/* ── Toast ── */
+let _t;
+function toast(msg){
+  const el=document.getElementById('toastEl');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_t); _t=setTimeout(()=>el.classList.remove('show'),2200);
+}
+</script>
+</body>
+</html>
