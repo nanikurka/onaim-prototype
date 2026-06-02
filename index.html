@@ -337,6 +337,32 @@ input[type="date"].fi:valid{color:var(--text);}
 .coin-drawer-form.open{display:block;}
 .coin-drawer-picker{display:block;}
 .coin-drawer-picker.hidden{display:none;}
+/* section label */
+.cd-section-label{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:block;}
+/* type cards */
+.cd-type-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.cd-type-card{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .15s,background .12s;}
+.cd-type-card.active{border-color:#6D28D9;background:#FAFAFF;}
+.cd-type-card-left{display:flex;align-items:center;gap:10px;}
+.cd-type-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cd-type-icon-in{background:#EDE9FE;}
+.cd-type-icon-promo{background:#FEF3C7;}
+.cd-type-card-name{font-size:13px;font-weight:600;color:var(--text);}
+.cd-type-card-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.cd-type-radio{width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;transition:border-color .15s;}
+.cd-type-radio.active{border-color:#00C37F;border-width:5px;}
+/* form divider */
+.cd-form-divider{height:1px;background:var(--border);margin:16px -20px;}
+/* coin description row */
+.cd-desc-row{display:flex;align-items:flex-start;gap:12px;}
+.cd-icon-picker{width:64px;height:64px;border-radius:10px;background:#F4F6F8;border:1.5px dashed #D1D5DB;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:border-color .15s;}
+.cd-icon-picker:hover{border-color:var(--green);}
+.cd-name-field{flex:1;}
+.cd-name-label{font-size:12.5px;font-weight:500;color:var(--text-sub);display:block;margin-bottom:6px;}
+/* advanced settings */
+.cd-advanced{display:flex;align-items:center;justify-content:space-between;padding:14px 0;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-top:8px;}
+.cd-advanced-body{display:none;padding:12px 0 4px;}
+.cd-advanced-body.open{display:block;}
 
 /* ══ COIN FORM ══ */
 .cfp-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:12px;}
@@ -788,33 +814,82 @@ input[type="date"].fi:valid{color:var(--text);}
       </div>
       <!-- Create new coin tab (form) -->
       <div class="coin-drawer-form" id="coinDrawerForm">
-        <div class="cfp-grid">
-          <div>
-            <span class="cfp-lbl">Icon</span>
-            <button class="cfp-em-btn" id="drawerCfpEmBtn" onclick="toggleDrawerEmOpts()">
-              <span id="drawerCfpEm">🪙</span>
-              <div class="em-opts" id="drawerEmOpts">
-                <span class="em-o" onclick="pickDrawerEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickDrawerEm(event,'💎')">💎</span>
-                <span class="em-o" onclick="pickDrawerEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickDrawerEm(event,'🔥')">🔥</span>
-                <span class="em-o" onclick="pickDrawerEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickDrawerEm(event,'💰')">💰</span>
-                <span class="em-o" onclick="pickDrawerEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickDrawerEm(event,'🎁')">🎁</span>
+
+        <!-- SELECT COIN TYPE -->
+        <div class="cd-section-label">SELECT COIN TYPE</div>
+        <div class="cd-type-cards">
+          <div class="cd-type-card active" id="cdNewTypeCoinIn" onclick="selectNewCoinType('in')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-in">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
               </div>
-            </button>
+              <div>
+                <div class="cd-type-card-name">Coin In</div>
+                <div class="cd-type-card-sub">Entry currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio active" id="cdNewRadioIn"></div>
           </div>
-          <div>
-            <span class="cfp-lbl">Coin Name</span>
-            <input class="cfp-fi" id="drawerCfpName" placeholder="e.g. Promo Coins" />
+          <div class="cd-type-card" id="cdNewTypePromo" onclick="selectNewCoinType('promo')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-promo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Promo Coin</div>
+                <div class="cd-type-card-sub">Inside promotion currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="cdNewRadioPromo"></div>
           </div>
-          <div>
-            <span class="cfp-lbl">Description</span>
+        </div>
+
+        <!-- Info banner -->
+        <div class="cd-info-banner" id="cdNewInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text" id="cdNewInfoText"><strong>Coin in</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.</div>
+        </div>
+
+        <div class="cd-form-divider"></div>
+
+        <!-- COIN DESCRIPTION -->
+        <div class="cd-section-label">COIN DESCRIPTION</div>
+        <div class="cd-desc-row">
+          <button class="cd-icon-picker" onclick="toggleDrawerEmOpts()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+            <div class="em-opts" id="drawerEmOpts">
+              <span class="em-o" onclick="pickDrawerEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickDrawerEm(event,'💎')">💎</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickDrawerEm(event,'🔥')">🔥</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickDrawerEm(event,'💰')">💰</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickDrawerEm(event,'🎁')">🎁</span>
+            </div>
+            <span id="drawerCfpEm" style="font-size:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;"></span>
+          </button>
+          <div class="cd-name-field">
+            <label class="cd-name-label">Coin Name <sup style="color:#F04438">*</sup></label>
+            <input class="cfp-fi" id="drawerCfpName" placeholder="Enter coin name" />
+          </div>
+        </div>
+
+        <div class="cd-form-divider"></div>
+
+        <!-- ADVANCED SETTINGS -->
+        <div class="cd-advanced" onclick="toggleAdvanced()">
+          <span class="cd-section-label" style="margin:0;">ADVANCED SETTINGS</span>
+          <svg id="cdAdvChev" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform .2s;color:var(--text-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="cd-advanced-body" id="cdAdvancedBody">
+          <div class="fg" style="margin-bottom:10px;">
+            <label class="cfp-lbl">Description</label>
             <input class="cfp-fi" id="drawerCfpDesc" placeholder="Short description" />
           </div>
+          <div class="rate-row">
+            <div><span class="cfp-lbl">Coins Earned</span><input class="cfp-fi" id="drawerCfpAmt" type="number" placeholder="10" /></div>
+            <div class="rate-sep">per €</div>
+            <div><span class="cfp-lbl">Bet Amount (€)</span><input class="cfp-fi" id="drawerCfpPer" type="number" placeholder="1" /></div>
+          </div>
         </div>
-        <div class="rate-row">
-          <div><span class="cfp-lbl">Coins Earned</span><input class="cfp-fi" id="drawerCfpAmt" type="number" placeholder="10" /></div>
-          <div class="rate-sep">per €</div>
-          <div><span class="cfp-lbl">Bet Amount (€)</span><input class="cfp-fi" id="drawerCfpPer" type="number" placeholder="1" /></div>
-        </div>
+
       </div>
     </div>
     <!-- Footer -->
@@ -1155,12 +1230,39 @@ function switchCoinDrawerTab(tab) {
   document.getElementById('coinDrawerPicker').classList.toggle('hidden', !isTemplates);
   document.getElementById('coinDrawerForm').classList.toggle('open', !isTemplates);
   if (!isTemplates) {
-    document.getElementById('drawerCfpEm').textContent = '🪙';
+    // reset form
+    const emEl = document.getElementById('drawerCfpEm');
+    if (emEl) { emEl.textContent = ''; emEl.style.display = 'none'; }
     document.getElementById('drawerCfpName').value = '';
-    document.getElementById('drawerCfpDesc').value = '';
-    document.getElementById('drawerCfpAmt').value = '1';
-    document.getElementById('drawerCfpPer').value = '1';
+    const descEl = document.getElementById('drawerCfpDesc'); if (descEl) descEl.value = '';
+    const amtEl = document.getElementById('drawerCfpAmt'); if (amtEl) amtEl.value = '1';
+    const perEl = document.getElementById('drawerCfpPer'); if (perEl) perEl.value = '1';
+    // default to Coin In selected
+    selectNewCoinType('in');
+    // close advanced
+    document.getElementById('cdAdvancedBody')?.classList.remove('open');
+    const chev = document.getElementById('cdAdvChev');
+    if (chev) chev.style.transform = '';
   }
+}
+function selectNewCoinType(type) {
+  ['in','promo'].forEach(t => {
+    document.getElementById(`cdNewType${t==='in'?'CoinIn':'Promo'}`)?.classList.toggle('active', t===type);
+    document.getElementById(`cdNewRadio${t==='in'?'In':'Promo'}`)?.classList.toggle('active', t===type);
+  });
+  _coinDrawerType = type;
+  // update info banner text
+  const info = document.getElementById('cdNewInfoText');
+  if (info) {
+    if (type === 'in') info.innerHTML = '<strong>Coin in</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.';
+    else info.innerHTML = '<strong>Promo Coin</strong> is used as an internal promotion currency. It can be distributed as prizes and used within the promotion scope.';
+  }
+}
+function toggleAdvanced() {
+  const body = document.getElementById('cdAdvancedBody');
+  const chev = document.getElementById('cdAdvChev');
+  body?.classList.toggle('open');
+  if (chev) chev.style.transform = body?.classList.contains('open') ? 'rotate(180deg)' : '';
 }
 
 function switchCoinType(type) {
@@ -1213,7 +1315,9 @@ function toggleDrawerEmOpts() {
 }
 function pickDrawerEm(e, em) {
   e.stopPropagation();
-  document.getElementById('drawerCfpEm').textContent = em;
+  const el = document.getElementById('drawerCfpEm');
+  el.textContent = em;
+  el.style.display = 'block';
   document.getElementById('drawerEmOpts').classList.remove('open');
 }
 function editCoin(id) {
