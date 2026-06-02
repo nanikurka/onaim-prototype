@@ -84,6 +84,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 4px;}
 .step-sep svg{width:14px;height:14px;}
 
+/* ══ FEATURES & PRIZES ══ */
+.features-layout{display:grid;grid-template-columns:220px 1fr;border-top:1px solid var(--border);min-height:400px;}
+.features-list{border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;gap:4px;}
+.feature-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);cursor:pointer;font-size:13.5px;font-weight:500;color:var(--text);transition:background .12s;border:1px solid transparent;}
+.feature-item:hover{background:var(--bg);border-color:var(--border);}
+.feature-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.features-selected{padding:16px 20px;}
+.features-selected-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);margin-bottom:12px;}
+.features-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--text-muted);}
+.feature-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px;}
+.feature-drag{color:#CBD5E0;cursor:grab;flex-shrink:0;display:flex;}
+.feature-card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.feature-card-info{flex:1;}
+.feature-card-name{font-size:14px;font-weight:600;color:var(--text);}
+.feature-card-status{display:flex;align-items:center;gap:5px;font-size:12px;margin-top:2px;}
+.feature-card-status.configured{color:#059669;}
+.feature-card-status.partial{color:#D97706;}
+.feature-card-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.feature-card-actions button{background:none;border:none;cursor:pointer;padding:5px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;transition:background .1s,color .1s;}
+.feature-card-actions button:hover{background:var(--bg);color:var(--text);}
+.feature-card-actions button.del:hover{background:#FFF2EE;color:var(--red);}
+
 /* ══ CARD ══ */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:18px;}
 .card-body{padding:22px 24px;}
@@ -600,10 +622,78 @@ input[type="date"].fi:valid{color:var(--text);}
       </div>
     </div>
 
+    <!-- ══ PROMOTION FEATURES & PRIZES ══ -->
+    <div class="card" id="sec-features" style="margin-top:16px;">
+      <div class="card-body" style="padding-bottom:0;">
+        <div class="card-title">Promotion Features & Prizes</div>
+        <div class="card-sub">Select features and define how users participate and earn rewards</div>
+      </div>
+      <div class="features-layout">
+        <!-- Left: feature list -->
+        <div class="features-list">
+          <div class="feature-item" onclick="addFeature('progress','Progress','🔗')">
+            <span class="feature-icon" style="background:#E0F7FA;color:#00897B;">🔗</span>
+            Progress
+          </div>
+          <div class="feature-item" onclick="addFeature('game','Game','🎮')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#388E3C;">🎮</span>
+            Game
+          </div>
+          <div class="feature-item" onclick="addFeature('leaderboard','Leaderboard','🏆')">
+            <span class="feature-icon" style="background:#FFF8E1;color:#F9A825;">🏆</span>
+            Leaderboard
+          </div>
+          <div class="feature-item" onclick="addFeature('raffle','Raffle','🎟️')">
+            <span class="feature-icon" style="background:#F3E5F5;color:#8E24AA;">🎟️</span>
+            Raffle
+          </div>
+          <div class="feature-item" onclick="addFeature('rewardbar','Reward Bar','💎')">
+            <span class="feature-icon" style="background:#E3F2FD;color:#1E88E5;">💎</span>
+            Reward Bar
+          </div>
+          <div class="feature-item" onclick="addFeature('journey','Journey Path','🚩')">
+            <span class="feature-icon" style="background:#FBE9E7;color:#E64A19;">🚩</span>
+            Journey Path
+          </div>
+          <div class="feature-item" onclick="addFeature('factory','Reward Factory','🏭')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#43A047;">🏭</span>
+            Reward Factory
+          </div>
+          <div class="feature-item" onclick="addFeature('market','Market','🛒')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#388E3C;">🛒</span>
+            Market
+          </div>
+          <div class="feature-item" onclick="addFeature('mission','Mission','🎯')">
+            <span class="feature-icon" style="background:#FFEBEE;color:#E53935;">🎯</span>
+            Mission
+          </div>
+          <div class="feature-item" onclick="addFeature('offers','Offers','🎁')">
+            <span class="feature-icon" style="background:#E0F2F1;color:#00897B;">🎁</span>
+            Offers
+          </div>
+          <div class="feature-item" onclick="addFeature('tournament','Tournament','❄️')">
+            <span class="feature-icon" style="background:#E3F2FD;color:#1565C0;">❄️</span>
+            Tournament
+          </div>
+        </div>
+        <!-- Right: selected features -->
+        <div class="features-selected" id="featuresSelected">
+          <div class="features-selected-label">Selected Features</div>
+          <div id="featuresList">
+            <div class="features-empty" id="featuresEmpty">
+              <svg width="32" height="32" fill="none" stroke="#D1D5DB" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+              <div style="margin-top:8px;font-size:13px;color:var(--text-muted);">No features selected yet</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Click a feature on the left to add it</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="page-footer">
       <button class="btn-draft" onclick="toast('Draft saved')">Save as Draft</button>
-      <button class="btn-next" onclick="toast('Moving to Promotion Features…')">
-        Next: Promotion Features
+      <button class="btn-next" onclick="toast('Promotion saved!')">
+        Save Promotion
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
     </div>
@@ -1052,6 +1142,74 @@ function toggleLabelSelect(name){
   else selectedLabels.push({...lbl});
   renderLabelChips();
   renderLabelList(document.getElementById('labelSearchInput').value);
+}
+
+/* ── Features & Prizes ── */
+let featureCounter = 0;
+const featureBgs = {
+  progress:'#E0F7FA',game:'#E8F5E9',leaderboard:'#FFF8E1',raffle:'#F3E5F5',
+  rewardbar:'#E3F2FD',journey:'#FBE9E7',factory:'#E8F5E9',market:'#E8F5E9',
+  mission:'#FFEBEE',offers:'#E0F2F1',tournament:'#E3F2FD'
+};
+
+function addFeature(type, name, icon) {
+  const id = 'feat-' + (++featureCounter);
+  document.getElementById('featuresEmpty').style.display = 'none';
+  const bg = featureBgs[type] || '#F4F6F8';
+  const card = document.createElement('div');
+  card.className = 'feature-card';
+  card.id = id;
+  card.innerHTML = `
+    <div class="feature-drag">
+      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>
+    </div>
+    <div class="feature-card-icon" style="background:${bg};">${icon}</div>
+    <div class="feature-card-info">
+      <div class="feature-card-name">${name}</div>
+      <div class="feature-card-status partial" id="fstat-${id}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#D97706"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
+        Not fully Configured
+      </div>
+    </div>
+    <div class="feature-card-actions">
+      <button title="Duplicate" onclick="duplicateFeature('${id}','${type}','${name}','${icon}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      </button>
+      <button title="Configure" onclick="configureFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button title="Delete" class="del" onclick="deleteFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    </div>
+  `;
+  document.getElementById('featuresList').appendChild(card);
+  toast(name + ' added');
+}
+
+function duplicateFeature(id, type, name, icon) {
+  addFeature(type, name, icon);
+}
+
+function deleteFeature(id) {
+  document.getElementById(id)?.remove();
+  if (!document.querySelector('.feature-card')) {
+    document.getElementById('featuresEmpty').style.display = 'flex';
+  }
+}
+
+function configureFeature(id) {
+  const stat = document.getElementById('fstat-' + id);
+  if (!stat) return;
+  const isConfigured = stat.classList.contains('configured');
+  if (isConfigured) {
+    stat.className = 'feature-card-status partial';
+    stat.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#D97706"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg> Not fully Configured`;
+  } else {
+    stat.className = 'feature-card-status configured';
+    stat.innerHTML = `<svg width="12" height="12" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#059669" stroke="none"/><polyline points="8 12 11 15 16 9" stroke="white" stroke-width="2"/></svg> Configured`;
+    toast('Feature configured ✓');
+  }
 }
 
 /* ── Toast ── */
