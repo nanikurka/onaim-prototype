@@ -98,7 +98,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .features-selected-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);margin-bottom:12px;}
 .features-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--text-muted);}
 .feature-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px;}
-.feature-drag{color:#CBD5E0;cursor:grab;flex-shrink:0;display:flex;}
+.feature-drag{color:#CBD5E0;cursor:grab;flex-shrink:0;display:flex;touch-action:none;}
+.feature-card.dragging{opacity:.4;border:1.5px dashed var(--green);}
+.feature-card.drag-over{border-color:var(--green);background:#F0FDF8;}
 .feature-card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
 .feature-card-info{flex:1;}
 .feature-card-name{font-size:14px;font-weight:600;color:var(--text);}
@@ -1204,6 +1206,37 @@ function validateFeatures() {
   }
 }
 
+let dragSrc = null;
+function initCardDrag(card) {
+  card.addEventListener('dragstart', e => {
+    dragSrc = card;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+    document.querySelectorAll('.feature-card.drag-over').forEach(c => c.classList.remove('drag-over'));
+    dragSrc = null;
+  });
+  card.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragSrc && dragSrc !== card) card.classList.add('drag-over');
+  });
+  card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    card.classList.remove('drag-over');
+    if (!dragSrc || dragSrc === card) return;
+    const list = document.getElementById('featuresList');
+    const cards = [...list.querySelectorAll('.feature-card')];
+    const srcIdx = cards.indexOf(dragSrc);
+    const tgtIdx = cards.indexOf(card);
+    if (srcIdx < tgtIdx) list.insertBefore(dragSrc, card.nextSibling);
+    else list.insertBefore(dragSrc, card);
+  });
+}
+
 function addFeature(type, name, icon) {
   const id = 'feat-' + (++featureCounter);
   document.getElementById('featuresEmpty').style.display = 'none';
@@ -1211,6 +1244,7 @@ function addFeature(type, name, icon) {
   const card = document.createElement('div');
   card.className = 'feature-card';
   card.id = id;
+  card.draggable = true;
   card.innerHTML = `
     <div class="feature-drag">
       <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>
@@ -1235,7 +1269,9 @@ function addFeature(type, name, icon) {
       </button>
     </div>
   `;
-  document.getElementById('featuresList').appendChild(card);
+  const list = document.getElementById('featuresList');
+  list.appendChild(card);
+  initCardDrag(card);
   validateFeatures();
   toast(name + ' added');
 }
