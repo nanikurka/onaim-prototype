@@ -450,10 +450,10 @@ input[type="date"].fi:valid{color:var(--text);}
 
           <div style="background:#F9FAFB;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:2px;">
             <div class="sw-row">
-              <div class="sw on" id="testSw" onclick="toggleTest()"></div>
+              <div class="sw" id="testSw" onclick="toggleTest()"></div>
               <div><div class="sw-lbl">Request Testing</div></div>
             </div>
-            <div id="testBody" style="margin-left:48px;margin-top:-4px;">
+            <div id="testBody" style="margin-left:48px;margin-top:-4px;display:none;">
               <div class="sw-desc" style="margin-bottom:10px;">Run a testing window before public launch. Only testers will see the promotion during this period</div>
               <div class="fg" style="margin-bottom:0;"><label class="fl">Test Ends (go live)<sup>*</sup></label><input class="fi cal" placeholder="dd/mm/yyyy" /></div>
             </div>
@@ -665,7 +665,7 @@ function removeDesc() {
   document.getElementById('addDescBtn').style.display='inline-flex';
   document.getElementById('descTa').value='';
 }
-let testOn=true;
+let testOn=false;
 function toggleTest(){
   testOn=!testOn;
   document.getElementById('testSw').classList.toggle('on',testOn);
