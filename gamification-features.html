@@ -102,9 +102,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .feature-card-status.configured{color:#059669;}
 .feature-card-status.partial{color:#FF5630;}
 .feature-card-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
-.feature-card-actions button{background:none;border:none;cursor:pointer;padding:5px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;transition:background .1s,color .1s;}
+.feature-card-actions button{background:none;border:none;cursor:pointer;padding:5px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;transition:background .1s,color .1s;position:relative;}
 .feature-card-actions button:hover{background:var(--bg);color:var(--text);}
 .feature-card-actions button.del:hover{background:#FFF2EE;color:var(--red);}
+/* Tooltips */
+[data-tip]{position:relative;}
+[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1B2A38;color:#fff;font-size:11px;white-space:nowrap;padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;}
+[data-tip]::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#1B2A38;pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;}
+[data-tip]:hover::after,[data-tip]:hover::before{opacity:1;}
+/* Inline name edit */
+.feature-card-name{cursor:default;}
+.feature-card-name.editing{outline:none;border-bottom:1.5px solid var(--green);cursor:text;}
 
 /* ══ CARD ══ */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:18px;}
@@ -1165,20 +1173,20 @@ function addFeature(type, name, icon) {
     </div>
     <div class="feature-card-icon" style="background:${bg};">${icon}</div>
     <div class="feature-card-info">
-      <div class="feature-card-name">${name}</div>
+      <div class="feature-card-name" ondblclick="inlineRename(this)">${name}</div>
       <div class="feature-card-status partial" id="fstat-${id}">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
         Not fully Configured
       </div>
     </div>
     <div class="feature-card-actions">
-      <button title="Rename" onclick="renameFeature('${id}')">
+      <button data-tip="Rename" onclick="renameFeature('${id}')">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
       </button>
-      <button title="Configure" onclick="configureFeature('${id}')">
+      <button data-tip="Configure" onclick="configureFeature('${id}')">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
-      <button title="Delete" class="del" onclick="deleteFeature('${id}')">
+      <button data-tip="Delete" class="del" onclick="deleteFeature('${id}')">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
     </div>
@@ -1190,10 +1198,33 @@ function addFeature(type, name, icon) {
 function renameFeature(id) {
   const card = document.getElementById(id);
   if (!card) return;
-  const nameEl = card.querySelector('.feature-card-name');
-  const current = nameEl.textContent;
-  const newName = prompt('Rename feature:', current);
-  if (newName && newName.trim()) nameEl.textContent = newName.trim();
+  inlineRename(card.querySelector('.feature-card-name'));
+}
+
+function inlineRename(el) {
+  if (!el || el.contentEditable === 'true') return;
+  el.contentEditable = 'true';
+  el.classList.add('editing');
+  el.focus();
+  // select all text
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  function finish() {
+    el.contentEditable = 'false';
+    el.classList.remove('editing');
+    if (!el.textContent.trim()) el.textContent = 'Untitled Feature';
+    el.removeEventListener('blur', finish);
+    el.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) {
+    if (e.key === 'Enter') { e.preventDefault(); finish(); }
+    if (e.key === 'Escape') { el.textContent = el.dataset.prev || el.textContent; finish(); }
+  }
+  el.dataset.prev = el.textContent;
+  el.addEventListener('blur', finish);
+  el.addEventListener('keydown', onKey);
 }
 
 function deleteFeature(id) {
