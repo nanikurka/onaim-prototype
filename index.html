@@ -111,12 +111,29 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .sw-desc{font-size:12px;color:var(--text-sub);margin-top:1px;}
 
 /* labels */
-.labels-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:14px 24px;border-top:1px solid var(--border);}
+.labels-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:14px 24px;border-top:1px solid var(--border);position:relative;}
 .lchip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;}
-.lchip.green{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;}
-.lchip.purple{background:#F5F3FF;color:#7C3AED;border:1px solid #C4B5FD;}
 .lchip-x{cursor:pointer;opacity:.5;display:flex;align-items:center;}
 .lchip-x:hover{opacity:1;}
+
+/* Label dropdown */
+.label-dropdown{position:absolute;bottom:calc(100% + 4px);left:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);width:260px;z-index:200;overflow:hidden;}
+.label-dropdown-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.label-dropdown-search input{width:100%;border:none;outline:none;font-size:13px;color:var(--text);background:transparent;}
+.label-list{max-height:200px;overflow-y:auto;}
+.label-list-item{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;cursor:pointer;font-size:13px;}
+.label-list-item:hover{background:var(--bg);}
+.label-list-item .lchip{pointer-events:none;}
+.label-create-row{padding:8px 12px;border-top:1px solid var(--border);font-size:12.5px;color:var(--blue);cursor:pointer;display:none;}
+.label-create-row:hover{background:var(--bg);}
+
+/* Color picker inside dropdown */
+.label-color-picker{padding:8px 12px;border-top:1px solid var(--border);display:none;}
+.label-color-picker-title{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.color-swatches{display:flex;gap:6px;flex-wrap:wrap;}
+.color-swatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .1s;}
+.color-swatch:hover{transform:scale(1.2);}
+.color-swatch.active{border-color:#111;}
 
 /* radio */
 .radio-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
@@ -488,13 +505,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
       </div>
     </div>
 
-    <div class="labels-row">
-      <div class="add-link" onclick="toast('Add label')">
+    <div class="labels-row" id="labelsRow">
+      <div class="add-link" id="addLabelBtn" onclick="toggleLabelDropdown(event)">
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Add Labels
       </div>
-      <div class="lchip green">Label <span class="lchip-x" onclick="this.parentElement.remove()"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
-      <div class="lchip purple">Label <span class="lchip-x" onclick="this.parentElement.remove()"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
+      <!-- chips injected here by JS -->
+      <div class="label-dropdown" id="labelDropdown" style="display:none;" onclick="event.stopPropagation()">
+        <div class="label-dropdown-search">
+          <input type="text" id="labelSearchInput" placeholder="Search or create label…" oninput="filterLabels()" onkeydown="labelKeydown(event)" />
+        </div>
+        <div class="label-list" id="labelList"></div>
+        <div class="label-create-row" id="labelCreateRow" onclick="createLabel()"></div>
+        <div class="label-color-picker" id="labelColorPicker">
+          <div class="label-color-picker-title">Pick a color</div>
+          <div class="color-swatches" id="colorSwatches"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -820,6 +847,122 @@ function toggleEmoji(id) {
 function pickEm(id,em) {
   document.getElementById(`cfp-em-${id}`).textContent=em;
   document.getElementById(`em-opts-${id}`).classList.remove('open');
+}
+
+/* ── Labels ── */
+const labelColors = [
+  {bg:'#ECFDF5',color:'#059669',border:'#A7F3D0',swatch:'#059669'},
+  {bg:'#F5F3FF',color:'#7C3AED',border:'#C4B5FD',swatch:'#7C3AED'},
+  {bg:'#EFF6FF',color:'#1D4ED8',border:'#BFDBFE',swatch:'#1D4ED8'},
+  {bg:'#FFF7ED',color:'#C2410C',border:'#FED7AA',swatch:'#C2410C'},
+  {bg:'#FDF2F8',color:'#BE185D',border:'#F9A8D4',swatch:'#BE185D'},
+  {bg:'#F0FDF4',color:'#15803D',border:'#86EFAC',swatch:'#15803D'},
+  {bg:'#FEFCE8',color:'#A16207',border:'#FDE68A',swatch:'#A16207'},
+  {bg:'#F0F9FF',color:'#0369A1',border:'#BAE6FD',swatch:'#0369A1'},
+];
+let allLabels = [
+  {name:'VIP',colorIdx:0},{name:'New User',colorIdx:1},{name:'High Roller',colorIdx:2},{name:'Sports',colorIdx:3},{name:'Casino',colorIdx:4}
+];
+let selectedLabels = [];
+let pendingColorIdx = null;
+let pendingLabelName = null;
+
+function renderLabelChips(){
+  const row = document.getElementById('labelsRow');
+  row.querySelectorAll('.lchip').forEach(c=>c.remove());
+  const btn = document.getElementById('addLabelBtn');
+  selectedLabels.forEach(lbl=>{
+    const c = labelColors[lbl.colorIdx];
+    const chip = document.createElement('div');
+    chip.className='lchip';
+    chip.style.cssText=`background:${c.bg};color:${c.color};border:1px solid ${c.border};`;
+    chip.innerHTML=`${lbl.name}<span class="lchip-x" onclick="removeLabel('${lbl.name}',event)"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>`;
+    row.insertBefore(chip, btn);
+  });
+}
+function removeLabel(name,e){
+  e.stopPropagation();
+  selectedLabels=selectedLabels.filter(l=>l.name!==name);
+  renderLabelChips();
+}
+function toggleLabelDropdown(e){
+  e.stopPropagation();
+  const dd=document.getElementById('labelDropdown');
+  const open=dd.style.display==='block';
+  if(open){closeLabelDropdown();return;}
+  dd.style.display='block';
+  document.getElementById('labelSearchInput').value='';
+  document.getElementById('labelColorPicker').style.display='none';
+  pendingColorIdx=null; pendingLabelName=null;
+  renderLabelList('');
+  document.getElementById('labelSearchInput').focus();
+  setTimeout(()=>document.addEventListener('click',closeLabelDropdown,{once:true}),0);
+}
+function closeLabelDropdown(){
+  document.getElementById('labelDropdown').style.display='none';
+}
+function renderLabelList(q){
+  const list=document.getElementById('labelList');
+  const filtered=allLabels.filter(l=>l.name.toLowerCase().includes(q.toLowerCase()));
+  list.innerHTML=filtered.map(l=>{
+    const c=labelColors[l.colorIdx];
+    const sel=selectedLabels.find(s=>s.name===l.name);
+    return `<div class="label-list-item" onclick="toggleLabelSelect('${l.name}')">
+      <span class="lchip" style="background:${c.bg};color:${c.color};border:1px solid ${c.border};">${l.name}</span>
+      ${sel?`<svg width="14" height="14" fill="none" stroke="#00C37F" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+    </div>`;
+  }).join('');
+  // create row
+  const cr=document.getElementById('labelCreateRow');
+  const exact=allLabels.find(l=>l.name.toLowerCase()===q.toLowerCase());
+  if(q && !exact){
+    cr.style.display='block';
+    cr.textContent=`+ Create "${q}"`;
+    pendingLabelName=q;
+    pendingColorIdx=Math.floor(Math.random()*labelColors.length);
+    showColorPicker(pendingColorIdx);
+  } else {
+    cr.style.display='none';
+    document.getElementById('labelColorPicker').style.display='none';
+  }
+}
+function showColorPicker(activeIdx){
+  const picker=document.getElementById('labelColorPicker');
+  picker.style.display='block';
+  const swatches=document.getElementById('colorSwatches');
+  swatches.innerHTML=labelColors.map((c,i)=>`
+    <div class="color-swatch${i===activeIdx?' active':''}" style="background:${c.swatch};" onclick="pickLabelColor(${i})"></div>
+  `).join('');
+}
+function pickLabelColor(idx){
+  pendingColorIdx=idx;
+  showColorPicker(idx);
+}
+function filterLabels(){
+  const q=document.getElementById('labelSearchInput').value;
+  renderLabelList(q);
+}
+function labelKeydown(e){
+  if(e.key==='Enter'){
+    const q=document.getElementById('labelSearchInput').value.trim();
+    if(q) createLabel();
+  }
+}
+function createLabel(){
+  if(!pendingLabelName) return;
+  const idx=pendingColorIdx??0;
+  allLabels.push({name:pendingLabelName,colorIdx:idx});
+  selectedLabels.push({name:pendingLabelName,colorIdx:idx});
+  renderLabelChips();
+  closeLabelDropdown();
+}
+function toggleLabelSelect(name){
+  const lbl=allLabels.find(l=>l.name===name);
+  const idx=selectedLabels.findIndex(s=>s.name===name);
+  if(idx>-1) selectedLabels.splice(idx,1);
+  else selectedLabels.push({...lbl});
+  renderLabelChips();
+  renderLabelList(document.getElementById('labelSearchInput').value);
 }
 
 /* ── Toast ── */
