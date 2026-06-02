@@ -463,11 +463,27 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-coin-drop-create{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;border-top:1px solid var(--border);color:var(--green);font-size:13px;font-weight:600;transition:background .1s;}
 .fcd-coin-drop-create:hover{background:var(--green-light);}
 /* pool items */
+/* pool type cards */
+.fcd-pool-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.fcd-pool-type-card{display:flex;align-items:center;gap:10px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
+.fcd-pool-type-card:hover{border-color:var(--green);background:var(--green-light);}
+.fcd-pool-type-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.fcd-pool-type-icon.t-in{background:#EDE9FE;}
+.fcd-pool-type-icon.t-promo{background:#FEF3C7;}
+.fcd-pool-type-icon.t-withdrawal{background:#DBEAFE;}
+.fcd-pool-type-icon.t-asset{background:#F3F4F6;}
+.fcd-pool-type-label{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.3;}
+.fcd-pool-type-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.fcd-pool-type-add{margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:300;line-height:1;}
+/* pool items list */
+.fcd-pool-section-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px;margin-top:4px;}
 .fcd-pool-item{display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:7px;}
-.fcd-pool-em{font-size:20px;line-height:1;flex-shrink:0;}
+.fcd-pool-em{font-size:18px;line-height:1;flex-shrink:0;}
 .fcd-pool-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
 .fcd-pool-remove{background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;justify-content:center;padding:2px;border-radius:4px;}
 .fcd-pool-remove:hover{color:var(--red);background:var(--red-light);}
+.fcd-pool-scratch-btn{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed var(--border);border-radius:8px;width:100%;padding:9px;font-size:12.5px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;justify-content:center;transition:border-color .15s,color .15s;margin-top:8px;}
+.fcd-pool-scratch-btn:hover{border-color:var(--green);color:var(--green);}
 /* prize amount */
 .fcd-prize-bottom{display:flex;align-items:center;gap:10px;margin-top:10px;}
 .fcd-prize-amt-wrap{display:flex;align-items:center;gap:8px;border:1px solid var(--border-input);border-radius:8px;padding:8px 12px;flex:1;}
@@ -929,21 +945,50 @@ input[type="date"].fi:valid{color:var(--text);}
 
       <!-- PANEL 2: Prize Coins Pool -->
       <div class="fcd-panel" id="fcd-panel-pool">
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</p>
-        <div id="fcdPoolList"></div>
-        <div style="position:relative;margin-top:4px;">
-          <button class="fcd-add-place" id="fcdAddPoolCoinBtn" onclick="togglePoolCoinPicker()">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Coin to Pool
-          </button>
-          <div class="fcd-coin-dropdown" id="fcdPoolPickerDrop" style="top:calc(100% + 4px);left:0;min-width:260px;">
-            <div id="fcdPoolPickerItems"></div>
-            <div class="fcd-coin-drop-create" onclick="openNewCoinFromPool()">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Create new coin
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Select which coins can be awarded in this leaderboard. Add as many as you need — you'll assign amounts per rank in the next step.</p>
+        <!-- 4 type template cards -->
+        <div class="fcd-pool-section-label">Add from templates</div>
+        <div class="fcd-pool-type-grid">
+          <div class="fcd-pool-type-card" onclick="addPoolCoinFromTemplate('coin-in')">
+            <div class="fcd-pool-type-icon t-in">🪙</div>
+            <div>
+              <div class="fcd-pool-type-label">Coin In</div>
+              <div class="fcd-pool-type-sub">Entry currency</div>
             </div>
+            <div class="fcd-pool-type-add">+</div>
+          </div>
+          <div class="fcd-pool-type-card" onclick="addPoolCoinFromTemplate('promo')">
+            <div class="fcd-pool-type-icon t-promo">⭐</div>
+            <div>
+              <div class="fcd-pool-type-label">Promo Coin</div>
+              <div class="fcd-pool-type-sub">Internal currency</div>
+            </div>
+            <div class="fcd-pool-type-add">+</div>
+          </div>
+          <div class="fcd-pool-type-card" onclick="addPoolCoinFromTemplate('withdrawal')">
+            <div class="fcd-pool-type-icon t-withdrawal">💸</div>
+            <div>
+              <div class="fcd-pool-type-label">Withdrawal</div>
+              <div class="fcd-pool-type-sub">Cashout reward</div>
+            </div>
+            <div class="fcd-pool-type-add">+</div>
+          </div>
+          <div class="fcd-pool-type-card" onclick="addPoolCoinFromTemplate('asset')">
+            <div class="fcd-pool-type-icon t-asset">🔮</div>
+            <div>
+              <div class="fcd-pool-type-label">Asset</div>
+              <div class="fcd-pool-type-sub">Virtual item</div>
+            </div>
+            <div class="fcd-pool-type-add">+</div>
           </div>
         </div>
+        <!-- Pool list -->
+        <div id="fcdPoolList"></div>
+        <!-- Create from scratch -->
+        <button class="fcd-pool-scratch-btn" onclick="openNewCoinFromPool()">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create new coin from scratch
+        </button>
       </div>
 
       <!-- PANEL 3: Rankings -->
@@ -1938,6 +1983,7 @@ function openFcd(featureId, featureName) {
   _fcdStepsDone = {};
   _fcdPool = [];
   _fcdRankCount = 0;
+  Object.keys(_poolTypeCounts).forEach(k => _poolTypeCounts[k] = 0);
   // Reset all step button classes and badge states
   ['entry','pool','rankings','schedule'].forEach((s, i) => {
     const btn = document.getElementById('fcd-step-' + s);
@@ -2025,14 +2071,37 @@ function fcdContinue() {
 }
 
 /* ── Prize Coins Pool (Step 2) ── */
+const _poolTypeDefaults = {
+  'coin-in':    {em:'🪙', label:'Coin In',    typeLabel:'Coin In'},
+  'promo':      {em:'⭐', label:'Promo Coin', typeLabel:'Promo Coin'},
+  'withdrawal': {em:'💸', label:'Withdrawal', typeLabel:'Withdrawal'},
+  'asset':      {em:'🔮', label:'Asset',      typeLabel:'Asset'},
+};
+const _poolTypeCounts = {'coin-in':0,'promo':0,'withdrawal':0,'asset':0};
+
+function addPoolCoinFromTemplate(type) {
+  const def = _poolTypeDefaults[type];
+  if (!def) return;
+  _poolTypeCounts[type] = (_poolTypeCounts[type] || 0) + 1;
+  const count = _poolTypeCounts[type];
+  const name = count === 1 ? def.label : `${def.label} ${count}`;
+  _fcdPool.push({em: def.em, name, type, typeLabel: def.typeLabel});
+  renderPool();
+  toast(`${def.em} "${name}" added to pool`);
+}
+
 function renderPool() {
   const list = document.getElementById('fcdPoolList');
   if (!list) return;
   if (_fcdPool.length === 0) {
-    list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:12px 0 8px;">No coins added yet. Add coins to the pool to assign them to rankings.</div>';
+    list.innerHTML = '';
     return;
   }
-  list.innerHTML = _fcdPool.map((c, i) => `
+  const label = document.createElement('div');
+  label.className = 'fcd-pool-section-label';
+  label.textContent = `Your prize pool (${_fcdPool.length})`;
+  list.innerHTML = '<div class="fcd-pool-section-label">Your prize pool (' + _fcdPool.length + ')</div>' +
+    _fcdPool.map((c, i) => `
     <div class="fcd-pool-item" id="fcd-pool-item-${i}">
       <span class="fcd-pool-em">${c.em}</span>
       <span class="fcd-pool-name">${c.name}</span>
@@ -2046,47 +2115,7 @@ function removePoolCoin(i) {
   _fcdPool.splice(i, 1);
   renderPool();
 }
-function togglePoolCoinPicker() {
-  const drop = document.getElementById('fcdPoolPickerDrop');
-  const isOpen = drop.classList.contains('open');
-  if (!isOpen) {
-    // Rebuild list: all template coins not already in pool
-    const items = document.getElementById('fcdPoolPickerItems');
-    const poolNames = _fcdPool.map(c => c.name);
-    const available = allPrizeCoins.filter(c => !poolNames.includes(c.name));
-    if (available.length === 0) {
-      items.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">All template coins added.</div>';
-    } else {
-      items.innerHTML = available.map((c, ci) => `
-        <div class="fcd-coin-drop-item" onclick="addPoolCoinByName('${c.name}')">
-          <span style="font-size:17px;margin-right:6px;">${c.em}</span>
-          <span class="fcd-coin-drop-name">${c.name}</span>
-          <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
-        </div>`).join('');
-    }
-  }
-  drop.classList.toggle('open', !isOpen);
-  // close on outside click
-  if (!isOpen) {
-    setTimeout(() => {
-      document.addEventListener('click', function h(e) {
-        if (!drop.contains(e.target) && e.target.id !== 'fcdAddPoolCoinBtn') {
-          drop.classList.remove('open');
-          document.removeEventListener('click', h);
-        }
-      });
-    }, 10);
-  }
-}
-function addPoolCoinByName(name) {
-  const c = allPrizeCoins.find(x => x.name === name);
-  if (!c) return;
-  if (!_fcdPool.find(x => x.name === name)) _fcdPool.push({...c});
-  document.getElementById('fcdPoolPickerDrop').classList.remove('open');
-  renderPool();
-}
 function openNewCoinFromPool() {
-  document.getElementById('fcdPoolPickerDrop').classList.remove('open');
   _fcdCoinViewCtx = 'pool';
   _prizeTargetIdx = null;
   document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
@@ -2338,7 +2367,7 @@ function saveFcdCoin() {
 
 // close coin dropdowns when clicking outside
 document.addEventListener('click', e => {
-  if (!e.target.closest('.fcd-prize-card') && !e.target.closest('.fcd-pool-item') && !e.target.closest('#fcdPoolPickerDrop')) {
+  if (!e.target.closest('.fcd-prize-card') && !e.target.closest('.fcd-pool-item')) {
     document.querySelectorAll('.fcd-coin-dropdown.open').forEach(d => {
       d.classList.remove('open');
       const sel = document.getElementById(d.id.replace('drop','sel'));
