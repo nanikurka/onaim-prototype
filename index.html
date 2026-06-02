@@ -281,32 +281,42 @@ input[type="date"].fi:valid{color:var(--text);}
 .c-icon-btn{width:24px;height:24px;border-radius:4px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .12s,color .12s;}
 .c-icon-btn:hover{background:var(--bg);color:var(--text);}
 
-/* ══ COIN PICKER PANEL ══ */
-.coin-picker-panel{display:none;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface);animation:slideDown .15s ease;}
-.coin-picker-panel.open{display:block;}
+/* ══ COIN PICKER PANEL (inline, hidden — content moved to drawer) ══ */
+.coin-picker-panel{display:none;}
+.coin-form-panel{display:none;}
 @keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.cpp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.cpp-title{font-size:12.5px;font-weight:700;color:var(--text);}
-.cpp-close{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
-.cpp-close:hover{background:var(--bg);}
-.coin-tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.coin-tpl{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 12px;cursor:pointer;background:var(--surface);transition:border-color .15s,background .12s;}
-.coin-tpl:hover{border-color:var(--green);background:var(--green-light);}
-.coin-tpl-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
-.coin-tpl-em{width:28px;height:28px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.coin-tpl:hover .coin-tpl-em{background:rgba(0,195,127,.12);}
-.coin-tpl-name{font-size:12px;font-weight:700;color:var(--text);}
-.coin-tpl-desc{font-size:11px;color:var(--text-sub);line-height:1.4;margin-bottom:5px;}
-.coin-tpl-rate{font-size:10.5px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:4px;display:inline-block;}
-.cpp-div{display:flex;align-items:center;gap:8px;margin:10px 0;}
-.cpp-div::before,.cpp-div::after{content:'';flex:1;height:1px;background:var(--border);}
-.cpp-div span{font-size:11px;color:var(--text-muted);white-space:nowrap;}
-.cpp-scratch{width:100%;padding:8px;border-radius:var(--r-sm);border:1.5px dashed var(--border);background:none;font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .15s,color .15s,background .12s;}
-.cpp-scratch:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* ══ COIN DRAWER (right-side slide-in) ══ */
+.coin-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;}
+.coin-drawer-overlay.open{opacity:1;pointer-events:all;}
+.coin-drawer{position:fixed;top:0;right:0;height:100%;width:400px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.coin-drawer-overlay.open .coin-drawer{transform:translateX(0);}
+.coin-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.coin-drawer-title{font-size:15px;font-weight:700;color:var(--text);}
+.coin-drawer-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.coin-drawer-close:hover{background:var(--bg);}
+.coin-drawer-body{flex:1;overflow-y:auto;padding:20px;}
+.coin-drawer-body .coin-tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.coin-drawer-body .coin-tpl{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;cursor:pointer;background:var(--surface);transition:border-color .15s,background .12s;}
+.coin-drawer-body .coin-tpl:hover{border-color:var(--green);background:var(--green-light);}
+.coin-drawer-body .coin-tpl-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.coin-drawer-body .coin-tpl-em{width:30px;height:30px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.coin-drawer-body .coin-tpl:hover .coin-tpl-em{background:rgba(0,195,127,.12);}
+.coin-drawer-body .coin-tpl-name{font-size:13px;font-weight:700;color:var(--text);}
+.coin-drawer-body .coin-tpl-desc{font-size:12px;color:var(--text-sub);line-height:1.4;margin-bottom:6px;}
+.coin-drawer-body .coin-tpl-rate{font-size:11px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:4px;display:inline-block;}
+.coin-drawer-body .cpp-div{display:flex;align-items:center;gap:8px;margin:14px 0;}
+.coin-drawer-body .cpp-div::before,.coin-drawer-body .cpp-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.coin-drawer-body .cpp-div span{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+.coin-drawer-body .cpp-scratch{width:100%;padding:10px;border-radius:var(--r-sm);border:1.5px dashed var(--border);background:none;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .15s,color .15s,background .12s;}
+.coin-drawer-body .cpp-scratch:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+/* coin form inside drawer */
+.coin-drawer-form{display:none;}
+.coin-drawer-form.open{display:block;}
+.coin-drawer-picker{display:block;}
+.coin-drawer-picker.hidden{display:none;}
 
 /* ══ COIN FORM ══ */
-.coin-form-panel{display:none;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface);animation:slideDown .15s ease;}
-.coin-form-panel.open{display:block;}
 .cfp-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:12px;}
 .cfp-grid{display:grid;grid-template-columns:56px 1fr 1fr;gap:10px;align-items:end;margin-bottom:10px;}
 .cfp-lbl{font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:4px;display:block;}
@@ -721,6 +731,72 @@ input[type="date"].fi:valid{color:var(--text);}
 
 <div class="toast" id="toastEl"></div>
 
+<!-- ══ COIN DRAWER ══ -->
+<div class="coin-drawer-overlay" id="coinDrawerOverlay" onclick="handleDrawerOverlayClick(event)">
+  <div class="coin-drawer" id="coinDrawer">
+    <div class="coin-drawer-header">
+      <div class="coin-drawer-title" id="coinDrawerTitle">Select a Coin Template</div>
+      <button class="coin-drawer-close" onclick="closeDrawerCoinPicker()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="coin-drawer-body" id="coinDrawerBody">
+      <!-- picker view -->
+      <div class="coin-drawer-picker" id="coinDrawerPicker">
+        <div class="coin-tpl-grid" id="coinDrawerTplGrid"></div>
+        <div class="cpp-div"><span>or build your own</span></div>
+        <button class="cpp-scratch" onclick="openDrawerCoinForm()">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Custom Coin from Scratch
+        </button>
+      </div>
+      <!-- form view -->
+      <div class="coin-drawer-form" id="coinDrawerForm">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <button onclick="backToDrawerPicker()" style="background:none;border:none;cursor:pointer;color:var(--text-sub);display:flex;align-items:center;gap:5px;font-size:13px;font-weight:500;padding:0;">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
+          </button>
+          <span style="font-size:14px;font-weight:700;color:var(--text);" id="coinDrawerFormTitle">Create Custom Coin</span>
+        </div>
+        <div class="cfp-grid">
+          <div>
+            <span class="cfp-lbl">Icon</span>
+            <button class="cfp-em-btn" id="drawerCfpEmBtn" onclick="toggleDrawerEmOpts()">
+              <span id="drawerCfpEm">🪙</span>
+              <div class="em-opts" id="drawerEmOpts">
+                <span class="em-o" onclick="pickDrawerEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickDrawerEm(event,'💎')">💎</span>
+                <span class="em-o" onclick="pickDrawerEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickDrawerEm(event,'🔥')">🔥</span>
+                <span class="em-o" onclick="pickDrawerEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickDrawerEm(event,'💰')">💰</span>
+                <span class="em-o" onclick="pickDrawerEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickDrawerEm(event,'🎁')">🎁</span>
+              </div>
+            </button>
+          </div>
+          <div>
+            <span class="cfp-lbl">Coin Name</span>
+            <input class="cfp-fi" id="drawerCfpName" placeholder="e.g. Promo Coins" />
+          </div>
+          <div>
+            <span class="cfp-lbl">Description</span>
+            <input class="cfp-fi" id="drawerCfpDesc" placeholder="Short description" />
+          </div>
+        </div>
+        <div class="rate-row">
+          <div><span class="cfp-lbl">Coins Earned</span><input class="cfp-fi" id="drawerCfpAmt" type="number" placeholder="10" /></div>
+          <div class="rate-sep">per €</div>
+          <div><span class="cfp-lbl">Bet Amount (€)</span><input class="cfp-fi" id="drawerCfpPer" type="number" placeholder="1" /></div>
+        </div>
+        <div class="cfp-actions">
+          <button class="cfp-cancel" onclick="closeDrawerCoinPicker()">Cancel</button>
+          <button class="cfp-save" onclick="saveDrawerCoin()">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Attach Coin
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── State ── */
 let selectedTriggers = [];
@@ -989,76 +1065,108 @@ function deleteRule(id) {
   toast('Rule removed');
 }
 
-/* ── Coin picker ── */
+/* ── Coin Drawer ── */
+let _coinDrawerRuleId = null;
+
 function openCoinPicker(id) {
-  document.getElementById(`coin-row-empty-${id}`).style.display='none';
-  document.getElementById(`coin-picker-${id}`).classList.add('open');
+  _coinDrawerRuleId = id;
+  // populate templates
+  const grid = document.getElementById('coinDrawerTplGrid');
+  grid.innerHTML = coinTemplates.map(c=>`
+    <div class="coin-tpl" onclick="drawerSelectTpl('${c.em}','${c.name}','${c.desc}','${c.amt}','${c.per}')">
+      <div class="coin-tpl-row"><div class="coin-tpl-em">${c.em}</div><div class="coin-tpl-name">${c.name}</div></div>
+      <div class="coin-tpl-desc">${c.desc}</div>
+      <div class="coin-tpl-rate">${c.amt} ${c.em} / €${c.per} bet</div>
+    </div>`).join('');
+  // show picker view
+  document.getElementById('coinDrawerPicker').classList.remove('hidden');
+  document.getElementById('coinDrawerForm').classList.remove('open');
+  document.getElementById('coinDrawerTitle').textContent = 'Select a Coin Template';
+  document.getElementById('coinDrawerOverlay').classList.add('open');
 }
-function closeCoinPicker(id) {
-  document.getElementById(`coin-picker-${id}`).classList.remove('open');
-  if(document.getElementById(`coin-row-attached-${id}`).style.display==='none')
-    document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+function closeDrawerCoinPicker() {
+  document.getElementById('coinDrawerOverlay').classList.remove('open');
+  if (_coinDrawerRuleId) {
+    const attached = document.getElementById(`coin-row-attached-${_coinDrawerRuleId}`);
+    const empty = document.getElementById(`coin-row-empty-${_coinDrawerRuleId}`);
+    if (attached && empty && attached.style.display === 'none') empty.style.display = 'flex';
+  }
+  _coinDrawerRuleId = null;
 }
-function selectCoinTpl(id,em,name,desc,amt,per) {
-  document.getElementById(`coin-picker-${id}`).classList.remove('open');
-  document.getElementById(`cfp-em-${id}`).textContent=em;
-  document.getElementById(`cfp-name-${id}`).value=name;
-  document.getElementById(`cfp-desc-${id}`).value=desc;
-  document.getElementById(`cfp-amt-${id}`).value=amt;
-  document.getElementById(`cfp-per-${id}`).value=per;
-  document.getElementById(`coin-form-${id}`).classList.add('open');
+function handleDrawerOverlayClick(e) {
+  if (e.target === document.getElementById('coinDrawerOverlay')) closeDrawerCoinPicker();
 }
-function openCoinFormBlank(id) {
-  document.getElementById(`coin-picker-${id}`).classList.remove('open');
-  document.getElementById(`cfp-em-${id}`).textContent='🪙';
-  ['cfp-name-','cfp-desc-'].forEach(p=>{ document.getElementById(p+id).value=''; });
-  document.getElementById(`cfp-amt-${id}`).value='1';
-  document.getElementById(`cfp-per-${id}`).value='1';
-  document.getElementById(`coin-form-${id}`).classList.add('open');
+function drawerSelectTpl(em, name, desc, amt, per) {
+  document.getElementById('drawerCfpEm').textContent = em;
+  document.getElementById('drawerCfpName').value = name;
+  document.getElementById('drawerCfpDesc').value = desc;
+  document.getElementById('drawerCfpAmt').value = amt;
+  document.getElementById('drawerCfpPer').value = per;
+  openDrawerCoinForm(name);
 }
-function backToPicker(id) {
-  document.getElementById(`coin-form-${id}`).classList.remove('open');
-  document.getElementById(`coin-picker-${id}`).classList.add('open');
+function openDrawerCoinForm(title) {
+  document.getElementById('coinDrawerPicker').classList.add('hidden');
+  document.getElementById('coinDrawerForm').classList.add('open');
+  document.getElementById('coinDrawerTitle').textContent = 'Configure Coin';
+  document.getElementById('coinDrawerFormTitle').textContent = title || 'Create Custom Coin';
+  if (!title) {
+    document.getElementById('drawerCfpEm').textContent = '🪙';
+    document.getElementById('drawerCfpName').value = '';
+    document.getElementById('drawerCfpDesc').value = '';
+    document.getElementById('drawerCfpAmt').value = '1';
+    document.getElementById('drawerCfpPer').value = '1';
+  }
 }
-function closeCoinZone(id) {
-  document.getElementById(`coin-form-${id}`).classList.remove('open');
-  document.getElementById(`coin-picker-${id}`).classList.remove('open');
-  if(document.getElementById(`coin-row-attached-${id}`).style.display==='none')
-    document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+function backToDrawerPicker() {
+  document.getElementById('coinDrawerPicker').classList.remove('hidden');
+  document.getElementById('coinDrawerForm').classList.remove('open');
+  document.getElementById('coinDrawerTitle').textContent = 'Select a Coin Template';
 }
-function saveCoin(id) {
-  const nameEl=document.getElementById(`cfp-name-${id}`);
-  const name=nameEl.value.trim();
-  if(!name){ nameEl.style.borderColor='var(--red)'; nameEl.focus(); return; }
-  nameEl.style.borderColor='';
-  const em=document.getElementById(`cfp-em-${id}`).textContent;
-  document.getElementById(`coin-pill-name-${id}`).textContent=name;
-  document.getElementById(`coin-pill-name-${id}`).previousElementSibling.textContent='Coin Name';
-  const dot=document.querySelector(`#coin-row-attached-${id} .coin-dot svg`);
-  document.getElementById(`coin-form-${id}`).classList.remove('open');
-  document.getElementById(`coin-row-attached-${id}`).style.display='flex';
+function saveDrawerCoin() {
+  const nameEl = document.getElementById('drawerCfpName');
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
+  nameEl.style.borderColor = '';
+  const em = document.getElementById('drawerCfpEm').textContent;
+  const id = _coinDrawerRuleId;
+  if (id) {
+    document.getElementById(`coin-pill-name-${id}`).textContent = name;
+    document.getElementById(`coin-row-attached-${id}`).style.display = 'flex';
+    document.getElementById(`coin-row-empty-${id}`).style.display = 'none';
+  }
+  document.getElementById('coinDrawerOverlay').classList.remove('open');
+  _coinDrawerRuleId = null;
   toast(`${em} "${name}" attached`);
 }
+function toggleDrawerEmOpts() {
+  const opts = document.getElementById('drawerEmOpts');
+  opts.classList.toggle('open');
+  setTimeout(()=>{ document.addEventListener('click', function h(e){ if(!opts.contains(e.target)){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); }, 10);
+}
+function pickDrawerEm(e, em) {
+  e.stopPropagation();
+  document.getElementById('drawerCfpEm').textContent = em;
+  document.getElementById('drawerEmOpts').classList.remove('open');
+}
 function editCoin(id) {
-  document.getElementById(`coin-row-attached-${id}`).style.display='none';
-  document.getElementById(`coin-form-${id}`).classList.add('open');
+  _coinDrawerRuleId = id;
+  const name = document.getElementById(`coin-pill-name-${id}`)?.textContent || '';
+  document.getElementById('drawerCfpName').value = name;
+  openDrawerCoinForm(name);
+  document.getElementById('coinDrawerOverlay').classList.add('open');
 }
 function detachCoin(id) {
   document.getElementById(`coin-row-attached-${id}`).style.display='none';
   document.getElementById(`coin-row-empty-${id}`).style.display='flex';
-  ['cfp-name-','cfp-desc-'].forEach(p=>{ document.getElementById(p+id).value=''; });
-  document.getElementById(`cfp-em-${id}`).textContent='🪙';
   toast('Coin detached');
 }
-function toggleEmoji(id) {
-  const opts=document.getElementById(`em-opts-${id}`);
-  opts.classList.toggle('open');
-  setTimeout(()=>{ document.addEventListener('click',function h(e){ if(!opts.contains(e.target)&&e.target.id!==`cfp-em-${id}`){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); },10);
-}
-function pickEm(id,em) {
-  document.getElementById(`cfp-em-${id}`).textContent=em;
-  document.getElementById(`em-opts-${id}`).classList.remove('open');
-}
+// legacy stubs (inline panels now hidden)
+function closeCoinPicker(id){}
+function closeCoinZone(id){}
+function backToPicker(id){}
+function saveCoin(id){ saveDrawerCoin(); }
+function toggleEmoji(id){}
+function pickEm(id,em){}
 
 /* ── Labels ── */
 const labelColors = [
