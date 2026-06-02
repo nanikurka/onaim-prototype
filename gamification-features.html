@@ -766,7 +766,7 @@ function activateTab(tabKey) {
       pill.classList.add('done');
       if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
     } else {
-      if (n) n.textContent = nums[key];
+      if (n) n.innerHTML = isValidated ? checkSvgStr : nums[key];
     }
   });
 }
