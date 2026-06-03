@@ -502,23 +502,36 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-coin-preview-icon{width:32px;height:32px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .fcd-coin-preview-name{font-size:13px;font-weight:600;color:var(--text);}
 .fcd-coin-badge{padding:3px 10px;border-radius:20px;background:#EDE9FE;color:#6D28D9;font-size:11.5px;font-weight:600;}
+/* rankings table layout */
+.fcd-rank-header-row{display:flex;align-items:center;gap:8px;padding:0 2px;margin-bottom:6px;}
+.fcd-rank-header-row>div{font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:none;}
+.fcd-rank-col-from{width:64px;flex-shrink:0;}
+.fcd-rank-col-to{width:64px;flex-shrink:0;}
+.fcd-rank-col-amt{width:80px;flex-shrink:0;}
+.fcd-rank-col-coin{flex:1;}
 /* prizes */
-.fcd-prize-card{border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;}
+.fcd-prize-card{display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;}
 .fcd-prize-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .fcd-prize-place-row{display:flex;align-items:center;gap:8px;flex:1;}
 .fcd-place-type-toggle{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;flex-shrink:0;}
 .fcd-place-type-btn{padding:4px 10px;font-size:11px;font-weight:600;font-family:inherit;border:none;background:none;cursor:pointer;color:var(--text-muted);transition:all .12s;}
 .fcd-place-type-btn.active{background:var(--text);color:#fff;}
 .fcd-place-inputs{display:flex;align-items:center;gap:6px;}
+.fcd-rank-input{width:64px;border:1.5px solid var(--border-input);border-radius:7px;padding:7px 8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;text-align:center;flex-shrink:0;}
+.fcd-rank-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fcd-rank-amt-input{width:80px;border:1.5px solid var(--border-input);border-radius:7px;padding:7px 8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;text-align:center;flex-shrink:0;}
+.fcd-rank-amt-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
 .fcd-place-input{width:52px;border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;font-size:12.5px;font-family:inherit;text-align:center;outline:none;}
 .fcd-place-input:focus{border-color:var(--green);}
 .fcd-place-sep{font-size:11px;color:var(--text-muted);white-space:nowrap;}
 .fcd-prize-del{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;border-radius:4px;margin-left:4px;}
 .fcd-prize-del:hover{color:var(--red);background:#FFF2EE;}
 /* coin selector inside prize */
-.fcd-coin-selector{border:1px solid var(--border-input);border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;background:#fff;width:100%;transition:border-color .15s;position:relative;}
+.fcd-coin-selector{border:1.5px solid var(--border-input);border-radius:8px;padding:7px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;background:#fff;width:100%;transition:border-color .15s;position:relative;}
 .fcd-coin-selector:hover{border-color:var(--green);}
 .fcd-coin-selector.open{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+/* dropdown group label */
+.fcd-coin-drop-group{padding:6px 14px 2px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:capitalize;letter-spacing:.3px;}
 .fcd-coin-sel-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .fcd-coin-sel-info{flex:1;text-align:left;}
 .fcd-coin-sel-name{font-size:13px;font-weight:600;color:var(--text);}
@@ -1097,11 +1110,22 @@ input[type="date"].fi:valid{color:var(--text);}
 
       <!-- PANEL 3: Rankings -->
       <div class="fcd-panel" id="fcd-panel-rankings">
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Define what each rank wins. Coins are limited to your prize pool. You can set a single place or a range (e.g. 1–3).</p>
+        <div class="cd-info-banner" style="margin-bottom:14px;">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text">For a single position, leave <strong>"To"</strong> empty. To set a range, fill in both <strong>"From"</strong> and <strong>"To"</strong> values.</div>
+        </div>
+        <!-- Column headers -->
+        <div class="fcd-rank-header-row">
+          <div class="fcd-rank-col-from">From</div>
+          <div class="fcd-rank-col-to">To</div>
+          <div class="fcd-rank-col-amt">Amount</div>
+          <div class="fcd-rank-col-coin">Prize Coin</div>
+          <div style="width:28px;flex-shrink:0;"></div>
+        </div>
         <div id="fcdRankingsList"></div>
         <button class="fcd-add-place" onclick="addFcdRanking()">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Rank
+          Add Another Prize
         </button>
       </div>
 
@@ -2379,51 +2403,36 @@ function openNewCoinFromPool() {
 function addFcdRanking() {
   _fcdRankCount++;
   const idx = _fcdRankCount;
-  const poolCoin = _fcdPool[0] || allPrizeCoins[0];
+  const poolCoin = _fcdPool[0] || null;
   const div = document.createElement('div');
   div.className = 'fcd-prize-card'; div.id = 'fcd-rank-' + idx;
   div.innerHTML = `
-    <div class="fcd-prize-card-header">
-      <div class="fcd-prize-place-row">
-        <div class="fcd-place-type-toggle">
-          <button class="fcd-place-type-btn active" id="fcd-rpt-single-${idx}" onclick="setRankType(${idx},'single')">Single</button>
-          <button class="fcd-place-type-btn" id="fcd-rpt-range-${idx}" onclick="setRankType(${idx},'range')">Range</button>
-        </div>
-        <div class="fcd-place-inputs" id="fcd-rank-place-inputs-${idx}">
-          <span class="fcd-place-sep" style="font-size:12px;color:var(--text-sub);">Place</span>
-          <input class="fcd-place-input" id="fcd-rfrom-${idx}" type="number" value="${idx}" min="1" placeholder="1" />
-          <span class="fcd-place-sep" id="fcd-rrange-sep-${idx}" style="display:none;">–</span>
-          <input class="fcd-place-input" id="fcd-rto-${idx}" type="number" value="${idx+2}" min="1" placeholder="3" style="display:none;" />
-        </div>
-      </div>
-      <button class="fcd-prize-del" onclick="removeFcdRanking(${idx})" title="Remove rank">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <!-- Coin selector (pool only) -->
-    <div style="position:relative;">
+    <input class="fcd-rank-input" id="fcd-rfrom-${idx}" type="number" value="${idx}" min="1" placeholder="1" />
+    <input class="fcd-rank-input" id="fcd-rto-${idx}" type="number" min="1" placeholder="-" style="color:var(--text-muted);" />
+    <input class="fcd-rank-amt-input" id="fcd-ramt-${idx}" type="number" value="100" min="1" />
+    <!-- Coin selector -->
+    <div style="position:relative;flex:1;">
       <div class="fcd-coin-selector" id="fcd-rcoin-sel-${idx}" onclick="toggleRankCoinDrop(${idx})">
-        <div class="fcd-coin-sel-icon" id="fcd-rcsel-icon-${idx}" style="font-size:17px;background:transparent;">
-          ${poolCoin.em}
+        ${poolCoin ? `
+        <div class="fcd-coin-sel-icon" id="fcd-rcsel-icon-${idx}" style="font-size:15px;background:transparent;">${poolCoin.em}</div>
+        <div class="fcd-coin-sel-info" style="flex:1;min-width:0;">
+          <div class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}" style="font-size:12.5px;">${poolCoin.name}</div>
+          <span class="fcd-coin-sel-type fcd-coin-type-${poolCoin.type}" id="fcd-rcsel-type-${idx}" style="font-size:10px;">${poolCoin.typeLabel}</span>
+        </div>` : `
+        <div class="fcd-coin-sel-info" style="flex:1;min-width:0;">
+          <div class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}" style="font-size:12.5px;color:var(--text-muted);">Select Prize Coin</div>
+          <span id="fcd-rcsel-type-${idx}"></span>
         </div>
-        <div class="fcd-coin-sel-info">
-          <div class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}">${poolCoin.name}</div>
-          <span class="fcd-coin-sel-type fcd-coin-type-${poolCoin.type}" id="fcd-rcsel-type-${idx}">${poolCoin.typeLabel}</span>
-        </div>
-        <svg class="fcd-coin-sel-chev" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        <div id="fcd-rcsel-icon-${idx}" style="display:none;"></div>`}
+        <svg class="fcd-coin-sel-chev" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="fcd-coin-dropdown" id="fcd-rcoin-drop-${idx}">
         <div id="fcd-rcoin-drop-items-${idx}"></div>
       </div>
     </div>
-    <!-- Amount -->
-    <div class="fcd-prize-bottom">
-      <div class="fcd-prize-amt-wrap">
-        <span>Amount</span>
-        <input class="fcd-prize-amt" type="number" value="100" min="1" id="fcd-ramt-${idx}" />
-        <span id="fcd-ramt-unit-${idx}" style="color:var(--text-muted);font-size:12px;">${poolCoin.em}</span>
-      </div>
-    </div>`;
+    <button class="fcd-prize-del" onclick="removeFcdRanking(${idx})" title="Remove rank" style="flex-shrink:0;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    </button>`;
   document.getElementById('fcdRankingsList').appendChild(div);
 }
 function removeFcdRanking(idx) {
@@ -2450,18 +2459,34 @@ function rebuildRankingCoinDrops() {
   });
 }
 function toggleRankCoinDrop(idx) {
-  // Rebuild items first
+  // Rebuild items grouped by type
   const itemsEl = document.getElementById('fcd-rcoin-drop-items-' + idx);
   if (itemsEl) {
-    const poolHtml = _fcdPool.length > 0
-      ? _fcdPool.map((c, ci) => `
-          <div class="fcd-coin-drop-item" onclick="selectRankCoin('${idx}',${ci})">
-            <span style="font-size:17px;margin-right:6px;">${c.em}</span>
-            <span class="fcd-coin-drop-name">${c.name}</span>
+    if (_fcdPool.length === 0) {
+      itemsEl.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">No coins in pool. Go back to Prize Coins step.</div>';
+    } else {
+      // Group by type
+      const groups = {};
+      const typeOrder = ['promo','withdrawal','asset','coin-in'];
+      const typeGroupLabel = {'promo':'Promo Coins','withdrawal':'Withdrawal','asset':'Assets','coin-in':'Coin In'};
+      _fcdPool.forEach((c, ci) => {
+        if (!groups[c.type]) groups[c.type] = [];
+        groups[c.type].push({c, ci});
+      });
+      let html = '';
+      typeOrder.forEach(type => {
+        if (!groups[type]) return;
+        html += `<div class="fcd-coin-drop-group">${typeGroupLabel[type]}</div>`;
+        groups[type].forEach(({c, ci}) => {
+          html += `<div class="fcd-coin-drop-item" onclick="selectRankCoin('${idx}',${ci})">
+            <span style="font-size:15px;margin-right:6px;">${c.em}</span>
+            <span class="fcd-coin-drop-name" style="flex:1;">${c.name}${c.value ? `<span style="color:var(--text-muted);font-size:11px;font-weight:400;"> Value: ${c.value}</span>` : ''}</span>
             <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
-          </div>`).join('')
-      : '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">No coins in pool. Go back to Prize Coins step.</div>';
-    itemsEl.innerHTML = poolHtml + `<div class="fcd-coin-drop-create" onclick="openNewCoinFromRanking(${idx})"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create new coin</div>`;
+          </div>`;
+        });
+      });
+      itemsEl.innerHTML = html;
+    }
   }
   document.querySelectorAll('.fcd-coin-dropdown').forEach(d => {
     if (d.id !== 'fcd-rcoin-drop-' + idx) { d.classList.remove('open'); }
@@ -2475,13 +2500,11 @@ function selectRankCoin(idx, coinIdx, silent) {
   const c = _fcdPool[coinIdx];
   if (!c) return;
   const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
-  if (iconEl) iconEl.textContent = c.em;
+  if (iconEl) { iconEl.textContent = c.em; iconEl.style.display = ''; iconEl.style.fontSize = '15px'; iconEl.style.background = 'transparent'; }
   const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
-  if (nameEl) nameEl.textContent = c.name;
+  if (nameEl) { nameEl.textContent = c.name; nameEl.style.color = ''; }
   const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
-  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; }
-  const unitEl = document.getElementById('fcd-ramt-unit-' + idx);
-  if (unitEl) unitEl.textContent = c.em;
+  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; typeEl.style.fontSize = '10px'; }
   if (!silent) {
     document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
     document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
