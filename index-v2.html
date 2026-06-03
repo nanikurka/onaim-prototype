@@ -317,7 +317,11 @@ input[type="date"].fi:valid{color:var(--text);}
 .cd-coin-icon svg{width:18px;height:18px;}
 .cd-coin-info{flex:1;}
 .cd-coin-name{font-size:13px;font-weight:600;color:var(--text);}
-.cd-coin-badge{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:4px;background:#EDE9FE;color:#7C3AED;font-size:11px;font-weight:600;}
+.cd-coin-badge{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.cd-coin-badge.type-in{background:#EDE9FE;color:#7C3AED;}
+.cd-coin-badge.type-promo{background:#FEF9C3;color:#A16207;}
+.cd-coin-badge.type-withdrawal{background:#FEF3C7;color:#92400E;}
+.cd-coin-badge.type-asset{background:#EFF6FF;color:#1D4ED8;}
 .cd-coin-dots{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;border-radius:4px;}
 .cd-coin-dots:hover{background:var(--bg);}
 /* footer */
@@ -1542,7 +1546,7 @@ function renderCoinDrawerList() {
       </div>
       <div class="cd-coin-info">
         <div class="cd-coin-name">${c.name}</div>
-        <span class="cd-coin-badge">${_coinDrawerType==='in'?'Coin In':'Promo Coin'}</span>
+        <span class="cd-coin-badge type-${_coinDrawerType==='in'?'in':'promo'}">${_coinDrawerType==='in'?'Coin In':'Promo Coin'}</span>
       </div>
       <button class="cd-coin-dots" onclick="event.stopPropagation()">
         <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
