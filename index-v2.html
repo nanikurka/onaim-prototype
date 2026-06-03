@@ -443,7 +443,7 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-coin-sel-name{font-size:13px;font-weight:600;color:var(--text);}
 .fcd-coin-sel-type{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:2px;}
 .fcd-coin-type-coin-in{background:#EDE9FE;color:#6D28D9;}
-.fcd-coin-type-promo{background:#DCFCE7;color:#15803D;}
+.fcd-coin-type-promo{background:#FEF9C3;color:#A16207;}
 .fcd-coin-type-withdrawal{background:#FEF3C7;color:#92400E;}
 .fcd-coin-type-asset{background:#EFF6FF;color:#1D4ED8;}
 .fcd-coin-sel-chev{color:var(--text-muted);flex-shrink:0;}
@@ -1587,7 +1587,7 @@ function selectNewCoinType(type) {
   const info = document.getElementById('cdNewInfoText');
   if (info) {
     if (type === 'in') info.innerHTML = '<strong>Coin in</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.';
-    else info.innerHTML = '<strong>Promo Coin</strong> is used as an internal promotion currency. It can be distributed as prizes and used within the promotion scope.';
+    else info.innerHTML = '<strong>Promo Coin</strong> is an internal promotion currency. It exists only within the promotion — it cannot be aggregated from external sources or withdrawn to outside wallets. Use it to reward and incentivize players inside your promotion.';
   }
 }
 function toggleAdvanced() {
@@ -2286,7 +2286,7 @@ function fcdSelectCoinType(type) {
   const info = document.getElementById('fcdCoinInfoText');
   if (info) info.innerHTML = type==='in'
     ? '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.'
-    : '<strong>Promo Coin</strong> is used as an internal promotion currency distributed as prizes within the promotion scope.';
+    : '<strong>Promo Coin</strong> is an internal promotion currency. It exists only within the promotion — it cannot be aggregated from external sources or withdrawn to outside wallets. Use it to reward and incentivize players inside your promotion.';
 }
 function toggleFcdEmOpts() {
   const opts = document.getElementById('fcdEmOpts');
