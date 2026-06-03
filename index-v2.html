@@ -423,12 +423,15 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-pool-search-wrap{position:relative;flex:1;margin-bottom:0;}
 .fcd-pool-filter-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1.5px solid #D1D5DB;border-radius:8px;background:#fff;cursor:pointer;font-size:12.5px;font-weight:600;color:#374151;white-space:nowrap;font-family:inherit;flex-shrink:0;}
 .fcd-pool-filter-btn:hover{border-color:#9CA3AF;}
-.fcd-pool-filter-btn.active{border-color:var(--green);color:var(--green);}
-.fcd-pool-filter-drop{display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:400;min-width:160px;overflow:hidden;}
+.fcd-pool-filter-drop{display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:400;min-width:180px;overflow:hidden;}
 .fcd-pool-filter-drop.open{display:block;}
-.fcd-pool-filter-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text);transition:background .1s;}
+.fcd-pool-filter-opt{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text);transition:background .1s;user-select:none;}
 .fcd-pool-filter-opt:hover{background:#F9FAFB;}
 .fcd-pool-filter-opt.selected{background:#F0FDF4;color:var(--green);font-weight:600;}
+.fcd-pool-filter-check{width:15px;height:15px;border:1.5px solid #D1D5DB;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;}
+.fcd-pool-filter-opt.selected .fcd-pool-filter-check{background:var(--green);border-color:var(--green);}
+.fcd-pool-filter-check-tick{display:none;color:#fff;font-size:10px;line-height:1;}
+.fcd-pool-filter-opt.selected .fcd-pool-filter-check-tick{display:block;}
 .fcd-pool-chips-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:0;}
 .fcd-pool-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px 3px 10px;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:20px;font-size:12px;font-weight:500;color:#374151;}
 .fcd-pool-chip-x{cursor:pointer;color:#9CA3AF;font-size:13px;line-height:1;margin-left:1px;padding:0 2px;}
@@ -1067,11 +1070,10 @@ input[type="date"].fi:valid{color:var(--text);}
               <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="fcd-pool-filter-drop" id="fcdPoolFilterDrop">
-              <div class="fcd-pool-filter-opt selected" onclick="applyPoolFilter('all','All',this)">All Types</div>
-              <div class="fcd-pool-filter-opt" onclick="applyPoolFilter('coin-in','Coin In',this)">Coin In</div>
-              <div class="fcd-pool-filter-opt" onclick="applyPoolFilter('promo','Promo Coin',this)">Promo Coin</div>
-              <div class="fcd-pool-filter-opt" onclick="applyPoolFilter('withdrawal','Withdrawal',this)">Withdrawal</div>
-              <div class="fcd-pool-filter-opt" onclick="applyPoolFilter('asset','Assets',this)">Assets</div>
+              <div class="fcd-pool-filter-opt" data-filter="coin-in" onclick="togglePoolFilterType('coin-in','Coin In',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Coin In</div>
+              <div class="fcd-pool-filter-opt" data-filter="promo" onclick="togglePoolFilterType('promo','Promo Coin',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Promo Coin</div>
+              <div class="fcd-pool-filter-opt" data-filter="withdrawal" onclick="togglePoolFilterType('withdrawal','Withdrawal',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Withdrawal</div>
+              <div class="fcd-pool-filter-opt" data-filter="asset" onclick="togglePoolFilterType('asset','Assets',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Assets</div>
             </div>
           </div>
         </div>
@@ -2135,7 +2137,7 @@ function goFcdStep(step) {
   document.getElementById('fcdContinueBtn').textContent = step === 'schedule' ? 'Save' : 'Continue';
   // When entering rankings, rebuild ranking coin dropdowns to reflect current pool
   if (step === 'rankings') rebuildRankingCoinDrops();
-  if (step === 'pool') { _poolFilter='all'; _poolSearch=''; if(document.getElementById('fcdPoolSearch')) document.getElementById('fcdPoolSearch').value=''; const firstOpt=document.querySelector('.fcd-pool-filter-opt'); if(firstOpt) applyPoolFilter('all','All Types',firstOpt); renderPoolGrid(); renderPool(); }
+  if (step === 'pool') { _poolFilters=[]; _poolSearch=''; if(document.getElementById('fcdPoolSearch')) document.getElementById('fcdPoolSearch').value=''; clearPoolFilters(); renderPoolGrid(); renderPool(); }
 }
 function fcdContinue() {
   const steps = ['entry','pool','rankings','schedule'];
@@ -2177,7 +2179,7 @@ const _poolCatalog = [
   {name:'Mystic Gems',    type:'asset',      typeLabel:'Asset',      value:'$0.12'},
   {name:'Gold Medals',    type:'coin-in',    typeLabel:'Coin In',    value:'$0.08'},
 ];
-let _poolFilter = 'all';
+let _poolFilters = [];
 let _poolSearch = '';
 
 const _badgeStyle = {
@@ -2202,28 +2204,44 @@ function togglePoolFilterDrop() {
     }, 10);
   }
 }
-function applyPoolFilter(f, label, el) {
-  _poolFilter = f;
+const _poolFilterLabels = {'coin-in':'Coin In','promo':'Promo Coin','withdrawal':'Withdrawal','asset':'Assets'};
+function togglePoolFilterType(f, label, el) {
+  const idx = _poolFilters.indexOf(f);
+  if (idx === -1) _poolFilters.push(f);
+  else _poolFilters.splice(idx, 1);
+  // sync checkbox states
+  document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => {
+    o.classList.toggle('selected', _poolFilters.includes(o.dataset.filter));
+  });
+  _updatePoolFilterUI();
+  renderPoolGrid();
+}
+function clearPoolFilters() {
+  _poolFilters = [];
   document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('fcdPoolFilterDrop')?.classList.remove('open');
-  const btn = document.getElementById('fcdPoolFilterBtn');
-  const lbl = document.getElementById('fcdPoolFilterLabel');
-  if (lbl) lbl.textContent = f === 'all' ? 'Filter' : label;
-  if (btn) btn.classList.toggle('active', f !== 'all');
-  // chips
+  _updatePoolFilterUI();
+  renderPoolGrid();
+}
+function _updatePoolFilterUI() {
   const chipsRow = document.getElementById('fcdPoolChipsRow');
-  if (chipsRow) {
-    if (f === 'all') {
-      chipsRow.style.display = 'none';
-      chipsRow.innerHTML = '';
-    } else {
-      chipsRow.style.display = 'flex';
-      chipsRow.innerHTML = `
-        <span class="fcd-pool-chip">${label}<span class="fcd-pool-chip-x" onclick="applyPoolFilter('all','All Types',document.querySelector('.fcd-pool-filter-opt'))">✕</span></span>
-        <button class="fcd-pool-clear" onclick="applyPoolFilter('all','All Types',document.querySelector('.fcd-pool-filter-opt'))">Clear all</button>`;
-    }
+  if (!chipsRow) return;
+  if (_poolFilters.length === 0) {
+    chipsRow.style.display = 'none';
+    chipsRow.innerHTML = '';
+  } else {
+    chipsRow.style.display = 'flex';
+    const chips = _poolFilters.map(f =>
+      `<span class="fcd-pool-chip">${_poolFilterLabels[f]}<span class="fcd-pool-chip-x" onclick="removePoolFilter('${f}')">✕</span></span>`
+    ).join('');
+    chipsRow.innerHTML = chips + `<button class="fcd-pool-clear" onclick="clearPoolFilters()">Clear all</button>`;
   }
+}
+function removePoolFilter(f) {
+  _poolFilters = _poolFilters.filter(x => x !== f);
+  document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => {
+    o.classList.toggle('selected', _poolFilters.includes(o.dataset.filter));
+  });
+  _updatePoolFilterUI();
   renderPoolGrid();
 }
 function filterPoolCoins(val) {
@@ -2234,7 +2252,7 @@ function renderPoolGrid() {
   const grid = document.getElementById('fcdPoolCoinGrid');
   if (!grid) return;
   const items = _poolCatalog.filter(c => {
-    const matchFilter = _poolFilter === 'all' || c.type === _poolFilter;
+    const matchFilter = _poolFilters.length === 0 || _poolFilters.includes(c.type);
     const matchSearch = !_poolSearch || c.name.toLowerCase().includes(_poolSearch);
     return matchFilter && matchSearch;
   });
