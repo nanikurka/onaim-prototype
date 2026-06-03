@@ -413,16 +413,42 @@ input[type="date"].fi:valid{color:var(--text);}
 /* panels */
 .fcd-panel{display:none;}
 .fcd-panel.active{display:block;}
-/* entry source */
-.fcd-select{width:100%;padding:10px 14px;border:1px solid var(--border-input);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239CA3AF' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;margin-bottom:16px;}
-.fcd-select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+/* entry source multi-select dropdown */
+.fcd-ms-wrap{position:relative;margin-bottom:12px;}
+.fcd-ms-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid var(--border-input);border-radius:8px;background:#fff;cursor:pointer;min-height:40px;transition:border-color .15s;}
+.fcd-ms-trigger:hover,.fcd-ms-trigger.open{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fcd-ms-chips{display:flex;flex-wrap:wrap;gap:5px;flex:1;}
+.fcd-ms-placeholder{font-size:13px;color:#9CA3AF;}
+.fcd-ms-chip{display:flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:20px;padding:2px 8px 2px 6px;font-size:11.5px;font-weight:500;color:#15803D;}
+.fcd-ms-chip-icon{font-size:13px;line-height:1;}
+.fcd-ms-chip-label{display:flex;align-items:center;gap:3px;}
+.fcd-ms-chip-badge{background:#D1FAE5;color:#065F46;border-radius:10px;padding:0 5px;font-size:10px;font-weight:600;}
+.fcd-ms-chip-x{margin-left:2px;cursor:pointer;color:#6B7280;font-size:12px;line-height:1;padding:0 2px;}
+.fcd-ms-chip-x:hover{color:#EF4444;}
+.fcd-ms-caret{flex-shrink:0;color:#9CA3AF;transition:transform .2s;}
+.fcd-ms-trigger.open .fcd-ms-caret{transform:rotate(180deg);}
+.fcd-ms-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;overflow:hidden;}
+.fcd-ms-dropdown.open{display:block;}
+.fcd-ms-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.fcd-ms-search input{width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:inherit;}
+.fcd-ms-list{max-height:220px;overflow-y:auto;}
+.fcd-ms-option{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;transition:background .1s;}
+.fcd-ms-option:hover{background:#F9FAFB;}
+.fcd-ms-option.selected{background:#F0FDF4;}
+.fcd-ms-option-check{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.fcd-ms-option.selected .fcd-ms-option-check{background:var(--green);border-color:var(--green);}
+.fcd-ms-option-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.fcd-ms-opt-icon-trigger{background:#EFF6FF;}
+.fcd-ms-opt-icon-coin{background:#F0FDF4;}
+.fcd-ms-option-info{flex:1;min-width:0;}
+.fcd-ms-option-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-ms-option-meta{display:flex;align-items:center;gap:5px;margin-top:2px;}
+.fcd-ms-option-type{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:10px;}
+.fcd-ms-type-trigger{background:#DBEAFE;color:#1D4ED8;}
+.fcd-ms-type-coin{background:#D1FAE5;color:#065F46;}
+.fcd-ms-option-coin{font-size:11px;color:var(--text-muted);}
+.fcd-ms-empty{padding:14px;text-align:center;font-size:12px;color:var(--text-muted);}
 .fcd-trigger-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0;}
-.fcd-entry-check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
-.fcd-entry-check-item:has(.fcd-entry-cb:checked){border-color:var(--green);background:#F0FDF4;}
-.fcd-entry-check-body{display:flex;flex-direction:column;gap:2px;flex:1;}
-.fcd-entry-check-name{font-size:13px;font-weight:600;color:var(--text);}
-.fcd-entry-check-desc{font-size:11px;color:var(--text-muted);}
-.fcd-entry-check-coin{display:flex;align-items:center;gap:5px;margin-top:4px;}
 .fcd-trigger-head{padding:14px 16px;}
 .fcd-trigger-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
 .fcd-trigger-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
@@ -942,7 +968,14 @@ input[type="date"].fi:valid{color:var(--text);}
 
       <!-- PANEL 1: Entry Source -->
       <div class="fcd-panel active" id="fcd-panel-entry">
-        <div id="fcdNoTriggersNotice" style="display:none;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:16px 18px;margin-bottom:4px;">
+        <!-- Info notice -->
+        <div class="cd-info-banner" style="margin-bottom:14px;">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text">Select which earning rules or prizes from other features serve as the <strong>entry source</strong> of this leaderboard. Players must meet these conditions to qualify and appear on the rankings.</div>
+        </div>
+
+        <!-- No triggers warning -->
+        <div id="fcdNoTriggersNotice" style="display:none;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:16px 18px;">
           <div style="display:flex;align-items:flex-start;gap:10px;">
             <span style="font-size:18px;line-height:1;">⚠️</span>
             <div>
@@ -952,7 +985,21 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
           </div>
         </div>
-        <div id="fcdEntryChecklist" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+        <!-- Multi-select dropdown -->
+        <div class="fcd-ms-wrap" id="fcdEntryMsWrap" style="display:none;">
+          <div class="fcd-section-label" style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:6px;">ENTRY SOURCE</div>
+          <div class="fcd-ms-trigger" id="fcdMsTrigger" onclick="toggleFcdMsDropdown()">
+            <div class="fcd-ms-chips" id="fcdMsChips">
+              <span class="fcd-ms-placeholder" id="fcdMsPlaceholder">Select entry source(s)…</span>
+            </div>
+            <svg class="fcd-ms-caret" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="fcd-ms-dropdown" id="fcdMsDropdown">
+            <div class="fcd-ms-search"><input type="text" placeholder="Search…" oninput="filterFcdMsOptions(this.value)" id="fcdMsSearch"></div>
+            <div class="fcd-ms-list" id="fcdMsList"></div>
+          </div>
+        </div>
         <div id="fcdEntryPreview" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
@@ -1987,33 +2034,17 @@ function openFcd(featureId, featureName) {
   document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
   // populate entry source dropdown with current triggers
   const noTriggersNotice = document.getElementById('fcdNoTriggersNotice');
-  const checklist = document.getElementById('fcdEntryChecklist');
-  checklist.innerHTML = '';
+  const msWrap = document.getElementById('fcdEntryMsWrap');
   document.getElementById('fcdEntryPreview').innerHTML = '';
+  _fcdMsSelected = [];
+  renderFcdMsChips();
   if (selectedTriggers.length === 0) {
     noTriggersNotice.style.display = 'block';
-    checklist.style.display = 'none';
+    msWrap.style.display = 'none';
   } else {
     noTriggersNotice.style.display = 'none';
-    checklist.style.display = 'flex';
-    selectedTriggers.forEach((tid, i) => {
-      const ruleEl = document.getElementById(tid);
-      const rname = ruleEl?.querySelector('.rule-name')?.textContent || ('Trigger ' + (i+1));
-      const rdesc = ruleEl?.querySelector('.rule-desc')?.textContent || '';
-      const coinName = ruleEl?.querySelector('.coin-row-name')?.textContent || '';
-      const coinBadge = ruleEl?.querySelector('.coin-pill')?.textContent || '';
-      const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
-      const item = document.createElement('label');
-      item.className = 'fcd-entry-check-item';
-      item.innerHTML = `
-        <input type="checkbox" class="fcd-entry-cb" value="${tid}" onchange="renderFcdEntryPreviews()" style="width:16px;height:16px;accent-color:var(--green);flex-shrink:0;cursor:pointer;">
-        <div class="fcd-entry-check-body">
-          <div class="fcd-entry-check-name">${rname}</div>
-          ${rdesc ? `<div class="fcd-entry-check-desc">${rdesc}</div>` : ''}
-          ${coinName ? `<div class="fcd-entry-check-coin">${coinEm ? `<span style="font-size:14px;">${coinEm}</span>` : ''}<span style="font-size:12px;font-weight:500;">${coinName}</span><span class="fcd-coin-badge" style="font-size:10px;">${coinBadge}</span></div>` : ''}
-        </div>`;
-      checklist.appendChild(item);
-    });
+    msWrap.style.display = 'block';
+    buildFcdMsList();
   }
   // reset pool & rankings
   renderPool();
@@ -2067,8 +2098,7 @@ function fcdContinue() {
   const steps = ['entry','pool','rankings','schedule'];
   const idx = steps.indexOf(_fcdStep);
   if (_fcdStep === 'entry') {
-    const checked = document.querySelectorAll('.fcd-entry-cb:checked');
-    if (!checked.length) { toast('Please select at least one entry source'); return; }
+    if (!_fcdMsSelected.length) { toast('Please select at least one entry source'); return; }
   }
   _fcdStepsDone[_fcdStep] = true;
   if (idx < steps.length - 1) {
@@ -2250,11 +2280,106 @@ function selectRankCoin(idx, coinIdx, silent) {
     document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
   }
 }
+/* ── Entry source multi-select ── */
+let _fcdMsSelected = [];
+
+function buildFcdMsList(filter) {
+  const list = document.getElementById('fcdMsList');
+  list.innerHTML = '';
+  const items = selectedTriggers.map(tid => {
+    const ruleEl = document.getElementById(tid);
+    const rname = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
+    const coinName = ruleEl?.querySelector('.coin-row-name')?.textContent || '';
+    const coinBadge = ruleEl?.querySelector('.coin-pill')?.textContent || '';
+    const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
+    return { id: tid, name: rname, coinName, coinBadge, coinEm, type: 'Earning Rule' };
+  });
+  const filtered = filter ? items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase())) : items;
+  if (!filtered.length) {
+    list.innerHTML = '<div class="fcd-ms-empty">No options found</div>';
+    return;
+  }
+  filtered.forEach(item => {
+    const sel = _fcdMsSelected.includes(item.id);
+    const row = document.createElement('div');
+    row.className = 'fcd-ms-option' + (sel ? ' selected' : '');
+    row.dataset.id = item.id;
+    row.innerHTML = `
+      <div class="fcd-ms-option-check">${sel ? '<svg width="10" height="10" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' : ''}</div>
+      <div class="fcd-ms-option-icon fcd-ms-opt-icon-trigger">🎯</div>
+      <div class="fcd-ms-option-info">
+        <div class="fcd-ms-option-name">${item.name}</div>
+        <div class="fcd-ms-option-meta">
+          <span class="fcd-ms-option-type fcd-ms-type-trigger">Earning Rule</span>
+          ${item.coinName ? `<span class="fcd-ms-option-coin">${item.coinEm} ${item.coinName} · <span style="font-size:10px;font-weight:600;color:#065F46;">${item.coinBadge}</span></span>` : '<span class="fcd-ms-option-coin" style="color:#D1D5DB;">No coin attached</span>'}
+        </div>
+      </div>`;
+    row.onclick = () => toggleFcdMsOption(item.id);
+    list.appendChild(row);
+  });
+}
+
+function toggleFcdMsOption(id) {
+  const idx = _fcdMsSelected.indexOf(id);
+  if (idx === -1) _fcdMsSelected.push(id);
+  else _fcdMsSelected.splice(idx, 1);
+  renderFcdMsChips();
+  buildFcdMsList(document.getElementById('fcdMsSearch')?.value || '');
+  renderFcdEntryPreviews();
+}
+
+function renderFcdMsChips() {
+  const chips = document.getElementById('fcdMsChips');
+  const placeholder = document.getElementById('fcdMsPlaceholder');
+  if (!chips) return;
+  [...chips.querySelectorAll('.fcd-ms-chip')].forEach(c => c.remove());
+  if (_fcdMsSelected.length === 0) {
+    if (placeholder) placeholder.style.display = '';
+    return;
+  }
+  if (placeholder) placeholder.style.display = 'none';
+  _fcdMsSelected.forEach(tid => {
+    const ruleEl = document.getElementById(tid);
+    const rname = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
+    const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '🎯';
+    const chip = document.createElement('span');
+    chip.className = 'fcd-ms-chip';
+    chip.innerHTML = `<span class="fcd-ms-chip-icon">${coinEm || '🎯'}</span><span class="fcd-ms-chip-label">${rname}<span class="fcd-ms-chip-badge">Rule</span></span><span class="fcd-ms-chip-x" onclick="event.stopPropagation();toggleFcdMsOption('${tid}')">✕</span>`;
+    chips.insertBefore(chip, placeholder);
+  });
+}
+
+function toggleFcdMsDropdown() {
+  const trigger = document.getElementById('fcdMsTrigger');
+  const dropdown = document.getElementById('fcdMsDropdown');
+  const isOpen = dropdown.classList.contains('open');
+  if (isOpen) {
+    dropdown.classList.remove('open');
+    trigger.classList.remove('open');
+  } else {
+    dropdown.classList.add('open');
+    trigger.classList.add('open');
+    document.getElementById('fcdMsSearch').value = '';
+    buildFcdMsList();
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!document.getElementById('fcdEntryMsWrap')?.contains(e.target)) {
+          dropdown.classList.remove('open');
+          trigger.classList.remove('open');
+          document.removeEventListener('click', handler);
+        }
+      });
+    }, 10);
+  }
+}
+
+function filterFcdMsOptions(val) { buildFcdMsList(val); }
+
 function renderFcdEntryPreviews() {
   const preview = document.getElementById('fcdEntryPreview');
-  const checked = [...document.querySelectorAll('.fcd-entry-cb:checked')].map(cb => cb.value);
-  if (!checked.length) { preview.innerHTML = ''; return; }
-  preview.innerHTML = checked.map(tid => {
+  if (!preview) return;
+  if (!_fcdMsSelected.length) { preview.innerHTML = ''; return; }
+  preview.innerHTML = _fcdMsSelected.map(tid => {
     const ruleEl = document.getElementById(tid);
     if (!ruleEl) return '';
     const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
@@ -2263,23 +2388,11 @@ function renderFcdEntryPreviews() {
     const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
     const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
     const coinEm = ruleEl.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
-    const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount'])
-      .map(t=>`<span class="fcd-tag">${t}</span>`).join('');
-    const coinHtml = coinName ? `
-      <div class="fcd-coin-preview" style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:var(--surface-alt,#F9FAFB);border-radius:6px;border:1px solid var(--border);">
-        ${coinEm ? `<span style="font-size:20px;line-height:1;">${coinEm}</span>` : ''}
-        <span style="font-size:12px;font-weight:600;">${coinName}</span>
-        <span class="fcd-coin-badge">${coinBadge}</span>
-      </div>` : `<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">⚠ No coin attached</div>`;
-    return `
-      <div class="fcd-trigger-card">
-        <div class="fcd-trigger-head">
-          <div class="fcd-trigger-name">${rname}</div>
-          ${rdesc ? `<div class="fcd-trigger-desc">${rdesc}</div>` : ''}
-          <div class="fcd-tags">${tagsHtml}</div>
-        </div>
-        ${coinHtml}
-      </div>`;
+    const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount']).map(t=>`<span class="fcd-tag">${t}</span>`).join('');
+    const coinHtml = coinName
+      ? `<div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:#F9FAFB;border-radius:6px;border:1px solid var(--border);">${coinEm ? `<span style="font-size:18px;">${coinEm}</span>` : ''}<span style="font-size:12px;font-weight:600;">${coinName}</span><span class="fcd-coin-badge">${coinBadge}</span></div>`
+      : `<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">⚠ No coin attached to this rule</div>`;
+    return `<div class="fcd-trigger-card"><div class="fcd-trigger-head"><div class="fcd-trigger-name">${rname}</div>${rdesc?`<div class="fcd-trigger-desc">${rdesc}</div>`:''}<div class="fcd-tags">${tagsHtml}</div>${coinHtml}</div></div>`;
   }).join('');
 }
 // Extended coin options with types
