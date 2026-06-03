@@ -532,10 +532,11 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-coin-selector.open{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
 /* dropdown group label */
 .fcd-coin-drop-group{padding:6px 14px 2px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:capitalize;letter-spacing:.3px;}
-.fcd-coin-sel-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.fcd-coin-sel-info{flex:1;text-align:left;}
-.fcd-coin-sel-name{font-size:13px;font-weight:600;color:var(--text);}
-.fcd-coin-sel-type{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:2px;}
+.fcd-coin-sel-icon{width:22px;height:22px;border-radius:5px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-coin-sel-info{flex:1;text-align:left;display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;}
+.fcd-coin-sel-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;}
+.fcd-coin-sel-value{font-size:11.5px;color:var(--text-muted);font-weight:400;white-space:nowrap;}
+.fcd-coin-sel-type{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0;}
 .fcd-coin-type-coin-in{background:#EDE9FE;color:#6D28D9;}
 .fcd-coin-type-promo{background:#FEF9C3;color:#A16207;}
 .fcd-coin-type-withdrawal{background:#FEF3C7;color:#92400E;}
@@ -2412,9 +2413,10 @@ function addFcdRanking() {
     <!-- Coin selector -->
     <div style="position:relative;flex:1;">
       <div class="fcd-coin-selector" id="fcd-rcoin-sel-${idx}" onclick="toggleRankCoinDrop(${idx})">
-        <div id="fcd-rcsel-icon-${idx}" style="display:none;font-size:15px;background:transparent;"></div>
-        <div class="fcd-coin-sel-info" style="flex:1;min-width:0;">
-          <div class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}" style="font-size:12.5px;color:var(--text-muted);">Select Prize Coin</div>
+        <div id="fcd-rcsel-icon-${idx}" style="display:none;width:22px;height:22px;border-radius:5px;font-size:14px;align-items:center;justify-content:center;flex-shrink:0;"></div>
+        <div class="fcd-coin-sel-info">
+          <span class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}" style="color:var(--text-muted);font-weight:400;">Select Prize Coin</span>
+          <span class="fcd-coin-sel-value" id="fcd-rcsel-value-${idx}"></span>
           <span id="fcd-rcsel-type-${idx}"></span>
         </div>
         <svg class="fcd-coin-sel-chev" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2449,9 +2451,11 @@ function rebuildRankingCoinDrops() {
     if (curName && curName !== 'Select Prize Coin' && !_fcdPool.find(c => c.name === curName)) {
       // reset to unselected
       const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
-      if (nameEl) { nameEl.textContent = 'Select Prize Coin'; nameEl.style.color = 'var(--text-muted)'; }
+      if (nameEl) { nameEl.textContent = 'Select Prize Coin'; nameEl.style.color = 'var(--text-muted)'; nameEl.style.fontWeight = '400'; }
       const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
       if (iconEl) iconEl.style.display = 'none';
+      const valueEl = document.getElementById('fcd-rcsel-value-' + idx);
+      if (valueEl) valueEl.textContent = '';
       const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
       if (typeEl) { typeEl.textContent = ''; typeEl.className = ''; }
     }
@@ -2499,11 +2503,13 @@ function selectRankCoin(idx, coinIdx, silent) {
   const c = _fcdPool[coinIdx];
   if (!c) return;
   const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
-  if (iconEl) { iconEl.textContent = c.em; iconEl.style.display = ''; iconEl.style.fontSize = '15px'; iconEl.style.background = 'transparent'; }
+  if (iconEl) { iconEl.textContent = c.em; iconEl.style.display = 'inline-flex'; }
   const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
-  if (nameEl) { nameEl.textContent = c.name; nameEl.style.color = ''; }
+  if (nameEl) { nameEl.textContent = c.name; nameEl.style.color = ''; nameEl.style.fontWeight = '600'; }
+  const valueEl = document.getElementById('fcd-rcsel-value-' + idx);
+  if (valueEl) valueEl.textContent = c.value ? 'Value: ' + c.value : '';
   const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
-  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; typeEl.style.fontSize = '10px'; }
+  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; }
   if (!silent) {
     document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
     document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
