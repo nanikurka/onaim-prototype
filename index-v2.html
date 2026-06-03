@@ -416,7 +416,13 @@ input[type="date"].fi:valid{color:var(--text);}
 /* entry source */
 .fcd-select{width:100%;padding:10px 14px;border:1px solid var(--border-input);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239CA3AF' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;margin-bottom:16px;}
 .fcd-select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
-.fcd-trigger-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.fcd-trigger-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0;}
+.fcd-entry-check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
+.fcd-entry-check-item:has(.fcd-entry-cb:checked){border-color:var(--green);background:#F0FDF4;}
+.fcd-entry-check-body{display:flex;flex-direction:column;gap:2px;flex:1;}
+.fcd-entry-check-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-entry-check-desc{font-size:11px;color:var(--text-muted);}
+.fcd-entry-check-coin{display:flex;align-items:center;gap:5px;margin-top:4px;}
 .fcd-trigger-head{padding:14px 16px;}
 .fcd-trigger-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
 .fcd-trigger-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
@@ -946,10 +952,8 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
           </div>
         </div>
-        <select class="fcd-select" id="fcdEntrySelect" onchange="onFcdEntryChange()">
-          <option value="">Select Entry Source</option>
-        </select>
-        <div id="fcdEntryPreview"></div>
+        <div id="fcdEntryChecklist" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div id="fcdEntryPreview" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
       <!-- PANEL 2: Prize Coins Pool -->
@@ -1406,9 +1410,7 @@ function selectTrigger(tcIdx, name, desc, tags) {
     <!-- Coin row: attached state -->
     <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
       <div class="coin-row-left">
-        <div class="coin-gem-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
-        </div>
+        <div class="coin-gem-icon" id="coin-gem-icon-${id}" style="font-size:20px;background:none;border:1px solid var(--border);">💎</div>
         <div>
           <div class="coin-row-name" id="coin-pill-name-${id}">Coin Name</div>
           <span class="coin-pill" id="coin-pill-type-${id}">Promo Coin</span>
@@ -1647,6 +1649,8 @@ function saveDrawerCoin() {
     document.getElementById(`coin-pill-name-${id}`).textContent = name;
     const typeEl = document.getElementById(`coin-pill-type-${id}`);
     if (typeEl) typeEl.textContent = _coinDrawerType === 'in' ? 'Coin In' : 'Promo Coin';
+    const iconEl = document.getElementById(`coin-gem-icon-${id}`);
+    if (iconEl) iconEl.textContent = em;
     document.getElementById(`coin-row-attached-${id}`).style.display = 'flex';
     document.getElementById(`coin-row-empty-${id}`).style.display = 'none';
   }
@@ -1982,24 +1986,35 @@ function openFcd(featureId, featureName) {
   });
   document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
   // populate entry source dropdown with current triggers
-  const sel = document.getElementById('fcdEntrySelect');
   const noTriggersNotice = document.getElementById('fcdNoTriggersNotice');
-  sel.innerHTML = '<option value="">Select Entry Source</option>';
+  const checklist = document.getElementById('fcdEntryChecklist');
+  checklist.innerHTML = '';
+  document.getElementById('fcdEntryPreview').innerHTML = '';
   if (selectedTriggers.length === 0) {
     noTriggersNotice.style.display = 'block';
-    sel.style.display = 'none';
+    checklist.style.display = 'none';
   } else {
     noTriggersNotice.style.display = 'none';
-    sel.style.display = '';
+    checklist.style.display = 'flex';
     selectedTriggers.forEach((tid, i) => {
       const ruleEl = document.getElementById(tid);
       const rname = ruleEl?.querySelector('.rule-name')?.textContent || ('Trigger ' + (i+1));
-      const opt = document.createElement('option');
-      opt.value = tid; opt.textContent = rname;
-      sel.appendChild(opt);
+      const rdesc = ruleEl?.querySelector('.rule-desc')?.textContent || '';
+      const coinName = ruleEl?.querySelector('.coin-row-name')?.textContent || '';
+      const coinBadge = ruleEl?.querySelector('.coin-pill')?.textContent || '';
+      const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
+      const item = document.createElement('label');
+      item.className = 'fcd-entry-check-item';
+      item.innerHTML = `
+        <input type="checkbox" class="fcd-entry-cb" value="${tid}" onchange="renderFcdEntryPreviews()" style="width:16px;height:16px;accent-color:var(--green);flex-shrink:0;cursor:pointer;">
+        <div class="fcd-entry-check-body">
+          <div class="fcd-entry-check-name">${rname}</div>
+          ${rdesc ? `<div class="fcd-entry-check-desc">${rdesc}</div>` : ''}
+          ${coinName ? `<div class="fcd-entry-check-coin">${coinEm ? `<span style="font-size:14px;">${coinEm}</span>` : ''}<span style="font-size:12px;font-weight:500;">${coinName}</span><span class="fcd-coin-badge" style="font-size:10px;">${coinBadge}</span></div>` : ''}
+        </div>`;
+      checklist.appendChild(item);
     });
   }
-  document.getElementById('fcdEntryPreview').innerHTML = '';
   // reset pool & rankings
   renderPool();
   document.getElementById('fcdRankingsList').innerHTML = '';
@@ -2051,6 +2066,10 @@ function goFcdStep(step) {
 function fcdContinue() {
   const steps = ['entry','pool','rankings','schedule'];
   const idx = steps.indexOf(_fcdStep);
+  if (_fcdStep === 'entry') {
+    const checked = document.querySelectorAll('.fcd-entry-cb:checked');
+    if (!checked.length) { toast('Please select at least one entry source'); return; }
+  }
   _fcdStepsDone[_fcdStep] = true;
   if (idx < steps.length - 1) {
     goFcdStep(steps[idx + 1]);
@@ -2231,36 +2250,37 @@ function selectRankCoin(idx, coinIdx, silent) {
     document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
   }
 }
-function onFcdEntryChange() {
-  const sel = document.getElementById('fcdEntrySelect');
-  const tid = sel.value;
+function renderFcdEntryPreviews() {
   const preview = document.getElementById('fcdEntryPreview');
-  if (!tid) { preview.innerHTML = ''; return; }
-  const ruleEl = document.getElementById(tid);
-  if (!ruleEl) { preview.innerHTML = ''; return; }
-  const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
-  const rdesc = ruleEl.querySelector('.rule-desc')?.textContent || 'Description of what does this trigger do';
-  const tags = [...(ruleEl.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
-  const coinAttached = ruleEl.querySelector('.coin-gem-icon');
-  const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
-  const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
-  const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount'])
-    .map(t=>`<span class="fcd-tag">${t}</span>`).join('');
-  const coinHtml = coinName ? `
-    <div class="fcd-coin-preview">
-      <div class="fcd-coin-preview-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg></div>
-      <span class="fcd-coin-preview-name">${coinName}</span>
-      <span class="fcd-coin-badge">${coinBadge}</span>
-    </div>` : '';
-  preview.innerHTML = `
-    <div class="fcd-trigger-card">
-      <div class="fcd-trigger-head">
-        <div class="fcd-trigger-name">${rname}</div>
-        <div class="fcd-trigger-desc">${rdesc}</div>
-        <div class="fcd-tags">${tagsHtml}</div>
-      </div>
-      ${coinHtml}
-    </div>`;
+  const checked = [...document.querySelectorAll('.fcd-entry-cb:checked')].map(cb => cb.value);
+  if (!checked.length) { preview.innerHTML = ''; return; }
+  preview.innerHTML = checked.map(tid => {
+    const ruleEl = document.getElementById(tid);
+    if (!ruleEl) return '';
+    const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
+    const rdesc = ruleEl.querySelector('.rule-desc')?.textContent || '';
+    const tags = [...(ruleEl.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
+    const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
+    const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
+    const coinEm = ruleEl.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
+    const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount'])
+      .map(t=>`<span class="fcd-tag">${t}</span>`).join('');
+    const coinHtml = coinName ? `
+      <div class="fcd-coin-preview" style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:var(--surface-alt,#F9FAFB);border-radius:6px;border:1px solid var(--border);">
+        ${coinEm ? `<span style="font-size:20px;line-height:1;">${coinEm}</span>` : ''}
+        <span style="font-size:12px;font-weight:600;">${coinName}</span>
+        <span class="fcd-coin-badge">${coinBadge}</span>
+      </div>` : `<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">⚠ No coin attached</div>`;
+    return `
+      <div class="fcd-trigger-card">
+        <div class="fcd-trigger-head">
+          <div class="fcd-trigger-name">${rname}</div>
+          ${rdesc ? `<div class="fcd-trigger-desc">${rdesc}</div>` : ''}
+          <div class="fcd-tags">${tagsHtml}</div>
+        </div>
+        ${coinHtml}
+      </div>`;
+  }).join('');
 }
 // Extended coin options with types
 const allPrizeCoins = [
