@@ -2399,6 +2399,9 @@ function renderPool() {
       </div>
       <span class="fcd-pool-footer-item-name">${c.name}</span>
       <span class="fcd-pool-coin-card-badge" style="${_badgeStyle[c.type]||''};font-size:10.5px;">${c.typeLabel}</span>
+      <button class="fcd-pool-footer-item-rm" onclick="editPoolCoin(${i})" title="Edit" style="margin-left:auto;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
       <button class="fcd-pool-footer-item-rm" onclick="removePoolCoin(${i})" title="Remove">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -2411,8 +2414,31 @@ function removePoolCoin(i) {
 function openNewCoinFromPool() {
   _fcdCoinViewCtx = 'pool';
   _prizeTargetIdx = null;
+  _editingPoolIdx = null;
   document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
+  document.querySelector('.fcd-coin-view-title').textContent = 'Create New Coin';
+  document.getElementById('fcdCoinView').querySelector('.fcd-btn-continue').textContent = 'Add Coin';
   _openFcdCoinView();
+}
+function editPoolCoin(i) {
+  const c = _fcdPool[i];
+  if (!c) return;
+  _fcdCoinViewCtx = 'pool';
+  _editingPoolIdx = i;
+  _prizeTargetIdx = null;
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
+  document.querySelector('.fcd-coin-view-title').textContent = 'Edit Coin';
+  document.getElementById('fcdCoinView').querySelector('.fcd-btn-continue').textContent = 'Save Changes';
+  _openFcdCoinView();
+  // Pre-fill form
+  document.getElementById('fcdCoinName').value = c.name;
+  if (c.em && c.em !== '💎') {
+    const emEl = document.getElementById('fcdCoinEm');
+    emEl.textContent = c.em; emEl.style.display = '';
+  }
+  // Select coin type
+  const typeKey = Object.keys({in:'coin-in',promo:'promo',asset:'asset',withdrawal:'withdrawal'}).find(k => ({in:'coin-in',promo:'promo',asset:'asset',withdrawal:'withdrawal'})[k] === c.type) || 'in';
+  fcdSelectCoinType(typeKey);
 }
 
 /* ── Rankings (Step 3) ── */
@@ -2695,6 +2721,7 @@ const allPrizeCoins = [
 // (addFcdPrize removed — v2 uses pool + rankings flow)
 let _prizeTargetIdx = null; // ranking idx that triggered coin creation (null = from pool)
 let _fcdNewCoinType = 'in';
+let _editingPoolIdx = null; // index in _fcdPool being edited (null = creating new)
 
 function _openFcdCoinView() {
   // reset form
@@ -2719,6 +2746,7 @@ function openNewCoinFromRanking(idx) {
 function closeFcdCoinView() {
   document.getElementById('fcdCoinView').classList.remove('open');
   document.getElementById('fcdMainFooter').style.display = '';
+  _editingPoolIdx = null;
 }
 function fcdSelectCoinType(type) {
   _fcdNewCoinType = type;
@@ -2753,15 +2781,31 @@ function saveFcdCoin() {
   if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
   nameEl.style.borderColor = '';
   const em = document.getElementById('fcdCoinEm').textContent || '🪙';
-  const typeMap = {in:{type:'coin-in',label:'Coin In'}, promo:{type:'promo',label:'Promo Coin'}};
+  const typeMap = {in:{type:'coin-in',label:'Coin In'}, promo:{type:'promo',label:'Promo Coin'}, asset:{type:'asset',label:'Asset'}, withdrawal:{type:'withdrawal',label:'Withdrawal'}};
   const ct = typeMap[_fcdNewCoinType] || typeMap.in;
   const newCoin = {em, name, type: ct.type, typeLabel: ct.label};
-  // Always add to allPrizeCoins global template list
+
+  // EDIT mode — update existing pool coin in place
+  if (_editingPoolIdx !== null) {
+    const oldName = _fcdPool[_editingPoolIdx]?.name;
+    _fcdPool[_editingPoolIdx] = {...newCoin};
+    // If old name matched a catalog coin, re-enable it by re-rendering the grid
+    renderPool();
+    renderPoolGrid();
+    refreshStepBadges();
+    closeFcdCoinView();
+    toast(`${em} "${name}" updated`);
+    _editingPoolIdx = null;
+    return;
+  }
+
+  // CREATE mode
   allPrizeCoins.push(newCoin);
   // Also add to current leaderboard pool if not already there
   if (!_fcdPool.find(c => c.name === name)) {
     _fcdPool.push({...newCoin});
     renderPool();
+    renderPoolGrid();
   }
   refreshStepBadges();
   // If triggered from a ranking row, select this coin there
