@@ -414,20 +414,14 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-panel{display:none;}
 .fcd-panel.active{display:block;}
 /* entry source multi-select dropdown */
-.fcd-ms-wrap{position:relative;margin-bottom:12px;}
-.fcd-ms-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid var(--border-input);border-radius:8px;background:#fff;cursor:pointer;min-height:40px;transition:border-color .15s;}
+.fcd-ms-wrap{position:relative;margin-bottom:16px;}
+.fcd-ms-trigger{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:var(--text);transition:border-color .15s,box-shadow .15s;white-space:nowrap;}
 .fcd-ms-trigger:hover,.fcd-ms-trigger.open{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
-.fcd-ms-chips{display:flex;flex-wrap:wrap;gap:5px;flex:1;}
-.fcd-ms-placeholder{font-size:13px;color:#9CA3AF;}
-.fcd-ms-chip{display:flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:20px;padding:2px 8px 2px 6px;font-size:11.5px;font-weight:500;color:#15803D;}
-.fcd-ms-chip-icon{font-size:13px;line-height:1;}
-.fcd-ms-chip-label{display:flex;align-items:center;gap:3px;}
-.fcd-ms-chip-badge{background:#D1FAE5;color:#065F46;border-radius:10px;padding:0 5px;font-size:10px;font-weight:600;}
-.fcd-ms-chip-x{margin-left:2px;cursor:pointer;color:#6B7280;font-size:12px;line-height:1;padding:0 2px;}
-.fcd-ms-chip-x:hover{color:#EF4444;}
-.fcd-ms-caret{flex-shrink:0;color:#9CA3AF;transition:transform .2s;}
+.fcd-ms-chips{display:none;}
+.fcd-ms-placeholder{font-size:13px;color:var(--text);}
+.fcd-ms-caret{flex-shrink:0;color:#6B7280;transition:transform .2s;}
 .fcd-ms-trigger.open .fcd-ms-caret{transform:rotate(180deg);}
-.fcd-ms-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;overflow:hidden;}
+.fcd-ms-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:280px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;overflow:hidden;}
 .fcd-ms-dropdown.open{display:block;}
 .fcd-ms-search{padding:8px 10px;border-bottom:1px solid var(--border);}
 .fcd-ms-search input{width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:inherit;}
@@ -439,22 +433,28 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-ms-option.selected .fcd-ms-option-check{background:var(--green);border-color:var(--green);}
 .fcd-ms-option-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
 .fcd-ms-opt-icon-trigger{background:#EFF6FF;}
-.fcd-ms-opt-icon-coin{background:#F0FDF4;}
 .fcd-ms-option-info{flex:1;min-width:0;}
 .fcd-ms-option-name{font-size:13px;font-weight:600;color:var(--text);}
 .fcd-ms-option-meta{display:flex;align-items:center;gap:5px;margin-top:2px;}
 .fcd-ms-option-type{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:10px;}
 .fcd-ms-type-trigger{background:#DBEAFE;color:#1D4ED8;}
-.fcd-ms-type-coin{background:#D1FAE5;color:#065F46;}
 .fcd-ms-option-coin{font-size:11px;color:var(--text-muted);}
 .fcd-ms-empty{padding:14px;text-align:center;font-size:12px;color:var(--text-muted);}
-.fcd-trigger-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0;}
-.fcd-trigger-head{padding:14px 16px;}
-.fcd-trigger-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
+/* selected trigger cards */
+.fcd-entry-cards{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.fcd-trigger-card{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
+.fcd-trigger-card-head{padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.fcd-trigger-card-info{flex:1;}
+.fcd-trigger-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
 .fcd-trigger-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
 .fcd-tags{display:flex;gap:6px;flex-wrap:wrap;}
 .fcd-tag{padding:3px 9px;border-radius:6px;background:#F4F6F8;border:1px solid var(--border);font-size:11.5px;color:var(--text-sub);}
-.fcd-coin-preview{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#F4F6F8;border-top:1px solid var(--border);}
+.fcd-card-remove{width:24px;height:24px;border-radius:50%;background:#1F2937;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.fcd-card-remove:hover{background:#374151;}
+.fcd-trigger-coin-row{display:flex;align-items:center;gap:10px;padding:11px 16px;background:#F8FAFC;border-top:1px solid var(--border);}
+.fcd-trigger-coin-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-trigger-coin-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-trigger-coin-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
 .fcd-coin-preview-icon{width:32px;height:32px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .fcd-coin-preview-name{font-size:13px;font-weight:600;color:var(--text);}
 .fcd-coin-badge{padding:3px 10px;border-radius:20px;background:#EDE9FE;color:#6D28D9;font-size:11.5px;font-weight:600;}
@@ -2379,7 +2379,7 @@ function renderFcdEntryPreviews() {
   const preview = document.getElementById('fcdEntryPreview');
   if (!preview) return;
   if (!_fcdMsSelected.length) { preview.innerHTML = ''; return; }
-  preview.innerHTML = _fcdMsSelected.map(tid => {
+  preview.innerHTML = `<div class="fcd-entry-cards">${_fcdMsSelected.map(tid => {
     const ruleEl = document.getElementById(tid);
     if (!ruleEl) return '';
     const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
@@ -2387,13 +2387,35 @@ function renderFcdEntryPreviews() {
     const tags = [...(ruleEl.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
     const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
     const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
-    const coinEm = ruleEl.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
     const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount']).map(t=>`<span class="fcd-tag">${t}</span>`).join('');
-    const coinHtml = coinName
-      ? `<div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:#F9FAFB;border-radius:6px;border:1px solid var(--border);">${coinEm ? `<span style="font-size:18px;">${coinEm}</span>` : ''}<span style="font-size:12px;font-weight:600;">${coinName}</span><span class="fcd-coin-badge">${coinBadge}</span></div>`
-      : `<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">⚠ No coin attached to this rule</div>`;
-    return `<div class="fcd-trigger-card"><div class="fcd-trigger-head"><div class="fcd-trigger-name">${rname}</div>${rdesc?`<div class="fcd-trigger-desc">${rdesc}</div>`:''}<div class="fcd-tags">${tagsHtml}</div>${coinHtml}</div></div>`;
-  }).join('');
+    // badge color based on type
+    const badgeLower = (coinBadge||'').toLowerCase();
+    const badgeStyle = badgeLower.includes('promo') ? 'background:#EDE9FE;color:#7C3AED;'
+      : badgeLower.includes('coin in') ? 'background:#EDE9FE;color:#6D28D9;'
+      : badgeLower.includes('withdrawal') ? 'background:#FEF3C7;color:#92400E;'
+      : badgeLower.includes('asset') ? 'background:#EFF6FF;color:#1D4ED8;'
+      : 'background:#F3F4F6;color:#374151;';
+    const coinRow = coinName ? `
+      <div class="fcd-trigger-coin-row">
+        <div class="fcd-trigger-coin-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg></div>
+        <span class="fcd-trigger-coin-name">${coinName}</span>
+        <span class="fcd-trigger-coin-badge" style="${badgeStyle}">${coinBadge}</span>
+      </div>` : `<div style="padding:10px 16px;background:#F8FAFC;border-top:1px solid var(--border);font-size:11.5px;color:#9CA3AF;">No coin attached to this rule</div>`;
+    return `
+      <div class="fcd-trigger-card">
+        <div class="fcd-trigger-card-head">
+          <div class="fcd-trigger-card-info">
+            <div class="fcd-trigger-name">${rname}</div>
+            ${rdesc ? `<div class="fcd-trigger-desc">${rdesc}</div>` : ''}
+            <div class="fcd-tags">${tagsHtml}</div>
+          </div>
+          <button class="fcd-card-remove" onclick="toggleFcdMsOption('${tid}')" title="Remove">
+            <svg width="9" height="9" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        ${coinRow}
+      </div>`;
+  }).join('')}</div>`;
 }
 // Extended coin options with types
 const allPrizeCoins = [
