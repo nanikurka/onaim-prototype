@@ -2171,26 +2171,58 @@ function goFcdStep(step) {
   steps.forEach((s, i) => {
     const btn = document.getElementById('fcd-step-' + s);
     const panel = document.getElementById('fcd-panel-' + s);
-    const n = document.getElementById('fcd-sn-' + s);
-    if (!btn || !panel || !n) return;
-    const isDone = !!_fcdStepsDone[s];
+    if (!btn || !panel) return;
     const isActive = s === step;
     btn.classList.toggle('active', isActive);
-    btn.classList.toggle('done', !isActive && isDone);
+    btn.classList.toggle('done', !isActive && isFcdStepValid(s));
     panel.classList.toggle('active', isActive);
-    if (isDone && !isActive) {
-      n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
-      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
-    } else {
-      n.textContent = '!';
-      n.style.background = ''; n.style.color = ''; n.style.border = '';
-    }
   });
+  refreshStepBadges();
   // Update Continue btn label
   document.getElementById('fcdContinueBtn').textContent = step === 'schedule' ? 'Save' : 'Continue';
   // When entering rankings, rebuild ranking coin dropdowns to reflect current pool
   if (step === 'rankings') rebuildRankingCoinDrops();
   if (step === 'pool') { _poolFilters=[]; _poolSearch=''; if(document.getElementById('fcdPoolSearch')) document.getElementById('fcdPoolSearch').value=''; clearPoolFilters(); renderPoolGrid(); renderPool(); }
+}
+function isFcdStepValid(s) {
+  if (s === 'entry') return _fcdMsSelected.length > 0;
+  if (s === 'pool') return _fcdPool.length > 0;
+  if (s === 'rankings') {
+    const list = document.getElementById('fcdRankingsList');
+    if (!list) return false;
+    const rows = list.querySelectorAll('.fcd-prize-card');
+    if (rows.length === 0) return false;
+    // at least one row must have a coin selected
+    return Array.from(rows).some(row => {
+      const id = row.id.replace('fcd-rank-', '');
+      const name = document.getElementById('fcd-rcsel-name-' + id)?.textContent;
+      return name && name !== 'Select Prize Coin';
+    });
+  }
+  if (s === 'schedule') return true; // always has a default
+  return false;
+}
+function refreshStepBadges() {
+  ['entry','pool','rankings','schedule'].forEach(s => {
+    const n = document.getElementById('fcd-sn-' + s);
+    const btn = document.getElementById('fcd-step-' + s);
+    if (!n) return;
+    const isActive = s === _fcdStep;
+    const isValid = isFcdStepValid(s);
+    if (isValid && !isActive) {
+      btn?.classList.add('done');
+      n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
+    } else if (isValid && isActive) {
+      btn?.classList.remove('done');
+      n.textContent = '✓';
+      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
+    } else {
+      btn?.classList.remove('done');
+      n.textContent = '!';
+      n.style.background = ''; n.style.color = ''; n.style.border = '';
+    }
+  });
 }
 function fcdContinue() {
   const steps = ['entry','pool','rankings','schedule'];
@@ -2349,6 +2381,7 @@ function addPoolCoinFromTemplate(type) {
   toast(`${def.em} "${name}" added to pool`);
 }
 function renderPool() {
+  refreshStepBadges();
   const list = document.getElementById('fcdPoolList');
   const count = document.getElementById('fcdPoolCount');
   if (!list) return;
@@ -2499,6 +2532,7 @@ function selectRankCoin(idx, coinIdx, silent) {
   if (valueEl) valueEl.textContent = c.value ? 'Value: ' + c.value : '';
   const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
   if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; }
+  refreshStepBadges();
   if (!silent) {
     document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
     document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
@@ -2550,6 +2584,7 @@ function toggleFcdMsOption(id) {
   renderFcdMsChips();
   buildFcdMsList(document.getElementById('fcdMsSearch')?.value || '');
   renderFcdEntryPreviews();
+  refreshStepBadges();
 }
 
 function renderFcdMsChips() {
@@ -2722,6 +2757,7 @@ function saveFcdCoin() {
     _fcdPool.push({...newCoin});
     renderPool();
   }
+  refreshStepBadges();
   // If triggered from a ranking row, select this coin there
   if (_prizeTargetIdx !== null && _fcdCoinViewCtx === 'ranking') {
     const poolIdx = _fcdPool.findIndex(c => c.name === name);
