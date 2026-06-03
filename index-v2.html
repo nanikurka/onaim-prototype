@@ -396,8 +396,8 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-close:hover{color:var(--text);}
 /* step tabs */
 .fcd-steps{display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--border);flex-shrink:0;gap:0;}
-.fcd-step{display:flex;align-items:center;gap:6px;padding:12px 0;font-size:12.5px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;}
-.fcd-step.active{color:var(--text);font-weight:600;}
+.fcd-step{display:flex;align-items:center;gap:6px;padding:12px 0;font-size:12.5px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.fcd-step.active{color:var(--text);font-weight:600;border-bottom-color:var(--text);}
 .fcd-step.done .fcd-step-n{background:var(--green);color:#fff;border-color:var(--green);}
 .fcd-step-n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D1D5DB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#9CA3AF;background:#E5E8EC;transition:all .15s;}
 .fcd-step.active .fcd-step-n{background:#E5E8EC;border-color:#D1D5DB;color:#6B7280;}
