@@ -2362,9 +2362,9 @@ function renderPoolGrid() {
         </div>
       </div>
       <span class="fcd-pool-coin-card-badge" style="${_badgeStyle[c.type]||''}">${c.typeLabel}</span>
-      <button class="fcd-pool-coin-card-add" ${_fcdPool.find(p=>p.name===c.name)?'disabled':''} onclick="addPoolCoinFromCatalog(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+      <button class="fcd-pool-coin-card-add" ${_fcdPool.find(p=>p.name===c.name && !p.edited)?'disabled':''} onclick="addPoolCoinFromCatalog(${JSON.stringify(c).replace(/"/g,'&quot;')})">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        ${_fcdPool.find(p=>p.name===c.name) ? 'Added' : 'Add Coin'}
+        ${_fcdPool.find(p=>p.name===c.name && !p.edited) ? 'Added' : 'Add Coin'}
       </button>
     </div>`).join('');
 }
@@ -2787,9 +2787,8 @@ function saveFcdCoin() {
 
   // EDIT mode — update existing pool coin in place
   if (_editingPoolIdx !== null) {
-    const oldName = _fcdPool[_editingPoolIdx]?.name;
-    _fcdPool[_editingPoolIdx] = {...newCoin};
-    // If old name matched a catalog coin, re-enable it by re-rendering the grid
+    _fcdPool[_editingPoolIdx] = {...newCoin, edited: true};
+    // Mark as edited so catalog grid re-enables the original template button
     renderPool();
     renderPoolGrid();
     refreshStepBadges();
