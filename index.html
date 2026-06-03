@@ -76,15 +76,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* ══ STEP PILLS ══ */
 .steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:0;}
-.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .15s;}
-.step-pill:hover{color:var(--text-sub);}
-.step-pill.active{background:#fff;border:1px solid var(--border);color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.step-pill.done{color:var(--text-muted);}
+.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:13px;font-weight:500;color:var(--text-muted);white-space:nowrap;cursor:default;user-select:none;}
 .step-n{width:20px;height:20px;border-radius:50%;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.step-pill.active .step-n{background:#E5E8EC;color:var(--text-muted);display:flex;align-items:center;justify-content:center;}
-.step-pill.active.validated .step-n{background:var(--green);color:#fff;}
-.step-pill.done .step-n{background:#E5E8EC;color:var(--text-muted);}
-.step-pill.done.validated .step-n{background:var(--green);color:#fff;}
+.step-pill.validated .step-n{background:var(--green);color:#fff;}
 .step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 4px;}
 .step-sep svg{width:14px;height:14px;}
 
@@ -594,17 +588,17 @@ input[type="date"].fi:valid{color:var(--text);}
       </div>
       <div class="steps-bar-divider"></div>
       <div class="steps">
-        <div class="step-pill active" id="tab-general" onclick="goToStep('sec-general','general')">
+        <div class="step-pill" id="tab-general">
           <span class="step-n" id="spn-general">1</span>
           General Details
         </div>
         <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-        <div class="step-pill" id="tab-participation" onclick="goToStep('sec-participation','participation')">
+        <div class="step-pill" id="tab-participation">
           <span class="step-n" id="spn-participation">2</span>
           Participation Rules
         </div>
         <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-        <div class="step-pill" id="tab-features" onclick="goToStep('sec-features','features')">
+        <div class="step-pill" id="tab-features">
           <span class="step-n" id="spn-features">3</span>
           Promotion Features & prizes
         </div>
@@ -1195,28 +1189,7 @@ function initScrollSpy() {
 }
 
 function activateTab(tabKey) {
-  const map = {general:'tab-general', participation:'tab-participation', features:'tab-features'};
-  const order = ['general','participation','features'];
-  const checkSvgStr = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
-  const nums = {general:'1', participation:'2', features:'3'};
-  Object.entries(map).forEach(([key, id]) => {
-    const pill = document.getElementById(id);
-    if (!pill) return;
-    const idx = order.indexOf(key), activeIdx = order.indexOf(tabKey);
-    const n = pill.querySelector('.step-n');
-    const isValidated = pill.classList.contains('validated');
-    pill.classList.remove('active','done');
-    if (idx === activeIdx) {
-      pill.classList.add('active');
-    } else if (idx < activeIdx) {
-      pill.classList.add('done');
-    }
-    if (n) {
-      n.innerHTML = isValidated ? checkSvgStr : nums[key];
-      n.style.background = isValidated ? 'var(--green)' : '';
-      n.style.color = isValidated ? '#fff' : '';
-    }
-  });
+  // Step pills are now passive indicators — badge managed by validate functions only.
 }
 
 document.addEventListener('DOMContentLoaded', initScrollSpy);
