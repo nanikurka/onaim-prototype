@@ -59,7 +59,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .steps-bar-inner{max-width:1440px;width:100%;margin:0 auto;padding:0 28px;}
 .steps-bar .back{margin-bottom:6px;padding-top:12px;}
 .steps-bar .page-hdr{margin-bottom:12px;}
-.steps-bar-divider{height:1px;background:var(--border);margin:0 -28px;}
+.steps-bar-divider{height:1px;background:var(--border);width:100%;}
+.steps-bar-steps-row{width:100%;border-top:none;}
 .steps-bar .steps{margin-bottom:0;padding:10px 0;}
 .content{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
 .content-inner{width:100%;padding:24px 0 48px;flex:1;}
@@ -591,22 +592,22 @@ input[type="date"].fi:valid{color:var(--text);}
           <button class="dots-btn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
         </div>
       </div>
-      <div class="steps-bar-divider"></div>
-      <div class="steps">
-        <div class="step-pill" id="tab-general">
-          <span class="step-n" id="spn-general">1</span>
-          General Details
-        </div>
-        <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-        <div class="step-pill" id="tab-participation">
-          <span class="step-n" id="spn-participation">2</span>
-          Participation Rules
-        </div>
-        <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-        <div class="step-pill" id="tab-features">
-          <span class="step-n" id="spn-features">3</span>
-          Promotion Features & prizes
-        </div>
+    </div>
+    <div class="steps-bar-divider"></div>
+    <div class="steps">
+      <div class="step-pill" id="tab-general">
+        <span class="step-n" id="spn-general">1</span>
+        General Details
+      </div>
+      <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="step-pill" id="tab-participation">
+        <span class="step-n" id="spn-participation">2</span>
+        Participation Rules
+      </div>
+      <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="step-pill" id="tab-features">
+        <span class="step-n" id="spn-features">3</span>
+        Promotion Features & prizes
       </div>
     </div>
   </div>
