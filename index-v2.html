@@ -1172,6 +1172,30 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
             <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
           </div>
+          <div class="cd-type-card" id="fcdNewTypeAsset" onclick="fcdSelectCoinType('asset')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#EFF6FF;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Asset</div>
+                <div class="cd-type-card-sub">Real-value rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioAsset"></div>
+          </div>
+          <div class="cd-type-card" id="fcdNewTypeWithdrawal" onclick="fcdSelectCoinType('withdrawal')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#FEF3C7;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Withdrawal</div>
+                <div class="cd-type-card-sub">Cash-out rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioWithdrawal"></div>
+          </div>
         </div>
         <div class="cd-form-divider"></div>
         <!-- COIN DESCRIPTION -->
@@ -1292,6 +1316,30 @@ input[type="date"].fi:valid{color:var(--text);}
               </div>
             </div>
             <div class="cd-type-radio" id="cdNewRadioPromo"></div>
+          </div>
+          <div class="cd-type-card" id="cdNewTypeAsset" onclick="selectNewCoinType('asset')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#EFF6FF;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Asset</div>
+                <div class="cd-type-card-sub">Real-value rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="cdNewRadioAsset"></div>
+          </div>
+          <div class="cd-type-card" id="cdNewTypeWithdrawal" onclick="selectNewCoinType('withdrawal')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#FEF3C7;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Withdrawal</div>
+                <div class="cd-type-card-sub">Cash-out rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="cdNewRadioWithdrawal"></div>
           </div>
         </div>
 
@@ -1685,18 +1733,22 @@ function switchCoinDrawerTab(tab) {
     if (chev) chev.style.transform = '';
   }
 }
+const _coinTypeInfoTexts = {
+  'in':         '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside a promotion.',
+  'promo':      '<strong>Promo Coin</strong> is an internal promotion currency used to reward players within the promotion. It cannot be aggregated from external sources or withdrawn to outside wallets.',
+  'asset':      '<strong>Asset</strong> represents a real-value reward such as a free spin, bonus, or voucher. Assets are distributed directly to players and <strong>cannot be used</strong> as entry conditions.',
+  'withdrawal': '<strong>Withdrawal Coin</strong> is a cash-out reward that players can convert to real money. It is credited directly to the player\'s withdrawable balance once earned.',
+};
+const _coinTypeCardIds = { 'in':'CoinIn', 'promo':'Promo', 'asset':'Asset', 'withdrawal':'Withdrawal' };
 function selectNewCoinType(type) {
-  ['in','promo'].forEach(t => {
-    document.getElementById(`cdNewType${t==='in'?'CoinIn':'Promo'}`)?.classList.toggle('active', t===type);
-    document.getElementById(`cdNewRadio${t==='in'?'In':'Promo'}`)?.classList.toggle('active', t===type);
+  Object.keys(_coinTypeCardIds).forEach(t => {
+    const id = _coinTypeCardIds[t];
+    document.getElementById(`cdNewType${id}`)?.classList.toggle('active', t===type);
+    document.getElementById(`cdNewRadio${id}`)?.classList.toggle('active', t===type);
   });
   _coinDrawerType = type;
-  // update info banner text
   const info = document.getElementById('cdNewInfoText');
-  if (info) {
-    if (type === 'in') info.innerHTML = '<strong>Coin in</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.';
-    else info.innerHTML = '<strong>Promo Coin</strong> is an internal promotion currency. It exists only within the promotion — it cannot be aggregated from external sources or withdrawn to outside wallets. Use it to reward and incentivize players inside your promotion.';
-  }
+  if (info) info.innerHTML = _coinTypeInfoTexts[type] || '';
 }
 function toggleAdvanced() {
   const body = document.getElementById('cdAdvancedBody');
@@ -2612,14 +2664,13 @@ function closeFcdCoinView() {
 }
 function fcdSelectCoinType(type) {
   _fcdNewCoinType = type;
-  ['in','promo'].forEach(t => {
-    document.getElementById('fcdNewType' + (t==='in'?'CoinIn':'Promo')).classList.toggle('active', t===type);
-    document.getElementById('fcdNewRadio' + (t==='in'?'In':'Promo')).classList.toggle('active', t===type);
+  Object.keys(_coinTypeCardIds).forEach(t => {
+    const id = _coinTypeCardIds[t];
+    document.getElementById(`fcdNewType${id}`)?.classList.toggle('active', t===type);
+    document.getElementById(`fcdNewRadio${id}`)?.classList.toggle('active', t===type);
   });
   const info = document.getElementById('fcdCoinInfoText');
-  if (info) info.innerHTML = type==='in'
-    ? '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.'
-    : '<strong>Promo Coin</strong> is an internal promotion currency. It exists only within the promotion — it cannot be aggregated from external sources or withdrawn to outside wallets. Use it to reward and incentivize players inside your promotion.';
+  if (info) info.innerHTML = _coinTypeInfoTexts[type] || '';
 }
 function toggleFcdEmOpts() {
   const opts = document.getElementById('fcdEmOpts');
