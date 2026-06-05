@@ -76,7 +76,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* ══ STEP PILLS ══ */
 .steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:0;}
-.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:13px;font-weight:500;color:var(--text-muted);white-space:nowrap;cursor:default;user-select:none;}
+.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:13px;font-weight:500;color:var(--text-muted);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s;}
+.step-pill:hover{color:var(--text);}
 .step-n{width:20px;height:20px;border-radius:50%;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .step-pill.validated .step-n{background:var(--green);color:#fff;}
 .step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 4px;}
@@ -756,17 +757,17 @@ input[type="date"].fi:valid{color:var(--text);}
     </div>
     <div class="steps-bar-divider"></div>
     <div class="steps">
-      <div class="step-pill" id="tab-general">
+      <div class="step-pill" id="tab-general" onclick="scrollToSection('sec-general')">
         <span class="step-n" id="spn-general">1</span>
         General Details
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      <div class="step-pill" id="tab-participation">
+      <div class="step-pill" id="tab-participation" onclick="scrollToSection('sec-participation')">
         <span class="step-n" id="spn-participation">2</span>
         Participation Rules
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      <div class="step-pill" id="tab-features">
+      <div class="step-pill" id="tab-features" onclick="scrollToSection('sec-features')">
         <span class="step-n" id="spn-features">3</span>
         Promotion Features & prizes
       </div>
@@ -1509,6 +1510,7 @@ let ruleCounter = 0;
 const stepNumbers = {general:null, participation:'2', features:'3'};
 const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
 
+function scrollToSection(secId) { goToStep(secId, null); }
 function goToStep(secId, tabKey) {
   const sec = document.getElementById(secId);
   const contentEl = document.querySelector('.content');
