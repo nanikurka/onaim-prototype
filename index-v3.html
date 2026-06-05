@@ -1,0 +1,2863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OnAim — Create New Promotion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --green:#00C37F;
+  --green-light:#E8F8F2;
+  --green-dark:#009E67;
+  --red:#F04438;
+  --red-light:#FFF2EE;
+  --blue:#1570EF;
+  --sidebar:#1B2A38;
+  --sidebar-text:#8A9BAD;
+  --sidebar-label:#4E6070;
+  --bg:#F4F6F8;
+  --surface:#FFFFFF;
+  --border:#E5E8EC;
+  --border-input:#D1D5DB;
+  --text:#111927;
+  --text-sub:#4B5563;
+  --text-muted:#9CA3AF;
+  --r:10px;
+  --r-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;display:flex;height:100vh;overflow:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:210px;flex-shrink:0;background:var(--sidebar);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.sidebar::-webkit-scrollbar{width:0;}
+
+.sb-logo{padding:16px 14px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:4px;}
+.sb-logo-icon{width:26px;height:26px;}
+.sb-logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px;}
+
+.sb-section{padding:8px 0 2px;}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--sidebar-label);padding:0 14px 3px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:12.5px;font-weight:400;color:var(--sidebar-text);cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;overflow:hidden;}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#C9D6E0;}
+.sb-item.active{color:#fff;}
+.sb-item svg{flex-shrink:0;opacity:.65;}
+.sb-item.active svg{opacity:1;}
+.sb-chev{margin-left:auto;opacity:.4;}
+.sb-div{height:1px;background:rgba(255,255,255,.06);margin:4px 0;}
+.sb-user{padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);margin-top:auto;}
+.sb-email{font-size:11px;color:var(--sidebar-text);margin-bottom:8px;}
+.sb-signout{width:100%;padding:6px;border-radius:5px;border:none;background:#C0392B;color:#fff;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.steps-bar{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:0;z-index:100;width:100%;}
+.steps-bar-inner{max-width:1440px;width:100%;margin:0 auto;padding:0 28px;}
+.steps-bar .back{margin-bottom:6px;padding-top:12px;}
+.steps-bar .page-hdr{margin-bottom:12px;}
+.steps-bar-divider{height:1px;background:var(--border);width:100%;}
+.steps-bar .steps{margin-bottom:0;padding:10px 0;}
+.content{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.content-inner{width:100%;padding:24px 0 48px;flex:1;}
+
+/* back + header */
+.back{font-size:12.5px;color:var(--text-sub);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;}
+.back:hover{color:var(--text);}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.page-title{font-size:20px;font-weight:700;}
+.page-hdr-r{display:flex;align-items:center;gap:8px;}
+.tmpl-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:none;}
+.tmpl-link:hover{text-decoration:underline;}
+.dots-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-sub);}
+
+/* ══ STEP PILLS ══ */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:0;}
+.step-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:13px;font-weight:500;color:var(--text-muted);white-space:nowrap;cursor:default;user-select:none;}
+.step-n{width:20px;height:20px;border-radius:50%;background:#E5E8EC;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-pill.validated .step-n{background:var(--green);color:#fff;}
+.step-sep{display:flex;align-items:center;color:#CBD5E0;padding:0 4px;}
+.step-sep svg{width:14px;height:14px;}
+
+/* ══ FEATURES & PRIZES ══ */
+.features-layout{display:grid;grid-template-columns:220px 1fr;border-top:1px solid var(--border);min-height:400px;}
+.features-list{border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;gap:4px;}
+.feature-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);cursor:pointer;font-size:13.5px;font-weight:500;color:var(--text);transition:background .12s;border:1px solid transparent;}
+.feature-item:hover{background:var(--bg);border-color:var(--border);}
+.feature-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.features-selected{padding:16px 20px;}
+.features-selected-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);margin-bottom:12px;}
+.features-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--text-muted);}
+.feature-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px;}
+.feature-drag{color:#CBD5E0;cursor:grab;flex-shrink:0;display:flex;touch-action:none;}
+.feature-card.dragging{opacity:.4;border:1.5px dashed var(--green);}
+.feature-card.drag-over{border-color:var(--green);background:#F0FDF8;}
+.feature-card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.feature-card-info{flex:1;}
+.feature-card-name{font-size:14px;font-weight:600;color:var(--text);}
+.feature-card-status{display:flex;align-items:center;gap:5px;font-size:12px;margin-top:2px;}
+.feature-card-status.configured{color:#059669;}
+.feature-card-status.partial{color:#FF5630;}
+.feature-card-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.feature-card-actions button{background:none;border:none;cursor:pointer;padding:5px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;transition:background .1s,color .1s;position:relative;}
+.feature-card-actions button:hover{background:var(--bg);color:var(--text);}
+.feature-card-actions button.del:hover{background:#FFF2EE;color:var(--red);}
+/* Tooltips */
+[data-tip]{position:relative;}
+[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1B2A38;color:#fff;font-size:11px;white-space:nowrap;padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;}
+[data-tip]::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#1B2A38;pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;}
+[data-tip]:hover::after,[data-tip]:hover::before{opacity:1;}
+/* Inline name edit */
+.feature-card-name{cursor:default;}
+.feature-card-name.editing{outline:none;border-bottom:1.5px solid var(--green);cursor:text;}
+
+/* ══ CARD ══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);max-width:1440px;width:calc(100% - 56px);margin:0 auto;}
+.card-body{padding:22px 28px;}
+.section-sep{height:1px;background:var(--border);width:100%;margin:20px 0;flex-shrink:0;}
+.card-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.card-sub{font-size:12.5px;color:var(--text-sub);margin-bottom:18px;}
+
+/* ══ FORM ══ */
+.form-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.form-col{padding-right:28px;}
+.form-col+.form-col{padding-right:0;padding-left:28px;border-left:1px solid var(--border);}
+.sec-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:12px;}
+.fg{margin-bottom:14px;}
+.fg:last-child{margin-bottom:0;}
+.fl{font-size:12.5px;font-weight:500;color:var(--text);margin-bottom:5px;display:block;}
+.fl sup{color:var(--red);}
+.fi,.fsel{width:100%;border:1px solid var(--border-input);border-radius:var(--r-sm);padding:8px 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.fi::placeholder{color:var(--text-muted);}
+.fi:focus,.fsel:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fi.cal{padding-right:34px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E") no-repeat right 10px center;}
+input[type="date"].fi::-webkit-calendar-picker-indicator{opacity:0;position:absolute;right:0;width:34px;height:100%;cursor:pointer;}
+input[type="date"].fi{color:var(--text-muted);position:relative;}
+input[type="date"].fi:valid{color:var(--text);}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.add-link{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--text-sub);cursor:pointer;margin-top:2px;}
+.add-link:hover{color:var(--text);}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+
+/* toggle */
+.sw-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.sw{width:38px;height:21px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;flex-shrink:0;margin-top:1px;transition:background .2s;}
+.sw.on{background:var(--green);}
+.sw::after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+.sw.on::after{transform:translateX(17px);}
+.sw-lbl{font-size:13px;font-weight:600;}
+.sw-desc{font-size:12px;color:var(--text-sub);margin-top:1px;}
+
+/* labels */
+.labels-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:14px 24px;border-top:1px solid var(--border);position:relative;}
+.lchip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;}
+.lchip-x{cursor:pointer;opacity:.5;display:flex;align-items:center;}
+.lchip-x:hover{opacity:1;}
+
+/* Label dropdown */
+.label-dropdown{position:absolute;bottom:calc(100% + 4px);left:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);width:260px;z-index:200;overflow:hidden;}
+.label-dropdown-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.label-dropdown-search input{width:100%;border:none;outline:none;font-size:13px;color:var(--text);background:transparent;}
+.label-list{max-height:200px;overflow-y:auto;}
+.label-list-item{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;cursor:pointer;font-size:13px;}
+.label-list-item:hover{background:var(--bg);}
+.label-list-item .lchip{pointer-events:none;}
+.label-create-row{padding:8px 12px;border-top:1px solid var(--border);font-size:12.5px;color:var(--blue);cursor:pointer;display:none;}
+.label-create-row:hover{background:var(--bg);}
+
+/* Color picker inside dropdown */
+.label-color-picker{padding:8px 12px;border-top:1px solid var(--border);display:none;}
+.label-color-picker-title{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.color-swatches{display:flex;gap:6px;flex-wrap:wrap;}
+.color-swatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .1s;}
+.color-swatch:hover{transform:scale(1.2);}
+.color-swatch.active{border-color:#111;}
+
+/* radio */
+.radio-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.radio-opt{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1.5px solid #C5CAD3;border-radius:var(--r-sm);cursor:pointer;background:#fff;}
+.radio-opt.sel{border-color:var(--green);background:#fff;}
+.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-input);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;background:var(--surface);transition:border-color .15s;}
+.radio-opt.sel .rdot{border-color:var(--green);}
+.rdot::after{display:none;content:'';width:7px;height:7px;border-radius:50%;background:var(--green);}
+.radio-opt.sel .rdot::after{display:block;}
+.r-title{font-size:13px;font-weight:600;}
+.r-desc{font-size:11.5px;color:var(--text-sub);}
+
+/* segment panels */
+.seg-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.seg-panel{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.seg-panel.disabled{opacity:0.4;pointer-events:none;}
+.seg-head{display:flex;align-items:center;gap:6px;padding:7px 10px;font-size:11.5px;font-weight:600;border-bottom:1px solid var(--border);}
+.seg-head.inc{background:#F0FDF4;color:#15803D;}
+.seg-head.exc{background:#FFF5F5;color:#B91C1C;}
+.seg-search{padding:5px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.seg-search input{flex:1;border:1px solid var(--border-input);border-radius:4px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;background:var(--surface);color:var(--text);}
+.seg-search input:focus{border-color:var(--green);}
+.seg-check-all{width:15px;height:15px;border:1.5px solid #CBD5E0;border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.seg-check-all.chk{background:var(--green);border-color:var(--green);}
+.seg-check-all.chk::after{content:'';display:block;width:8px;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat;}
+.seg-list{max-height:120px;overflow-y:auto;}
+.seg-row{display:flex;align-items:center;gap:7px;padding:6px 10px;border-bottom:1px solid #F4F6F8;cursor:pointer;}
+.seg-row:last-child{border-bottom:none;}
+.seg-row:hover{background:var(--bg);}
+.seg-cb{width:14px;height:14px;border:1.5px solid var(--border-input);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface);transition:all .12s;}
+.seg-cb.chk{background:var(--green);border-color:var(--green);}
+.seg-cb.chk::after{content:'';display:block;width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
+.seg-name{font-size:12px;font-weight:500;flex:1;}
+.seg-cnt{font-size:11px;color:var(--text-muted);}
+
+.lock-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:8px 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px;}
+.cb-row{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.cbox{width:15px;height:15px;border:1.5px solid var(--border-input);border-radius:3px;flex-shrink:0;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.cbox.chk{background:var(--green);border-color:var(--green);}
+.cbox.chk::after{content:'';display:block;width:8px;height:4.5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
+.cb-lbl{font-size:12.5px;color:var(--text);}
+
+/* ══ PARTICIPATION SECTION ══ */
+.sec-heading{font-size:15px;font-weight:700;margin-bottom:2px;}
+.sec-heading-sub{font-size:12.5px;color:var(--text-sub);margin-bottom:16px;}
+
+/* freq templates header */
+.freq-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;}
+
+/* trigger template cards */
+.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.tpl-card{border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:8px;transition:border-color .15s,box-shadow .15s;}
+.tpl-card:hover{border-color:var(--green);box-shadow:0 2px 8px rgba(0,195,127,.1);}
+.tpl-card-top{display:flex;align-items:center;justify-content:space-between;}
+.tpl-name{font-size:13px;font-weight:600;color:var(--text);}
+.tpl-eye{color:var(--text-muted);cursor:pointer;display:flex;align-items:center;}
+.tpl-eye:hover{color:var(--text);}
+.tpl-desc{font-size:12px;color:var(--text-sub);line-height:1.45;flex:1;}
+.tpl-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tpl-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;background:#F4F6F8;color:#4B5563;border:1px solid #E5E8EC;}
+.tpl-btn{width:100%;padding:7px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;transition:background .12s,border-color .12s,color .12s;text-align:center;}
+.tpl-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* bottom row */
+.tpl-bottom-row{display:flex;align-items:center;justify-content:space-between;padding-top:2px;}
+.browse-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:none;}
+.browse-link:hover{text-decoration:underline;}
+.create-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;}
+.create-btn:hover{background:var(--green-dark);}
+
+/* ══ SELECTED RULES ══ */
+.sel-rules-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:18px 0 10px;}
+
+/* rule card */
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow);}
+.rule-card-body{padding:14px 16px;}
+.rule-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px;}
+.rule-name{font-size:13px;font-weight:700;color:var(--text);}
+.rule-desc{font-size:12px;color:var(--text-sub);margin-bottom:8px;}
+.rule-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.rule-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;background:#F4F6F8;color:#4B5563;border:1px solid #E5E8EC;}
+.rule-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.r-icon-btn{width:28px;height:28px;border-radius:5px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .12s,color .12s;}
+.r-icon-btn:hover{background:var(--bg);color:var(--text);}
+.r-icon-btn.del svg{color:var(--red);}
+.r-icon-btn.del:hover{background:var(--red-light);}
+
+/* coin row inside rule */
+.coin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:#F4F6F8;border-radius:0 0 var(--r) var(--r);}
+.coin-row-left{display:flex;align-items:center;gap:10px;}
+.coin-gem-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.coin-dot{display:none;}
+.coin-row-name{font-size:13px;font-weight:600;color:var(--text);}
+.coin-pill{display:inline-flex;align-items:center;padding:3px 12px;border-radius:20px;font-size:11.5px;font-weight:600;background:#EDE9FE;color:#6D28D9;border:none;}
+.coin-row-empty{font-size:12px;color:#DC2626;}
+.coin-attach-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
+.coin-attach-btn:hover{color:var(--green-dark);}
+.coin-row-actions{display:flex;align-items:center;gap:6px;}
+.c-icon-btn{width:28px;height:28px;border-radius:6px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6B7280;transition:background .12s,color .12s;}
+.c-icon-btn:hover{background:#E5E7EB;color:var(--text);}
+.c-icon-btn-del{width:24px;height:24px;border-radius:50%;background:#4B5563;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .12s;}
+.c-icon-btn-del:hover{background:#374151;}
+
+/* ══ COIN PICKER PANEL (inline, hidden — content moved to drawer) ══ */
+.coin-picker-panel{display:none;}
+.coin-form-panel{display:none;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ COIN DRAWER (right-side slide-in) ══ */
+.coin-drawer-overlay{position:fixed;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;}
+.coin-drawer-overlay.open{opacity:1;pointer-events:all;}
+.coin-drawer{position:absolute;top:0;right:0;bottom:0;width:420px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.coin-drawer-overlay.open .coin-drawer{transform:translateX(0);}
+/* header */
+.coin-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0;}
+.coin-drawer-title{font-size:17px;font-weight:700;color:var(--text);}
+.coin-drawer-close{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;font-size:18px;line-height:1;}
+.coin-drawer-close:hover{color:var(--text);}
+/* tabs */
+.cd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:14px 0 0;flex-shrink:0;padding:0 20px;}
+.cd-tab{padding:10px 0;margin-right:24px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:5px;white-space:nowrap;transition:color .15s;}
+.cd-tab.active{color:var(--text);font-weight:600;border-bottom-color:var(--text);}
+.cd-tab:hover:not(.active){color:var(--text-sub);}
+/* body */
+.coin-drawer-body{flex:1;overflow-y:auto;padding:16px 20px;}
+/* type toggle (Coin In / Promo Coin) */
+.cd-type-toggle{display:grid;grid-template-columns:1fr 1fr;background:#F4F6F8;border-radius:8px;padding:4px;margin-bottom:14px;}
+.cd-type-btn{padding:8px;border-radius:6px;border:none;background:none;font-size:13px;font-weight:500;font-family:inherit;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.cd-type-btn.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+/* info banner */
+.cd-info-banner{display:flex;gap:10px;background:#EFF6FF;border-radius:8px;padding:12px 14px;margin-bottom:14px;}
+.cd-info-icon{width:18px;height:18px;border-radius:50%;background:#3B82F6;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.cd-info-text{font-size:12.5px;color:#1D4ED8;line-height:1.5;}
+.cd-info-text strong{font-weight:700;}
+/* coin list */
+.cd-coin-list{display:flex;flex-direction:column;gap:8px;}
+.cd-coin-item{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .12s;position:relative;}
+.cd-coin-item:hover,.cd-coin-item.selected{border-color:#6366F1;background:#FAFAFF;}
+.cd-coin-item.selected{border-color:#6366F1;}
+.cd-coin-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#3B82F6,#6366F1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cd-coin-icon svg{width:18px;height:18px;}
+.cd-coin-info{flex:1;}
+.cd-coin-name{font-size:13px;font-weight:600;color:var(--text);}
+.cd-coin-badge{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.cd-coin-badge.type-in{background:#EDE9FE;color:#7C3AED;}
+.cd-coin-badge.type-promo{background:#FEF9C3;color:#A16207;}
+.cd-coin-badge.type-withdrawal{background:#FEF3C7;color:#92400E;}
+.cd-coin-badge.type-asset{background:#EFF6FF;color:#1D4ED8;}
+.cd-coin-dots{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;border-radius:4px;}
+.cd-coin-dots:hover{background:var(--bg);}
+/* footer */
+.coin-drawer-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.cd-btn-cancel{padding:9px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;}
+.cd-btn-cancel:hover{background:var(--bg);}
+.cd-btn-attach{padding:9px 22px;border-radius:8px;border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;}
+.cd-btn-attach:hover{background:var(--green-dark);}
+/* form tab */
+.coin-drawer-form{display:none;}
+.coin-drawer-form.open{display:block;}
+.coin-drawer-picker{display:block;}
+.coin-drawer-picker.hidden{display:none;}
+/* section label */
+.cd-section-label{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:block;}
+/* type cards */
+.cd-type-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.cd-type-card{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .15s,background .12s;}
+.cd-type-card.active{border-color:#6D28D9;background:#FAFAFF;}
+.cd-type-card-left{display:flex;align-items:center;gap:10px;}
+.cd-type-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cd-type-icon-in{background:#EDE9FE;}
+.cd-type-icon-promo{background:#FEF3C7;}
+.cd-type-card-name{font-size:13px;font-weight:600;color:var(--text);}
+.cd-type-card-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.cd-type-radio{width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;transition:border-color .15s;}
+.cd-type-radio.active{border-color:#00C37F;border-width:5px;}
+/* form divider */
+.cd-form-divider{height:1px;background:var(--border);margin:16px -20px;}
+/* coin description row */
+.cd-desc-row{display:flex;align-items:flex-start;gap:12px;}
+.cd-icon-picker{width:64px;height:64px;border-radius:10px;background:#F4F6F8;border:1.5px dashed #D1D5DB;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:border-color .15s;}
+.cd-icon-picker:hover{border-color:var(--green);}
+.cd-name-field{flex:1;}
+.cd-name-label{font-size:12.5px;font-weight:500;color:var(--text-sub);display:block;margin-bottom:6px;}
+/* advanced settings */
+.cd-advanced{display:flex;align-items:center;justify-content:space-between;padding:14px 0;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-top:8px;}
+.cd-advanced-body{display:none;padding:12px 0 4px;}
+.cd-advanced-body.open{display:block;}
+
+/* ══ COIN FORM ══ */
+.cfp-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.cfp-grid{display:grid;grid-template-columns:56px 1fr 1fr;gap:10px;align-items:end;margin-bottom:10px;}
+.cfp-lbl{font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:4px;display:block;}
+.cfp-fi{width:100%;border:1px solid var(--border-input);border-radius:var(--r-sm);padding:7px 10px;font-size:12.5px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;}
+.cfp-fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.cfp-em-btn{width:44px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border-input);background:var(--surface);font-size:21px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .15s;}
+.cfp-em-btn:hover{border-color:var(--green);}
+.em-opts{display:none;flex-wrap:wrap;gap:3px;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px;z-index:30;box-shadow:0 4px 16px rgba(0,0,0,.12);width:190px;}
+.em-opts.open{display:flex;}
+.em-o{font-size:18px;cursor:pointer;padding:3px;border-radius:4px;line-height:1;}
+.em-o:hover{background:var(--bg);}
+.rate-row{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-bottom:12px;}
+.rate-sep{font-size:12px;color:var(--text-muted);text-align:center;padding-top:16px;}
+.cfp-actions{display:flex;gap:7px;justify-content:flex-end;}
+.cfp-back{padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.cfp-back:hover{background:var(--bg);}
+.cfp-cancel{padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.cfp-cancel:hover{background:var(--bg);}
+.cfp-save{padding:7px 14px;border-radius:var(--r-sm);border:none;background:var(--green);font-size:12px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.cfp-save:hover{background:var(--green-dark);}
+
+/* ══ FEATURE CONFIG DRAWER ══ */
+.fcd-overlay{position:fixed;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:500;opacity:0;pointer-events:none;transition:opacity .22s;}
+.fcd-overlay.open{opacity:1;pointer-events:all;}
+.fcd-drawer{position:absolute;top:0;right:0;bottom:0;width:640px;background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:501;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.fcd-overlay.open .fcd-drawer{transform:translateX(0);}
+.fcd-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.fcd-title{font-size:17px;font-weight:700;color:var(--text);}
+.fcd-close{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:18px;padding:4px;display:flex;align-items:center;}
+.fcd-close:hover{color:var(--text);}
+/* step tabs */
+.fcd-steps{display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--border);flex-shrink:0;gap:0;}
+.fcd-step{display:flex;align-items:center;gap:6px;padding:12px 0;font-size:12.5px;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.fcd-step.active{color:var(--text);font-weight:600;border-bottom-color:var(--text);}
+.fcd-step.done .fcd-step-n{background:var(--green);color:#fff;border-color:var(--green);}
+.fcd-step-n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D1D5DB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#9CA3AF;background:#E5E8EC;transition:all .15s;}
+.fcd-step.active .fcd-step-n{background:#E5E8EC;border-color:#D1D5DB;color:#6B7280;}
+.fcd-step-sep{color:#D1D5DB;margin:0 8px;font-size:14px;}
+/* body */
+.fcd-body{flex:1;overflow-y:auto;padding:20px 24px;}
+/* footer */
+.fcd-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+.fcd-btn-cancel{padding:9px 20px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;}
+.fcd-btn-cancel:hover{background:var(--bg);}
+.fcd-btn-continue{padding:9px 24px;border-radius:8px;border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;}
+.fcd-btn-continue:hover{background:var(--green-dark);}
+/* panels */
+.fcd-panel{display:none;}
+.fcd-panel.active{display:block;}
+/* prize pool redesign */
+.fcd-pool-info{display:flex;gap:10px;background:#EFF6FF;border-radius:8px;padding:12px 14px;margin-bottom:16px;}
+.fcd-pool-search-wrap{position:relative;margin-bottom:10px;}
+.fcd-pool-search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9CA3AF;}
+.fcd-pool-search{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:var(--text);}
+.fcd-pool-search:focus{border-color:var(--green);}
+.fcd-pool-search-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.fcd-pool-search-wrap{position:relative;flex:1;margin-bottom:0;}
+.fcd-pool-filter-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1.5px solid #D1D5DB;border-radius:8px;background:#fff;cursor:pointer;font-size:12.5px;font-weight:600;color:#374151;white-space:nowrap;font-family:inherit;flex-shrink:0;}
+.fcd-pool-filter-btn:hover{border-color:#9CA3AF;}
+.fcd-pool-filter-drop{display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:400;min-width:180px;overflow:hidden;}
+.fcd-pool-filter-drop.open{display:block;}
+.fcd-pool-filter-opt{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text);transition:background .1s;user-select:none;}
+.fcd-pool-filter-opt:hover{background:#F9FAFB;}
+.fcd-pool-filter-opt.selected{background:#F0FDF4;color:var(--green);font-weight:600;}
+.fcd-pool-filter-check{width:15px;height:15px;border:1.5px solid #D1D5DB;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;}
+.fcd-pool-filter-opt.selected .fcd-pool-filter-check{background:var(--green);border-color:var(--green);}
+.fcd-pool-filter-check-tick{display:none;color:#fff;font-size:10px;line-height:1;}
+.fcd-pool-filter-opt.selected .fcd-pool-filter-check-tick{display:block;}
+.fcd-pool-chips-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:0;}
+.fcd-pool-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px 3px 10px;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:20px;font-size:12px;font-weight:500;color:#374151;}
+.fcd-pool-chip-x{cursor:pointer;color:#9CA3AF;font-size:13px;line-height:1;margin-left:1px;padding:0 2px;}
+.fcd-pool-chip-x:hover{color:#EF4444;}
+.fcd-pool-clear{font-size:12px;font-weight:600;color:#EF4444;cursor:pointer;background:none;border:none;font-family:inherit;padding:0;}
+.fcd-pool-clear:hover{text-decoration:underline;}
+.fcd-pool-coin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0;}
+.fcd-pool-coin-card{border:1.5px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:6px;}
+.fcd-pool-coin-card-top{display:flex;align-items:center;gap:8px;}
+.fcd-pool-coin-card-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-pool-coin-card-name{font-size:13px;font-weight:700;color:var(--text);}
+.fcd-pool-coin-card-val{font-size:11.5px;color:#6B7280;margin-left:2px;}
+.fcd-pool-coin-card-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.fcd-pool-coin-card-add{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:6px;border:1.5px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s;}
+.fcd-pool-coin-card-add:hover:not(:disabled){border-color:var(--green);color:var(--green);}
+.fcd-pool-coin-card-add:disabled{opacity:.45;cursor:not-allowed;border-color:var(--border);color:var(--text-muted);}
+.fcd-pool-footer{border-top:1px solid var(--border);margin:0 -20px;padding:12px 20px 0;}
+.fcd-pool-footer-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px;}
+.fcd-pool-footer-items{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.fcd-pool-footer-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#F9FAFB;border:1px solid var(--border);border-radius:7px;}
+.fcd-pool-footer-item-icon{width:26px;height:26px;border-radius:6px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-pool-footer-item-name{flex:1;font-size:12.5px;font-weight:600;color:var(--text);}
+.fcd-pool-footer-item-rm{background:none;border:none;cursor:pointer;color:#9CA3AF;display:flex;align-items:center;padding:2px;}
+.fcd-pool-footer-item-rm:hover{color:#EF4444;}
+.fcd-pool-create-link{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0;}
+.fcd-pool-create-link:hover{text-decoration:underline;}
+/* entry source multi-select dropdown */
+.fcd-ms-wrap{position:relative;margin-bottom:16px;}
+.fcd-ms-trigger{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1.5px solid #D1D5DB;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:#374151;transition:border-color .15s,box-shadow .15s;white-space:nowrap;}
+.fcd-ms-trigger:hover,.fcd-ms-trigger.open{border-color:#9CA3AF;box-shadow:none;}
+.fcd-ms-chips{display:flex;align-items:center;flex-wrap:wrap;gap:5px;flex:1;}
+.fcd-ms-placeholder{font-size:13px;font-weight:600;color:#374151;}
+.fcd-ms-caret{flex-shrink:0;color:#374151;transition:transform .2s;}
+.fcd-ms-trigger.open .fcd-ms-caret{transform:rotate(180deg);}
+.fcd-ms-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:100%;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;overflow:hidden;}
+.fcd-ms-dropdown.open{display:block;}
+.fcd-ms-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.fcd-ms-search input{width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:inherit;}
+.fcd-ms-list{max-height:220px;overflow-y:auto;}
+.fcd-ms-option{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;transition:background .1s;}
+.fcd-ms-option:hover{background:#F9FAFB;}
+.fcd-ms-option.selected{background:#F0FDF4;}
+.fcd-ms-option-check{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.fcd-ms-option.selected .fcd-ms-option-check{background:var(--green);border-color:var(--green);}
+.fcd-ms-option-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.fcd-ms-opt-icon-trigger{background:#EFF6FF;}
+.fcd-ms-option-info{flex:1;min-width:0;}
+.fcd-ms-option-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-ms-option-meta{display:flex;align-items:center;gap:5px;margin-top:2px;}
+.fcd-ms-option-type{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:10px;}
+.fcd-ms-type-trigger{background:#DBEAFE;color:#1D4ED8;}
+.fcd-ms-option-coin{font-size:11px;color:var(--text-muted);}
+.fcd-ms-empty{padding:14px;text-align:center;font-size:12px;color:var(--text-muted);}
+/* selected trigger cards */
+.fcd-entry-cards{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.fcd-trigger-card{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
+.fcd-trigger-card-head{padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.fcd-trigger-card-info{flex:1;}
+.fcd-trigger-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.fcd-trigger-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
+.fcd-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.fcd-tag{padding:3px 9px;border-radius:6px;background:#F4F6F8;border:1px solid var(--border);font-size:11.5px;color:var(--text-sub);}
+.fcd-card-remove{width:24px;height:24px;border-radius:50%;background:#1F2937;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.fcd-card-remove:hover{background:#374151;}
+.fcd-trigger-coin-row{display:flex;align-items:center;gap:10px;padding:11px 16px;background:#F8FAFC;border-top:1px solid var(--border);}
+.fcd-trigger-coin-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(145deg,#60A5FA 0%,#4338CA 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-trigger-coin-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-trigger-coin-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.fcd-coin-preview-icon{width:32px;height:32px;border-radius:7px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-coin-preview-name{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-coin-badge{padding:3px 10px;border-radius:20px;background:#EDE9FE;color:#6D28D9;font-size:11.5px;font-weight:600;}
+/* rankings table layout */
+.fcd-rank-header-row{display:flex;align-items:center;gap:8px;padding:0 2px;margin-bottom:6px;}
+.fcd-rank-header-row>div{font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:none;}
+.fcd-rank-col-from{width:64px;flex-shrink:0;}
+.fcd-rank-col-to{width:64px;flex-shrink:0;}
+.fcd-rank-col-amt{width:80px;flex-shrink:0;}
+.fcd-rank-col-coin{flex:1;}
+/* prizes */
+.fcd-prize-card{display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;}
+.fcd-prize-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.fcd-prize-place-row{display:flex;align-items:center;gap:8px;flex:1;}
+.fcd-place-type-toggle{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;flex-shrink:0;}
+.fcd-place-type-btn{padding:4px 10px;font-size:11px;font-weight:600;font-family:inherit;border:none;background:none;cursor:pointer;color:var(--text-muted);transition:all .12s;}
+.fcd-place-type-btn.active{background:var(--text);color:#fff;}
+.fcd-place-inputs{display:flex;align-items:center;gap:6px;}
+.fcd-rank-input{width:64px;border:1.5px solid var(--border-input);border-radius:7px;padding:7px 8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;text-align:center;flex-shrink:0;}
+.fcd-rank-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fcd-rank-amt-input{width:80px;border:1.5px solid var(--border-input);border-radius:7px;padding:7px 8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;text-align:center;flex-shrink:0;}
+.fcd-rank-amt-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+.fcd-place-input{width:52px;border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;font-size:12.5px;font-family:inherit;text-align:center;outline:none;}
+.fcd-place-input:focus{border-color:var(--green);}
+.fcd-place-sep{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+.fcd-prize-del{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;border-radius:4px;margin-left:4px;}
+.fcd-prize-del:hover{color:var(--red);background:#FFF2EE;}
+/* coin selector inside prize */
+.fcd-coin-selector{border:1.5px solid var(--border-input);border-radius:8px;padding:7px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;background:#fff;width:100%;transition:border-color .15s;position:relative;}
+.fcd-coin-selector:hover{border-color:var(--green);}
+.fcd-coin-selector.open{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
+/* dropdown group label */
+.fcd-coin-drop-group{padding:6px 14px 2px;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:capitalize;letter-spacing:.3px;}
+.fcd-coin-sel-icon{width:22px;height:22px;border-radius:5px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-coin-sel-info{flex:1;text-align:left;display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;}
+.fcd-coin-sel-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;}
+.fcd-coin-sel-value{font-size:11.5px;color:var(--text-muted);font-weight:400;white-space:nowrap;}
+.fcd-coin-sel-type{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.fcd-coin-type-coin-in{background:#EDE9FE;color:#6D28D9;}
+.fcd-coin-type-promo{background:#FEF9C3;color:#A16207;}
+.fcd-coin-type-withdrawal{background:#FEF3C7;color:#92400E;}
+.fcd-coin-type-asset{background:#EFF6FF;color:#1D4ED8;}
+.fcd-coin-sel-chev{color:var(--text-muted);flex-shrink:0;}
+/* coin dropdown list */
+.fcd-coin-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;overflow:hidden;}
+.fcd-coin-dropdown.open{display:block;}
+.fcd-coin-drop-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;}
+.fcd-coin-drop-item:hover{background:var(--bg);}
+.fcd-coin-drop-icon{width:28px;height:28px;border-radius:6px;background:linear-gradient(145deg,#60A5FA,#4338CA);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-coin-drop-name{font-size:13px;font-weight:600;color:var(--text);flex:1;}
+.fcd-coin-drop-create{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;border-top:1px solid var(--border);color:var(--green);font-size:13px;font-weight:600;transition:background .1s;}
+.fcd-coin-drop-create:hover{background:var(--green-light);}
+/* pool items */
+/* pool type cards */
+.fcd-pool-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.fcd-pool-type-card{display:flex;align-items:center;gap:10px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
+.fcd-pool-type-card:hover{border-color:var(--green);background:var(--green-light);}
+.fcd-pool-type-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.fcd-pool-type-icon.t-in{background:#EDE9FE;}
+.fcd-pool-type-icon.t-promo{background:#FEF3C7;}
+.fcd-pool-type-icon.t-withdrawal{background:#DBEAFE;}
+.fcd-pool-type-icon.t-asset{background:#F3F4F6;}
+.fcd-pool-type-label{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.3;}
+.fcd-pool-type-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.fcd-pool-type-add{margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;font-weight:300;line-height:1;}
+/* pool items list */
+.fcd-pool-section-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px;margin-top:4px;}
+.fcd-pool-item{display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:7px;}
+.fcd-pool-em{font-size:18px;line-height:1;flex-shrink:0;}
+.fcd-pool-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.fcd-pool-remove{background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;justify-content:center;padding:2px;border-radius:4px;}
+.fcd-pool-remove:hover{color:var(--red);background:var(--red-light);}
+.fcd-pool-scratch-btn{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed var(--border);border-radius:8px;width:100%;padding:9px;font-size:12.5px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;justify-content:center;transition:border-color .15s,color .15s;margin-top:8px;}
+.fcd-pool-scratch-btn:hover{border-color:var(--green);color:var(--green);}
+/* prize amount */
+.fcd-prize-bottom{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.fcd-prize-amt-wrap{display:flex;align-items:center;gap:8px;border:1px solid var(--border-input);border-radius:8px;padding:8px 12px;flex:1;}
+.fcd-prize-amt-wrap span{font-size:12px;color:var(--text-muted);white-space:nowrap;}
+.fcd-prize-amt{border:none;outline:none;font-size:13px;font-family:inherit;width:70px;color:var(--text);}
+.fcd-add-place{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed var(--border);border-radius:8px;width:100%;padding:10px;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;justify-content:center;transition:border-color .15s,color .15s;}
+.fcd-add-place:hover{border-color:var(--green);color:var(--green);}
+/* schedule */
+.fcd-radio-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;}
+.fcd-radio-card.active{border-color:var(--green);background:#F0FDF9;}
+.fcd-radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;margin-top:1px;transition:all .15s;}
+.fcd-radio-dot.active{border-color:var(--green);border-width:5px;}
+.fcd-radio-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.fcd-radio-sub{font-size:12px;color:var(--text-muted);}
+.fcd-renewal-opts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.fcd-renewal-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;transition:all .15s;}
+.fcd-renewal-btn.active{border-color:var(--green);background:var(--green-light);color:var(--green-dark);}
+/* inline coin creation view inside drawer */
+.fcd-coin-view{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:10;}
+.fcd-coin-view.open{transform:translateX(0);}
+.fcd-coin-view-header{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.fcd-back-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;color:var(--text-sub);font-size:13px;font-weight:500;font-family:inherit;padding:0;}
+.fcd-back-btn:hover{color:var(--text);}
+.fcd-coin-view-title{font-size:14px;font-weight:700;color:var(--text);}
+.fcd-coin-view-body{flex:1;overflow-y:auto;padding:20px 24px;}
+
+/* ══ FOOTER ══ */
+.page-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;margin-bottom:24px;}
+.btn-draft{padding:8px 18px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;font-family:inherit;color:var(--text-sub);cursor:pointer;}
+.btn-draft:hover{background:var(--bg);}
+.btn-next{padding:8px 18px;border-radius:var(--r-sm);border:none;background:var(--green);font-size:13px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-next:hover{background:var(--green-dark);}
+
+/* toast */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);background:#1B2A38;color:#fff;padding:9px 16px;border-radius:8px;font-size:12.5px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:all .22s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="sb-logo">
+    <svg class="sb-logo-icon" viewBox="0 0 26 26" fill="none">
+      <circle cx="13" cy="13" r="12" fill="#00C37F" opacity=".15"/>
+      <circle cx="13" cy="8" r="3" fill="#00C37F"/>
+      <circle cx="8" cy="18" r="3" fill="#00C37F"/>
+      <circle cx="18" cy="18" r="3" fill="#00C37F"/>
+      <line x1="13" y1="8" x2="8" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+      <line x1="13" y1="8" x2="18" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+      <line x1="8" y1="18" x2="18" y2="18" stroke="#00C37F" stroke-width="1.4"/>
+    </svg>
+    <span class="sb-logo-text">OnAim</span>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>Dashboard</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>Transactions</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Player Management</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Player list</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Games</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Balance Bo...</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Segments</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Configurations</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Promotion...</div>
+    <div class="sb-item active"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Promoti...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Missions<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Games</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Leader...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Reward...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Raffle</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Milesto...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Coins<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Withdra...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Aggreg...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">User Management</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Users</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Action Logs</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>Roles</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Permission...<svg class="sb-chev" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 2H3v16h5l3 3 3-3h7V2z"/></svg>Domains</div>
+  </div>
+  <div class="sb-div"></div>
+
+  <div class="sb-section">
+    <div class="sb-label">Other</div>
+    <div class="sb-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-email">Superadmin@test.com</div>
+    <button class="sb-signout">Sign out</button>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+<div class="content">
+
+  <!-- Sticky header + steps bar (full width, outside content-inner) -->
+  <div class="steps-bar">
+    <div class="steps-bar-inner">
+      <div class="back" onclick="toast('Back to Promotions')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Promotions
+      </div>
+      <div class="page-hdr">
+        <div class="page-title">Create New Promotion</div>
+        <div class="page-hdr-r">
+          <a class="tmpl-link">Braws Promotion Templates</a>
+          <button class="dots-btn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="steps-bar-divider"></div>
+    <div class="steps">
+      <div class="step-pill" id="tab-general">
+        <span class="step-n" id="spn-general">1</span>
+        General Details
+      </div>
+      <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="step-pill" id="tab-participation">
+        <span class="step-n" id="spn-participation">2</span>
+        Participation Rules
+      </div>
+      <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="step-pill" id="tab-features">
+        <span class="step-n" id="spn-features">3</span>
+        Promotion Features & prizes
+      </div>
+    </div>
+  </div>
+
+<div class="content-inner">
+
+
+  <!-- ══ GENERAL DETAILS ══ -->
+  <div class="card" id="sec-general">
+    <div class="card-body">
+      <div class="card-title">General Details</div>
+      <div class="card-sub">Configure name, schedule, audience, and labels for this promotion</div>
+
+      <div class="form-cols">
+        <!-- LEFT -->
+        <div class="form-col">
+          <div class="sec-lbl">Description</div>
+          <div class="fg">
+            <label class="fl">Promotion Name<sup>*</sup></label>
+            <input class="fi" id="promoName" placeholder="Value" oninput="validateGeneral()" />
+          </div>
+          <div class="add-link" id="addDescBtn" onclick="toggleDesc()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add description
+          </div>
+          <div id="descField" style="display:none;margin-top:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <label class="fl" style="margin-bottom:0;">Description</label>
+              <span onclick="removeDesc()" style="font-size:11.5px;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:3px;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Remove
+              </span>
+            </div>
+            <textarea class="fi" id="descTa" rows="3" placeholder="Enter description…" style="resize:vertical;"></textarea>
+          </div>
+
+          <div class="divider"></div>
+          <div class="sec-lbl">Schedule</div>
+          <div class="date-row">
+            <div class="fg"><label class="fl">Start Date<sup>*</sup></label><input class="fi cal" id="startDate" type="date" placeholder="dd/mm/yyyy" oninput="validateGeneral()" /></div>
+            <div class="fg"><label class="fl">End Date<sup>*</sup></label><input class="fi cal" id="endDate" type="date" placeholder="dd/mm/yyyy" oninput="validateGeneral()" /></div>
+          </div>
+
+          <div style="background:#F9FAFB;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:2px;">
+            <div class="sw-row">
+              <div class="sw" id="testSw" onclick="toggleTest()"></div>
+              <div><div class="sw-lbl">Request Testing</div></div>
+            </div>
+            <div id="testBody" style="margin-left:48px;margin-top:-4px;display:none;">
+              <div class="sw-desc" style="margin-bottom:10px;">Run a testing window before public launch. Only testers will see the promotion during this period</div>
+              <div class="fg" style="margin-bottom:0;"><label class="fl">Test Ends (go live)<sup>*</sup></label><input class="fi cal" type="date" placeholder="dd/mm/yyyy" /></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="form-col">
+          <div class="sec-lbl">Target Audience</div>
+          <div class="radio-opts">
+            <div class="radio-opt sel" id="ro-all" onclick="setAudience('all')">
+              <div class="rdot" id="rd-all"></div>
+              <div><div class="r-title">All Players</div><div class="r-desc">Include everyone by default. You can optionally exclude specific segments</div></div>
+            </div>
+            <div class="radio-opt" id="ro-custom" onclick="setAudience('custom')">
+              <div class="rdot" id="rd-custom"></div>
+              <div><div class="r-title">Custom Segments</div><div class="r-desc">Include and exclude players based on selected segments</div></div>
+            </div>
+          </div>
+
+          <div class="seg-panels" id="segPanels">
+            <div class="seg-panel disabled" id="includePanel">
+              <div class="seg-head inc">
+                <svg width="12" height="12" fill="none" stroke="#15803D" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Include Segment
+              </div>
+              <div class="seg-search"><div class="seg-check-all" onclick="toggleAllSegs(this)"></div><input type="text" placeholder="Search" /></div>
+              <div class="seg-list">
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+              </div>
+            </div>
+            <div class="seg-panel">
+              <div class="seg-head exc">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#B91C1C" stroke-width="2"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="#B91C1C" stroke-width="2"/></svg>
+                Exclude Segment
+              </div>
+              <div class="seg-search"><div class="seg-check-all" onclick="toggleAllSegs(this)"></div><input type="text" placeholder="Search" /></div>
+              <div class="seg-list">
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+                <div class="seg-row" onclick="toggleSeg(this)"><div class="seg-cb"></div><span class="seg-name">VIP</span><span class="seg-cnt">4444,555</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lock-row">
+            <div>
+              <div style="font-size:12.5px;font-weight:600;">Lock Audience</div>
+              <div style="font-size:11.5px;color:var(--text-sub);">Lock the audience at launch. Players who change segments later won't be added or removed</div>
+            </div>
+            <div class="sw" onclick="this.classList.toggle('on')" style="margin-top:2px;"></div>
+          </div>
+
+          <div class="cb-row" onclick="toggleCb(this)">
+            <div class="cbox"></div>
+            <span class="cb-lbl">Require players to opt-in to engage in this promotion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="labels-row" id="labelsRow">
+      <div class="add-link" id="addLabelBtn" onclick="toggleLabelDropdown(event)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Labels
+      </div>
+      <!-- chips injected here by JS -->
+      <div class="label-dropdown" id="labelDropdown" style="display:none;" onclick="event.stopPropagation()">
+        <div class="label-dropdown-search">
+          <input type="text" id="labelSearchInput" placeholder="Search or create label…" oninput="filterLabels()" onkeydown="labelKeydown(event)" />
+        </div>
+        <div class="label-list" id="labelList"></div>
+        <div class="label-create-row" id="labelCreateRow" onclick="createLabel()"></div>
+        <div class="label-color-picker" id="labelColorPicker">
+          <div class="label-color-picker-title">Pick a color</div>
+          <div class="color-swatches" id="colorSwatches"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ══ PARTICIPATION RULES ══ -->
+  <div id="sec-participation" style="margin-top:24px;">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">Participation Rules (Triggers)</div>
+        <div class="card-sub">Define how players earn points from external events like bets, deposits, or game actions</div>
+
+        <div class="freq-label">Frequently Used Templates</div>
+
+        <div class="tpl-grid">
+          <div class="tpl-card" id="tc-0">
+            <div class="tpl-card-top">
+              <div class="tpl-name">EGT Bets</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Tracks total bet amount placed on EGT slots</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Bet</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Bet amount</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(0,'EGT Bets','Tracks total bet amount placed on EGT slots',['External','Bet','Sum','Bet amount'])">Select Trigger</button>
+          </div>
+          <div class="tpl-card" id="tc-1">
+            <div class="tpl-card-top">
+              <div class="tpl-name">Deposit</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Triggers on each successful player deposit</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Deposit</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Amount</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(1,'Deposit','Triggers on each successful player deposit',['External','Deposit','Sum','Amount'])">Select Trigger</button>
+          </div>
+          <div class="tpl-card" id="tc-2">
+            <div class="tpl-card-top">
+              <div class="tpl-name">Referral</div>
+              <div class="tpl-eye"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
+            <div class="tpl-desc">Fires when a referred friend completes registration</div>
+            <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Referral</span><span class="tpl-tag">Count</span><span class="tpl-tag">Friend joined</span></div>
+            <button class="tpl-btn" onclick="selectTrigger(2,'Referral','Fires when a referred friend completes registration',['External','Referral','Count','Friend joined'])">Select Trigger</button>
+          </div>
+        </div>
+
+        <div class="tpl-bottom-row">
+          <a class="browse-link" onclick="toast('Browsing all templates…')">Browse All Templates</a>
+          <button class="create-btn" onclick="toast('Opening rule builder…')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create From Scratch
+          </button>
+        </div>
+      </div>
+
+      <!-- Selected Rules -->
+      <div style="padding:0 24px 20px;" id="selectedRulesSection">
+        <div class="sel-rules-label" id="selRulesLabel" style="display:none;">Selected Rules</div>
+        <div id="rulesList"></div>
+      </div>
+    </div>
+
+    <!-- ══ PROMOTION FEATURES & PRIZES ══ -->
+    <div class="card" id="sec-features" style="margin-top:24px;">
+      <div class="card-body" style="padding-bottom:0;">
+        <div class="card-title">Promotion Features & Prizes</div>
+        <div class="card-sub">Select features and define how users participate and earn rewards</div>
+      </div>
+      <div class="features-layout">
+        <!-- Left: feature list -->
+        <div class="features-list">
+          <div class="feature-item" onclick="addFeature('progress','Progress','🔗')">
+            <span class="feature-icon" style="background:#E0F7FA;color:#00897B;">🔗</span>
+            Progress
+          </div>
+          <div class="feature-item" onclick="addFeature('game','Game','🎮')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#388E3C;">🎮</span>
+            Game
+          </div>
+          <div class="feature-item" onclick="addFeature('leaderboard','Leaderboard','🏆')">
+            <span class="feature-icon" style="background:#FFF8E1;color:#F9A825;">🏆</span>
+            Leaderboard
+          </div>
+          <div class="feature-item" onclick="addFeature('raffle','Raffle','🎟️')">
+            <span class="feature-icon" style="background:#F3E5F5;color:#8E24AA;">🎟️</span>
+            Raffle
+          </div>
+          <div class="feature-item" onclick="addFeature('rewardbar','Reward Bar','💎')">
+            <span class="feature-icon" style="background:#E3F2FD;color:#1E88E5;">💎</span>
+            Reward Bar
+          </div>
+          <div class="feature-item" onclick="addFeature('journey','Journey Path','🚩')">
+            <span class="feature-icon" style="background:#FBE9E7;color:#E64A19;">🚩</span>
+            Journey Path
+          </div>
+          <div class="feature-item" onclick="addFeature('factory','Reward Factory','🏭')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#43A047;">🏭</span>
+            Reward Factory
+          </div>
+          <div class="feature-item" onclick="addFeature('market','Market','🛒')">
+            <span class="feature-icon" style="background:#E8F5E9;color:#388E3C;">🛒</span>
+            Market
+          </div>
+          <div class="feature-item" onclick="addFeature('mission','Mission','🎯')">
+            <span class="feature-icon" style="background:#FFEBEE;color:#E53935;">🎯</span>
+            Mission
+          </div>
+          <div class="feature-item" onclick="addFeature('offers','Offers','🎁')">
+            <span class="feature-icon" style="background:#E0F2F1;color:#00897B;">🎁</span>
+            Offers
+          </div>
+          <div class="feature-item" onclick="addFeature('tournament','Tournament','❄️')">
+            <span class="feature-icon" style="background:#E3F2FD;color:#1565C0;">❄️</span>
+            Tournament
+          </div>
+        </div>
+        <!-- Right: selected features -->
+        <div class="features-selected" id="featuresSelected">
+          <div class="features-selected-label">Selected Features</div>
+          <div id="featuresList">
+            <div class="features-empty" id="featuresEmpty">
+              <svg width="32" height="32" fill="none" stroke="#D1D5DB" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+              <div style="margin-top:8px;font-size:13px;color:var(--text-muted);">No features selected yet</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Click a feature on the left to add it</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <button class="btn-draft" onclick="toast('Draft saved')">Save as Draft</button>
+      <button class="btn-next" onclick="toast('Promotion saved!')">
+        Save Promotion
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /content-inner -->
+</div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toastEl"></div>
+
+<!-- ══ FEATURE CONFIG DRAWER ══ -->
+<div class="fcd-overlay" id="fcdOverlay" onclick="handleFcdOverlayClick(event)">
+  <div class="fcd-drawer" id="fcdDrawer">
+    <div class="fcd-header">
+      <div class="fcd-title" id="fcdTitle">Leaderboard Configuration</div>
+      <button class="fcd-close" onclick="closeFcd()">✕</button>
+    </div>
+    <!-- Step tabs -->
+    <div class="fcd-steps">
+      <div class="fcd-step active" id="fcd-step-entry" onclick="goFcdStep('entry')">
+        <div class="fcd-step-n" id="fcd-sn-entry">!</div>
+        How to Enter
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-pool" onclick="goFcdStep('pool')">
+        <div class="fcd-step-n" id="fcd-sn-pool">!</div>
+        Prize Coins
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-rankings" onclick="goFcdStep('rankings')">
+        <div class="fcd-step-n" id="fcd-sn-rankings">!</div>
+        Rankings
+      </div>
+      <span class="fcd-step-sep">›</span>
+      <div class="fcd-step" id="fcd-step-schedule" onclick="goFcdStep('schedule')">
+        <div class="fcd-step-n" id="fcd-sn-schedule">!</div>
+        Schedule
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="fcd-body" id="fcdBody">
+
+      <!-- PANEL 1: Entry Source -->
+      <div class="fcd-panel active" id="fcd-panel-entry">
+        <!-- Info notice -->
+        <div class="cd-info-banner" style="margin-bottom:14px;">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text">Select which earning rules or prizes from other features serve as the <strong>entry source</strong> of this leaderboard. Players must meet these conditions to qualify and appear on the rankings.</div>
+        </div>
+
+        <!-- No triggers warning -->
+        <div id="fcdNoTriggersNotice" style="display:none;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:16px 18px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <span style="font-size:18px;line-height:1;">⚠️</span>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#9A3412;margin-bottom:4px;">No participation rule configured</div>
+              <div style="font-size:12px;color:#C2410C;line-height:1.5;">This promotion has no participation rules yet. Players need a rule to earn points and enter the leaderboard.<br>Go back and add a trigger in the <strong>Participation Rules</strong> section first.</div>
+              <button onclick="closeFcd();document.getElementById('sec-participation')?.scrollIntoView({behavior:'smooth'})" style="margin-top:10px;background:#EA580C;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;">Go to Participation Rules →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-select dropdown -->
+        <div class="fcd-ms-wrap" id="fcdEntryMsWrap" style="display:none;">
+          <div class="fcd-ms-trigger" id="fcdMsTrigger" onclick="toggleFcdMsDropdown()">
+            <div class="fcd-ms-chips" id="fcdMsChips">
+              <span class="fcd-ms-placeholder" id="fcdMsPlaceholder">Select entry source(s)…</span>
+            </div>
+            <svg class="fcd-ms-caret" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="fcd-ms-dropdown" id="fcdMsDropdown">
+            <div class="fcd-ms-search"><input type="text" placeholder="Search…" oninput="filterFcdMsOptions(this.value)" id="fcdMsSearch"></div>
+            <div class="fcd-ms-list" id="fcdMsList"></div>
+          </div>
+        </div>
+        <div id="fcdEntryPreview" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+
+      <!-- PANEL 2: Prize Coins Pool -->
+      <div class="fcd-panel" id="fcd-panel-pool">
+        <!-- Info notice -->
+        <div class="fcd-pool-info">
+          <div class="cd-info-icon" style="flex-shrink:0;margin-top:1px;">i</div>
+          <div class="cd-info-text">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</div>
+        </div>
+
+        <!-- Section label -->
+        <div class="fcd-pool-section-label">SELECT FROM COIN TEMPLATES</div>
+
+        <!-- Search + Filter button row -->
+        <div class="fcd-pool-search-row" style="position:relative;">
+          <div class="fcd-pool-search-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="fcd-pool-search" id="fcdPoolSearch" type="text" placeholder="Search by coin name or type" oninput="filterPoolCoins(this.value)">
+          </div>
+          <div style="position:relative;flex-shrink:0;">
+            <button class="fcd-pool-filter-btn" id="fcdPoolFilterBtn" onclick="togglePoolFilterDrop()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              <span id="fcdPoolFilterLabel">Coin Type</span>
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="fcd-pool-filter-drop" id="fcdPoolFilterDrop">
+              <div class="fcd-pool-filter-opt" data-filter="coin-in" onclick="togglePoolFilterType('coin-in','Coin In',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Coin In</div>
+              <div class="fcd-pool-filter-opt" data-filter="promo" onclick="togglePoolFilterType('promo','Promo Coin',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Promo Coin</div>
+              <div class="fcd-pool-filter-opt" data-filter="withdrawal" onclick="togglePoolFilterType('withdrawal','Withdrawal',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Withdrawal</div>
+              <div class="fcd-pool-filter-opt" data-filter="asset" onclick="togglePoolFilterType('asset','Assets',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Assets</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active filter chips -->
+        <div class="fcd-pool-chips-row" id="fcdPoolChipsRow" style="display:none;"></div>
+
+        <!-- Coin template grid -->
+        <div class="fcd-pool-coin-grid" id="fcdPoolCoinGrid"></div>
+
+        <!-- Footer: pool list + create -->
+        <div class="fcd-pool-footer" style="margin-top:14px;">
+          <div class="fcd-pool-footer-label">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
+          <div class="fcd-pool-footer-items" id="fcdPoolList"></div>
+          <button class="fcd-pool-create-link" onclick="openNewCoinFromPool()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create New Prize Coin
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Rankings -->
+      <div class="fcd-panel" id="fcd-panel-rankings">
+        <div class="cd-info-banner" style="margin-bottom:14px;">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text">For a single position, leave <strong>"To"</strong> empty. To set a range, fill in both <strong>"From"</strong> and <strong>"To"</strong> values.</div>
+        </div>
+        <!-- Column headers -->
+        <div class="fcd-rank-header-row">
+          <div class="fcd-rank-col-from">From</div>
+          <div class="fcd-rank-col-to">To</div>
+          <div class="fcd-rank-col-amt">Amount</div>
+          <div class="fcd-rank-col-coin">Prize Coin</div>
+          <div style="width:28px;flex-shrink:0;"></div>
+        </div>
+        <div id="fcdRankingsList"></div>
+        <button class="fcd-add-place" onclick="addFcdRanking()">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Another Prize
+        </button>
+      </div>
+
+      <!-- PANEL 4: Schedule -->
+      <div class="fcd-panel" id="fcd-panel-schedule">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Define when this leaderboard resets.</p>
+        <div class="fcd-radio-card" id="fcd-sched-sync" onclick="selectFcdSchedule('sync')">
+          <div class="fcd-radio-dot" id="fcd-rdot-sync"></div>
+          <div>
+            <div class="fcd-radio-title">Sync with Promotion</div>
+            <div class="fcd-radio-sub">Leaderboard runs for the full duration of the promotion (start & end dates from General Details)</div>
+          </div>
+        </div>
+        <div class="fcd-radio-card" id="fcd-sched-renew" onclick="selectFcdSchedule('renew')">
+          <div class="fcd-radio-dot" id="fcd-rdot-renew"></div>
+          <div style="flex:1;">
+            <div class="fcd-radio-title">Recurring Reset</div>
+            <div class="fcd-radio-sub">Leaderboard resets on a fixed schedule within the promotion period</div>
+            <div class="fcd-renewal-opts" id="fcdRenewalOpts" style="display:none;">
+              <button class="fcd-renewal-btn active" onclick="selectRenewal(event,'daily')">Daily</button>
+              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'weekly')">Weekly</button>
+              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'monthly')">Monthly</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Inline coin creation view (drill-down, no second drawer) ── -->
+    <div class="fcd-coin-view" id="fcdCoinView">
+      <div class="fcd-coin-view-header">
+        <button class="fcd-back-btn" onclick="closeFcdCoinView()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          <span id="fcdCoinViewBackLabel">Back to Prize Coins</span>
+        </button>
+        <span class="fcd-coin-view-title">Create New Coin</span>
+      </div>
+      <div class="fcd-coin-view-body">
+        <!-- SELECT COIN TYPE -->
+        <div class="cd-section-label">SELECT COIN TYPE</div>
+        <div class="cd-info-banner" id="fcdCoinInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text" id="fcdCoinInfoText"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.</div>
+        </div>
+        <div class="cd-type-cards">
+          <div class="cd-type-card active" id="fcdNewTypeCoinIn" onclick="fcdSelectCoinType('in')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-in">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Coin In</div>
+                <div class="cd-type-card-sub">Entry currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio active" id="fcdNewRadioCoinIn"></div>
+          </div>
+          <div class="cd-type-card" id="fcdNewTypePromo" onclick="fcdSelectCoinType('promo')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-promo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Promo Coin</div>
+                <div class="cd-type-card-sub">Inside promotion</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
+          </div>
+          <div class="cd-type-card" id="fcdNewTypeAsset" onclick="fcdSelectCoinType('asset')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#EFF6FF;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Asset</div>
+                <div class="cd-type-card-sub">Real-value rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioAsset"></div>
+          </div>
+          <div class="cd-type-card" id="fcdNewTypeWithdrawal" onclick="fcdSelectCoinType('withdrawal')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon" style="background:#FEF3C7;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Withdrawal</div>
+                <div class="cd-type-card-sub">Cash-out rewards</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="fcdNewRadioWithdrawal"></div>
+          </div>
+        </div>
+        <div class="cd-form-divider"></div>
+        <!-- COIN DESCRIPTION -->
+        <div class="cd-section-label">COIN DESCRIPTION</div>
+        <div class="cd-desc-row">
+          <button class="cd-icon-picker" onclick="toggleFcdEmOpts()" style="width:56px;height:56px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+            <div class="em-opts" id="fcdEmOpts" style="z-index:600;">
+              <span class="em-o" onclick="pickFcdEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickFcdEm(event,'💎')">💎</span>
+              <span class="em-o" onclick="pickFcdEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickFcdEm(event,'🔥')">🔥</span>
+              <span class="em-o" onclick="pickFcdEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickFcdEm(event,'💰')">💰</span>
+              <span class="em-o" onclick="pickFcdEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickFcdEm(event,'🎁')">🎁</span>
+            </div>
+            <span id="fcdCoinEm" style="font-size:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;"></span>
+          </button>
+          <div class="cd-name-field">
+            <label class="cd-name-label">Coin Name <sup style="color:#F04438">*</sup></label>
+            <input class="cfp-fi" id="fcdCoinName" placeholder="Enter coin name" />
+          </div>
+        </div>
+        <div class="cd-form-divider"></div>
+        <!-- ADVANCED -->
+        <div class="cd-advanced" onclick="toggleFcdAdvanced()">
+          <span class="cd-section-label" style="margin:0;">ADVANCED SETTINGS</span>
+          <svg id="fcdAdvChev" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform .2s;color:var(--text-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="cd-advanced-body" id="fcdAdvancedBody">
+          <div style="margin-bottom:10px;">
+            <label class="cfp-lbl">Description</label>
+            <input class="cfp-fi" id="fcdCoinDesc" placeholder="Short description" />
+          </div>
+          <div class="rate-row">
+            <div><span class="cfp-lbl">Amount</span><input class="cfp-fi" id="fcdCoinAmt" type="number" placeholder="10" /></div>
+            <div class="rate-sep">per €</div>
+            <div><span class="cfp-lbl">Bet (€)</span><input class="cfp-fi" id="fcdCoinPer" type="number" placeholder="1" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="fcd-footer" style="border-top:1px solid var(--border);">
+        <button class="fcd-btn-cancel" onclick="closeFcdCoinView()">Cancel</button>
+        <button class="fcd-btn-continue" onclick="saveFcdCoin()">Add Coin</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="fcd-footer" id="fcdMainFooter">
+      <button class="fcd-btn-cancel" onclick="closeFcd()">Cancel</button>
+      <button class="fcd-btn-continue" id="fcdContinueBtn" onclick="fcdContinue()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COIN DRAWER ══ -->
+<div class="coin-drawer-overlay" id="coinDrawerOverlay" onclick="handleDrawerOverlayClick(event)">
+  <div class="coin-drawer" id="coinDrawer">
+    <!-- Header -->
+    <div class="coin-drawer-header">
+      <div class="coin-drawer-title">Attach coin to trigger</div>
+      <button class="coin-drawer-close" onclick="closeDrawerCoinPicker()">✕</button>
+    </div>
+    <!-- Tabs -->
+    <div class="cd-tabs">
+      <div class="cd-tab active" id="cdTabTemplates" onclick="switchCoinDrawerTab('templates')">Select from icon templates</div>
+      <div class="cd-tab" id="cdTabNew" onclick="switchCoinDrawerTab('new')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create new coin
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="coin-drawer-body" id="coinDrawerBody">
+      <!-- Templates tab -->
+      <div class="coin-drawer-picker" id="coinDrawerPicker">
+        <!-- Coin In / Promo Coin toggle -->
+        <div class="cd-type-toggle">
+          <button class="cd-type-btn active" id="cdTypeCoinIn" onclick="switchCoinType('in')">Coin In</button>
+          <button class="cd-type-btn" id="cdTypePromo" onclick="switchCoinType('promo')">Promo Coin</button>
+        </div>
+        <!-- Info banner -->
+        <div class="cd-info-banner" id="cdInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added more than once inside promotion.</div>
+        </div>
+        <!-- Coin list -->
+        <div class="cd-coin-list" id="coinDrawerTplGrid"></div>
+      </div>
+      <!-- Create new coin tab (form) -->
+      <div class="coin-drawer-form" id="coinDrawerForm">
+
+        <!-- SELECT COIN TYPE -->
+        <div class="cd-section-label">SELECT COIN TYPE</div>
+
+        <!-- Info banner -->
+        <div class="cd-info-banner" id="cdNewInfoBanner">
+          <div class="cd-info-icon">i</div>
+          <div class="cd-info-text" id="cdNewInfoText"><strong>Coin in</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.</div>
+        </div>
+        <div class="cd-type-cards">
+          <div class="cd-type-card active" id="cdNewTypeCoinIn" onclick="selectNewCoinType('in')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-in">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Coin In</div>
+                <div class="cd-type-card-sub">Entry currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio active" id="cdNewRadioCoinIn"></div>
+          </div>
+          <div class="cd-type-card" id="cdNewTypePromo" onclick="selectNewCoinType('promo')">
+            <div class="cd-type-card-left">
+              <div class="cd-type-card-icon cd-type-icon-promo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
+              <div>
+                <div class="cd-type-card-name">Promo Coin</div>
+                <div class="cd-type-card-sub">Inside promotion currency</div>
+              </div>
+            </div>
+            <div class="cd-type-radio" id="cdNewRadioPromo"></div>
+          </div>
+        </div>
+
+        <div class="cd-form-divider"></div>
+
+        <!-- COIN DESCRIPTION -->
+        <div class="cd-section-label">COIN DESCRIPTION</div>
+        <div class="cd-desc-row">
+          <button class="cd-icon-picker" onclick="toggleDrawerEmOpts()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+            <div class="em-opts" id="drawerEmOpts">
+              <span class="em-o" onclick="pickDrawerEm(event,'🪙')">🪙</span><span class="em-o" onclick="pickDrawerEm(event,'💎')">💎</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'⭐')">⭐</span><span class="em-o" onclick="pickDrawerEm(event,'🔥')">🔥</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'🏆')">🏆</span><span class="em-o" onclick="pickDrawerEm(event,'💰')">💰</span>
+              <span class="em-o" onclick="pickDrawerEm(event,'🎯')">🎯</span><span class="em-o" onclick="pickDrawerEm(event,'🎁')">🎁</span>
+            </div>
+            <span id="drawerCfpEm" style="font-size:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;"></span>
+          </button>
+          <div class="cd-name-field">
+            <label class="cd-name-label">Coin Name <sup style="color:#F04438">*</sup></label>
+            <input class="cfp-fi" id="drawerCfpName" placeholder="Enter coin name" />
+          </div>
+        </div>
+
+        <div class="cd-form-divider"></div>
+
+        <!-- ADVANCED SETTINGS -->
+        <div class="cd-advanced" onclick="toggleAdvanced()">
+          <span class="cd-section-label" style="margin:0;">ADVANCED SETTINGS</span>
+          <svg id="cdAdvChev" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform .2s;color:var(--text-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="cd-advanced-body" id="cdAdvancedBody">
+          <div class="fg" style="margin-bottom:10px;">
+            <label class="cfp-lbl">Description</label>
+            <input class="cfp-fi" id="drawerCfpDesc" placeholder="Short description" />
+          </div>
+          <div class="rate-row">
+            <div><span class="cfp-lbl">Coins Earned</span><input class="cfp-fi" id="drawerCfpAmt" type="number" placeholder="10" /></div>
+            <div class="rate-sep">per €</div>
+            <div><span class="cfp-lbl">Bet Amount (€)</span><input class="cfp-fi" id="drawerCfpPer" type="number" placeholder="1" /></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="coin-drawer-footer">
+      <button class="cd-btn-cancel" onclick="closeDrawerCoinPicker()">Cancel</button>
+      <button class="cd-btn-attach" onclick="saveDrawerCoin()">Attach</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── State ── */
+let selectedTriggers = [];
+
+/* ── Scroll spy ── */
+function initScrollSpy() {
+  const contentEl = document.querySelector('.content');
+  const sections = [
+    {id:'sec-general',   key:'general'},
+    {id:'sec-participation', key:'participation'},
+    {id:'sec-features',  key:'features'},
+  ];
+  if (!contentEl) return;
+  contentEl.addEventListener('scroll', () => {
+    const stepsBarH = document.querySelector('.steps-bar')?.offsetHeight || 0;
+    const contentRect = contentEl.getBoundingClientRect();
+    let current = sections[0].key;
+    for (const sec of sections) {
+      const el = document.getElementById(sec.id);
+      if (!el) continue;
+      const secRect = el.getBoundingClientRect();
+      const relTop = secRect.top - contentRect.top;
+      if (relTop <= stepsBarH + 48) current = sec.key;
+    }
+    activateTab(current);
+  }, {passive: true});
+}
+
+function activateTab(tabKey) {
+  // Step pills are now passive indicators — no active/done state toggling.
+  // Badge is managed by validateGeneral / validateParticipation / validateFeatures.
+}
+
+document.addEventListener('DOMContentLoaded', initScrollSpy);
+let ruleCounter = 0;
+
+/* ── Step scroll ── */
+const stepNumbers = {general:null, participation:'2', features:'3'};
+const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function goToStep(secId, tabKey) {
+  const sec = document.getElementById(secId);
+  const contentEl = document.querySelector('.content');
+  if (sec && contentEl) {
+    const stepsBarH = document.querySelector('.steps-bar')?.offsetHeight || 0;
+    // Calculate offset of section relative to content scroll container
+    let offsetTop = 0;
+    let el = sec;
+    while (el && el !== contentEl) {
+      offsetTop += el.offsetTop;
+      el = el.offsetParent;
+    }
+    contentEl.scrollTo({top: offsetTop - stepsBarH - 16, behavior: 'smooth'});
+  }
+  activateTab(tabKey);
+}
+
+/* ── General Details ── */
+function toggleDesc() {
+  const f=document.getElementById('descField'), b=document.getElementById('addDescBtn');
+  f.style.display='block'; b.style.display='none';
+}
+function removeDesc() {
+  document.getElementById('descField').style.display='none';
+  document.getElementById('addDescBtn').style.display='inline-flex';
+  document.getElementById('descTa').value='';
+}
+let testOn=false;
+function toggleTest(){
+  testOn=!testOn;
+  document.getElementById('testSw').classList.toggle('on',testOn);
+  document.getElementById('testBody').style.display=testOn?'block':'none';
+}
+let currentAudience = 'all';
+function setAudience(v){
+  currentAudience = v;
+  ['all','custom'].forEach(k=>{
+    document.getElementById('ro-'+k).classList.toggle('sel',k===v);
+  });
+  document.getElementById('includePanel').classList.toggle('disabled', v==='all');
+  validateGeneral();
+}
+
+function validateGeneral(){
+  const name = document.getElementById('promoName')?.value?.trim();
+  const start = document.getElementById('startDate')?.value;
+  const end = document.getElementById('endDate')?.value;
+  const filled = !!(name && start && end);
+  const n = document.getElementById('spn-general');
+  const pill = document.getElementById('tab-general');
+  if(filled){
+    if(n){ n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; n.style.background='var(--green)'; n.style.color='#fff'; }
+    pill?.classList.add('validated');
+  } else {
+    if(n){ n.textContent = '1'; n.style.background=''; n.style.color=''; }
+    pill?.classList.remove('validated');
+  }
+}
+function toggleSeg(row){ row.querySelector('.seg-cb').classList.toggle('chk'); }
+function toggleAllSegs(checkAllEl){
+  checkAllEl.classList.toggle('chk');
+  const checked = checkAllEl.classList.contains('chk');
+  const panel = checkAllEl.closest('.seg-panel');
+  panel.querySelectorAll('.seg-cb').forEach(cb => cb.classList.toggle('chk', checked));
+}
+function toggleCb(row){ row.querySelector('.cbox').classList.toggle('chk'); }
+
+/* ── Trigger selection ── */
+function selectTrigger(tcIdx, name, desc, tags) {
+  const id = 'rule-'+(++ruleCounter);
+  selectedTriggers.push(id);
+  validateParticipation();
+
+  // briefly flash "✓ Selected" feedback on the button then revert
+  const card = document.getElementById('tc-'+tcIdx);
+  if(card){
+    const btn = card.querySelector('.tpl-btn');
+    btn.textContent='✓ Added!';
+    btn.style.cssText='color:var(--green);border-color:var(--green);background:var(--green-light);';
+    setTimeout(()=>{ btn.textContent='Select Trigger'; btn.style.cssText=''; }, 1200);
+  }
+
+  document.getElementById('selRulesLabel').style.display='block';
+
+  const list = document.getElementById('rulesList');
+  const wrap = document.createElement('div');
+  wrap.className='rule-card'; wrap.id=id;
+  wrap.innerHTML=`
+    <div class="rule-card-body">
+      <div class="rule-top">
+        <div>
+          <div class="rule-name">${name}</div>
+          <div class="rule-desc">Description of what does this trigger do</div>
+          <div class="rule-tags">${tags.map(t=>`<span class="rule-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="rule-actions">
+          <button class="r-icon-btn" title="Edit" onclick="toast('Opening editor…')">
+            <svg width="13" height="13" fill="none" stroke="#6B7280" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="r-icon-btn del" title="Delete" onclick="deleteRule('${id}')">
+            <svg width="13" height="13" fill="none" stroke="#F04438" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Coin row: empty state -->
+    <div class="coin-row" id="coin-row-empty-${id}">
+      <span class="coin-row-empty">No coin attached yet. Players will not earn collectible points from this rule</span>
+      <button class="coin-attach-btn" onclick="openCoinPicker('${id}')">
+        + Attach coin to the rule
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </button>
+    </div>
+    <!-- Coin row: attached state -->
+    <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
+      <div class="coin-row-left">
+        <div class="coin-gem-icon" id="coin-gem-icon-${id}" style="font-size:20px;background:none;border:1px solid var(--border);">💎</div>
+        <div>
+          <div class="coin-row-name" id="coin-pill-name-${id}">Coin Name</div>
+          <span class="coin-pill" id="coin-pill-type-${id}">Promo Coin</span>
+        </div>
+      </div>
+      <div class="coin-row-actions">
+        <button class="c-icon-btn" title="Edit coin" onclick="editCoin('${id}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        </button>
+        <button class="c-icon-btn-del" title="Detach coin" onclick="detachCoin('${id}')">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Coin picker panel -->
+    <div class="coin-picker-panel" id="coin-picker-${id}">
+      <div class="cpp-head">
+        <div class="cpp-title">Select a Coin Template</div>
+        <button class="cpp-close" onclick="closeCoinPicker('${id}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="coin-tpl-grid">
+        ${coinTemplates.map(c=>`
+          <div class="coin-tpl" onclick="selectCoinTpl('${id}','${c.em}','${c.name}','${c.desc}','${c.amt}','${c.per}')">
+            <div class="coin-tpl-row"><div class="coin-tpl-em">${c.em}</div><div class="coin-tpl-name">${c.name}</div></div>
+            <div class="coin-tpl-desc">${c.desc}</div>
+            <div class="coin-tpl-rate">${c.amt} ${c.em} / €${c.per} bet</div>
+          </div>`).join('')}
+      </div>
+      <div class="cpp-div"><span>or build your own</span></div>
+      <button class="cpp-scratch" onclick="openCoinFormBlank('${id}')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Custom Coin from Scratch
+      </button>
+    </div>
+    <!-- Coin form panel -->
+    <div class="coin-form-panel" id="coin-form-${id}">
+      <div class="cfp-title">Create &amp; Attach Coin</div>
+      <div class="cfp-grid">
+        <div style="position:relative;">
+          <label class="cfp-lbl">Icon</label>
+          <button class="cfp-em-btn" id="cfp-em-${id}" onclick="toggleEmoji('${id}')">🪙</button>
+          <div class="em-opts" id="em-opts-${id}">
+            ${['🪙','💎','🔮','⭐','🌟','🔥','💰','🏅','✨','🎖️','🟡','🔵'].map(e=>`<span class="em-o" onclick="pickEm('${id}','${e}')">${e}</span>`).join('')}
+          </div>
+        </div>
+        <div>
+          <label class="cfp-lbl">Coin Name <span style="color:var(--red)">*</span></label>
+          <input class="cfp-fi" id="cfp-name-${id}" placeholder="e.g. Crystal Coins" />
+        </div>
+        <div>
+          <label class="cfp-lbl">Description</label>
+          <input class="cfp-fi" id="cfp-desc-${id}" placeholder="Optional" />
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label class="cfp-lbl">Earn Rate <span style="color:var(--red)">*</span></label>
+        <div class="rate-row">
+          <div><input class="cfp-fi" id="cfp-amt-${id}" type="number" value="1" min="1" style="text-align:center;" /><div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:2px;">coins</div></div>
+          <div class="rate-sep">per</div>
+          <div><input class="cfp-fi" id="cfp-per-${id}" type="number" value="1" min="0.01" step="0.01" style="text-align:center;" /><div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:2px;">€ bet</div></div>
+        </div>
+      </div>
+      <div class="cfp-actions">
+        <button class="cfp-back" onclick="backToPicker('${id}')">← Back</button>
+        <button class="cfp-cancel" onclick="closeCoinZone('${id}')">Cancel</button>
+        <button class="cfp-save" onclick="saveCoin('${id}')">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Save &amp; Attach
+        </button>
+      </div>
+    </div>
+  `;
+  list.appendChild(wrap);
+  toast(`Rule added`);
+}
+
+const coinTemplates = [
+  {em:'🪙',name:'Crystal Coins',desc:'General-purpose coin for slot bets',amt:'1',per:'1'},
+  {em:'💎',name:'Diamond Points',desc:'Premium points for high-value bets',amt:'2',per:'1'},
+  {em:'⭐',name:'Lucky Stars',desc:'Stars earned per qualifying round',amt:'1',per:'0.50'},
+  {em:'🔮',name:'Mystic Gems',desc:'Rare gems from jackpot activity',amt:'3',per:'1'},
+  {em:'🔥',name:'Flame Tokens',desc:'Tokens from live casino tables',amt:'1',per:'2'},
+  {em:'🏅',name:'Gold Medals',desc:'Medals for sports pre-match bets',amt:'1',per:'5'},
+];
+
+function deleteRule(id) {
+  document.getElementById(id)?.remove();
+  selectedTriggers = selectedTriggers.filter(x=>x!==id);
+  if(!selectedTriggers.length) document.getElementById('selRulesLabel').style.display='none';
+  validateParticipation();
+  toast('Rule removed');
+}
+
+function validateParticipation() {
+  // Tab is checked when at least 1 trigger is selected. Coin attachment is not required.
+  const hasRule = selectedTriggers.length > 0;
+  const pill = document.getElementById('tab-participation');
+  const n = document.getElementById('spn-participation');
+  const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  if (hasRule) {
+    pill?.classList.add('validated');
+    if (n) { n.innerHTML = checkSvg; n.style.background = 'var(--green)'; n.style.color = '#fff'; }
+  } else {
+    pill?.classList.remove('validated');
+    if (n) { n.textContent = '2'; n.style.background = ''; n.style.color = ''; }
+  }
+}
+
+/* ── Coin Drawer ── */
+let _coinDrawerRuleId = null;
+
+function openCoinPicker(id) {
+  _coinDrawerRuleId = id;
+  // populate templates
+  renderCoinDrawerList();
+  // show picker view (templates tab)
+  switchCoinDrawerTab('templates');
+  // position overlay below sticky bar
+  const stickyBar = document.querySelector('.steps-bar');
+  const topOffset = stickyBar ? stickyBar.getBoundingClientRect().bottom : 0;
+  const overlay = document.getElementById('coinDrawerOverlay');
+  overlay.style.top = topOffset + 'px';
+  overlay.classList.add('open');
+}
+function closeDrawerCoinPicker() {
+  document.getElementById('coinDrawerOverlay').classList.remove('open');
+  if (_coinDrawerRuleId) {
+    const attached = document.getElementById(`coin-row-attached-${_coinDrawerRuleId}`);
+    const empty = document.getElementById(`coin-row-empty-${_coinDrawerRuleId}`);
+    if (attached && empty && attached.style.display === 'none') empty.style.display = 'flex';
+  }
+  _coinDrawerRuleId = null;
+}
+function handleDrawerOverlayClick(e) {
+  if (e.target === document.getElementById('coinDrawerOverlay')) closeDrawerCoinPicker();
+}
+let _coinDrawerType = 'in'; // 'in' or 'promo'
+let _selectedCoinIdx = null;
+
+function renderCoinDrawerList() {
+  const grid = document.getElementById('coinDrawerTplGrid');
+  grid.innerHTML = coinTemplates.map((c, i) => `
+    <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
+      <div class="cd-coin-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
+      </div>
+      <div class="cd-coin-info">
+        <div class="cd-coin-name">${c.name}</div>
+        <span class="cd-coin-badge type-${_coinDrawerType==='in'?'in':'promo'}">${_coinDrawerType==='in'?'Coin In':'Promo Coin'}</span>
+      </div>
+      <button class="cd-coin-dots" onclick="event.stopPropagation()">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function selectCoinItem(idx) {
+  _selectedCoinIdx = idx;
+  renderCoinDrawerList();
+}
+
+function switchCoinDrawerTab(tab) {
+  const isTemplates = tab === 'templates';
+  document.getElementById('cdTabTemplates').classList.toggle('active', isTemplates);
+  document.getElementById('cdTabNew').classList.toggle('active', !isTemplates);
+  document.getElementById('coinDrawerPicker').classList.toggle('hidden', !isTemplates);
+  document.getElementById('coinDrawerForm').classList.toggle('open', !isTemplates);
+  if (!isTemplates) {
+    // reset form
+    const emEl = document.getElementById('drawerCfpEm');
+    if (emEl) { emEl.textContent = ''; emEl.style.display = 'none'; }
+    document.getElementById('drawerCfpName').value = '';
+    const descEl = document.getElementById('drawerCfpDesc'); if (descEl) descEl.value = '';
+    const amtEl = document.getElementById('drawerCfpAmt'); if (amtEl) amtEl.value = '1';
+    const perEl = document.getElementById('drawerCfpPer'); if (perEl) perEl.value = '1';
+    // default to Coin In selected
+    selectNewCoinType('in');
+    // close advanced
+    document.getElementById('cdAdvancedBody')?.classList.remove('open');
+    const chev = document.getElementById('cdAdvChev');
+    if (chev) chev.style.transform = '';
+  }
+}
+const _coinTypeInfoTexts = {
+  'in':         '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside a promotion.',
+  'promo':      '<strong>Promo Coin</strong> is an internal promotion currency used to reward players within the promotion. It cannot be aggregated from external sources or withdrawn to outside wallets.',
+  'asset':      '<strong>Asset</strong> represents a real-value reward such as a free spin, bonus, or voucher. Assets are distributed directly to players and <strong>cannot be used</strong> as entry conditions.',
+  'withdrawal': '<strong>Withdrawal Coin</strong> is a cash-out reward that players can convert to real money. It is credited directly to the player\'s withdrawable balance once earned.',
+};
+const _coinTypeCardIds = { 'in':'CoinIn', 'promo':'Promo', 'asset':'Asset', 'withdrawal':'Withdrawal' };
+function selectNewCoinType(type) {
+  Object.keys(_coinTypeCardIds).forEach(t => {
+    const id = _coinTypeCardIds[t];
+    document.getElementById(`cdNewType${id}`)?.classList.toggle('active', t===type);
+    document.getElementById(`cdNewRadio${id}`)?.classList.toggle('active', t===type);
+  });
+  _coinDrawerType = type;
+  const info = document.getElementById('cdNewInfoText');
+  if (info) info.innerHTML = _coinTypeInfoTexts[type] || '';
+}
+function toggleAdvanced() {
+  const body = document.getElementById('cdAdvancedBody');
+  const chev = document.getElementById('cdAdvChev');
+  body?.classList.toggle('open');
+  if (chev) chev.style.transform = body?.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function switchCoinType(type) {
+  _coinDrawerType = type;
+  document.getElementById('cdTypeCoinIn').classList.toggle('active', type==='in');
+  document.getElementById('cdTypePromo').classList.toggle('active', type==='promo');
+  renderCoinDrawerList();
+}
+
+function drawerSelectTpl(em, name, desc, amt, per) {
+  document.getElementById('drawerCfpEm').textContent = em;
+  document.getElementById('drawerCfpName').value = name;
+  document.getElementById('drawerCfpDesc').value = desc;
+  document.getElementById('drawerCfpAmt').value = amt;
+  document.getElementById('drawerCfpPer').value = per;
+}
+function openDrawerCoinForm() { switchCoinDrawerTab('new'); }
+function backToDrawerPicker() { switchCoinDrawerTab('templates'); }
+function saveDrawerCoin() {
+  const isNewTab = document.getElementById('coinDrawerForm').classList.contains('open');
+  let name, em;
+  if (isNewTab) {
+    const nameEl = document.getElementById('drawerCfpName');
+    name = nameEl.value.trim();
+    if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
+    nameEl.style.borderColor = '';
+    em = document.getElementById('drawerCfpEm').textContent;
+  } else {
+    if (_selectedCoinIdx === null) { toast('Please select a coin first'); return; }
+    const c = coinTemplates[_selectedCoinIdx];
+    name = c.name; em = c.em;
+  }
+  const id = _coinDrawerRuleId;
+  if (id) {
+    document.getElementById(`coin-pill-name-${id}`).textContent = name;
+    const typeEl = document.getElementById(`coin-pill-type-${id}`);
+    if (typeEl) typeEl.textContent = _coinDrawerType === 'in' ? 'Coin In' : 'Promo Coin';
+    const iconEl = document.getElementById(`coin-gem-icon-${id}`);
+    if (iconEl) iconEl.textContent = em;
+    document.getElementById(`coin-row-attached-${id}`).style.display = 'flex';
+    document.getElementById(`coin-row-empty-${id}`).style.display = 'none';
+  }
+  document.getElementById('coinDrawerOverlay').classList.remove('open');
+  _selectedCoinIdx = null;
+  _coinDrawerRuleId = null;
+  toast(`${em} "${name}" attached`);
+}
+function toggleDrawerEmOpts() {
+  const opts = document.getElementById('drawerEmOpts');
+  opts.classList.toggle('open');
+  setTimeout(()=>{ document.addEventListener('click', function h(e){ if(!opts.contains(e.target)){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); }, 10);
+}
+function pickDrawerEm(e, em) {
+  e.stopPropagation();
+  const el = document.getElementById('drawerCfpEm');
+  el.textContent = em;
+  el.style.display = 'block';
+  document.getElementById('drawerEmOpts').classList.remove('open');
+}
+function editCoin(id) {
+  _coinDrawerRuleId = id;
+  const name = document.getElementById(`coin-pill-name-${id}`)?.textContent || '';
+  document.getElementById('drawerCfpName').value = name;
+  openDrawerCoinForm(name);
+  const stickyBar = document.querySelector('.steps-bar');
+  const topOffset = stickyBar ? stickyBar.getBoundingClientRect().bottom : 0;
+  const overlay = document.getElementById('coinDrawerOverlay');
+  overlay.style.top = topOffset + 'px';
+  overlay.classList.add('open');
+}
+function detachCoin(id) {
+  document.getElementById(`coin-row-attached-${id}`).style.display='none';
+  document.getElementById(`coin-row-empty-${id}`).style.display='flex';
+  toast('Coin detached');
+}
+// legacy stubs (inline panels now hidden)
+function closeCoinPicker(id){}
+function closeCoinZone(id){}
+function backToPicker(id){}
+function saveCoin(id){ saveDrawerCoin(); }
+function toggleEmoji(id){}
+function pickEm(id,em){}
+
+/* ── Labels ── */
+const labelColors = [
+  {bg:'#ECFDF5',color:'#059669',border:'#A7F3D0',swatch:'#059669'},
+  {bg:'#F5F3FF',color:'#7C3AED',border:'#C4B5FD',swatch:'#7C3AED'},
+  {bg:'#EFF6FF',color:'#1D4ED8',border:'#BFDBFE',swatch:'#1D4ED8'},
+  {bg:'#FFF7ED',color:'#C2410C',border:'#FED7AA',swatch:'#C2410C'},
+  {bg:'#FDF2F8',color:'#BE185D',border:'#F9A8D4',swatch:'#BE185D'},
+  {bg:'#F0FDF4',color:'#15803D',border:'#86EFAC',swatch:'#15803D'},
+  {bg:'#FEFCE8',color:'#A16207',border:'#FDE68A',swatch:'#A16207'},
+  {bg:'#F0F9FF',color:'#0369A1',border:'#BAE6FD',swatch:'#0369A1'},
+];
+let allLabels = [
+  {name:'VIP',colorIdx:0},{name:'New User',colorIdx:1},{name:'High Roller',colorIdx:2},{name:'Sports',colorIdx:3},{name:'Casino',colorIdx:4}
+];
+let selectedLabels = [];
+let pendingColorIdx = null;
+let pendingLabelName = null;
+
+function renderLabelChips(){
+  let chips = document.getElementById('labelChipsContainer');
+  if(!chips){
+    chips = document.createElement('div');
+    chips.id = 'labelChipsContainer';
+    chips.style.cssText = 'display:flex;align-items:center;gap:7px;flex-wrap:wrap;';
+    const row = document.getElementById('labelsRow');
+    row.appendChild(chips);
+  }
+  chips.innerHTML = '';
+  selectedLabels.forEach(lbl=>{
+    const c = labelColors[lbl.colorIdx];
+    const chip = document.createElement('div');
+    chip.className='lchip';
+    chip.style.cssText=`background:${c.bg};color:${c.color};border:1px solid ${c.border};`;
+    chip.innerHTML=`${lbl.name}<span class="lchip-x" onclick="removeLabel('${lbl.name}',event)"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>`;
+    chips.appendChild(chip);
+  });
+}
+function removeLabel(name,e){
+  e.stopPropagation();
+  selectedLabels=selectedLabels.filter(l=>l.name!==name);
+  renderLabelChips();
+}
+function toggleLabelDropdown(e){
+  e.stopPropagation();
+  const dd=document.getElementById('labelDropdown');
+  const open=dd.style.display==='block';
+  if(open){closeLabelDropdown();return;}
+  dd.style.display='block';
+  document.getElementById('labelSearchInput').value='';
+  document.getElementById('labelColorPicker').style.display='none';
+  pendingColorIdx=null; pendingLabelName=null;
+  renderLabelList('');
+  document.getElementById('labelSearchInput').focus();
+  setTimeout(()=>document.addEventListener('click',closeLabelDropdown,{once:true}),0);
+}
+function closeLabelDropdown(){
+  document.getElementById('labelDropdown').style.display='none';
+}
+function renderLabelList(q){
+  const list=document.getElementById('labelList');
+  const filtered=allLabels.filter(l=>l.name.toLowerCase().includes(q.toLowerCase()));
+  list.innerHTML=filtered.map(l=>{
+    const c=labelColors[l.colorIdx];
+    const sel=selectedLabels.find(s=>s.name===l.name);
+    return `<div class="label-list-item" onclick="toggleLabelSelect('${l.name}')">
+      <span class="lchip" style="background:${c.bg};color:${c.color};border:1px solid ${c.border};">${l.name}</span>
+      ${sel?`<svg width="14" height="14" fill="none" stroke="#00C37F" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+    </div>`;
+  }).join('');
+  // create row
+  const cr=document.getElementById('labelCreateRow');
+  const exact=allLabels.find(l=>l.name.toLowerCase()===q.toLowerCase());
+  if(q && !exact){
+    cr.style.display='block';
+    cr.textContent=`+ Create "${q}"`;
+    pendingLabelName=q;
+    pendingColorIdx=Math.floor(Math.random()*labelColors.length);
+    showColorPicker(pendingColorIdx);
+  } else {
+    cr.style.display='none';
+    document.getElementById('labelColorPicker').style.display='none';
+  }
+}
+function showColorPicker(activeIdx){
+  const picker=document.getElementById('labelColorPicker');
+  picker.style.display='block';
+  const swatches=document.getElementById('colorSwatches');
+  swatches.innerHTML=labelColors.map((c,i)=>`
+    <div class="color-swatch${i===activeIdx?' active':''}" style="background:${c.swatch};" onclick="pickLabelColor(${i})"></div>
+  `).join('');
+}
+function pickLabelColor(idx){
+  pendingColorIdx=idx;
+  showColorPicker(idx);
+}
+function filterLabels(){
+  const q=document.getElementById('labelSearchInput').value;
+  renderLabelList(q);
+}
+function labelKeydown(e){
+  if(e.key==='Enter'){
+    const q=document.getElementById('labelSearchInput').value.trim();
+    if(q) createLabel();
+  }
+}
+function createLabel(){
+  if(!pendingLabelName) return;
+  const idx=pendingColorIdx??0;
+  allLabels.push({name:pendingLabelName,colorIdx:idx});
+  selectedLabels.push({name:pendingLabelName,colorIdx:idx});
+  renderLabelChips();
+  closeLabelDropdown();
+}
+function toggleLabelSelect(name){
+  const lbl=allLabels.find(l=>l.name===name);
+  const idx=selectedLabels.findIndex(s=>s.name===name);
+  if(idx>-1) selectedLabels.splice(idx,1);
+  else selectedLabels.push({...lbl});
+  renderLabelChips();
+  renderLabelList(document.getElementById('labelSearchInput').value);
+}
+
+/* ── Features & Prizes ── */
+let featureCounter = 0;
+const featureBgs = {
+  progress:'#E0F7FA',game:'#E8F5E9',leaderboard:'#FFF8E1',raffle:'#F3E5F5',
+  rewardbar:'#E3F2FD',journey:'#FBE9E7',factory:'#E8F5E9',market:'#E8F5E9',
+  mission:'#FFEBEE',offers:'#E0F2F1',tournament:'#E3F2FD'
+};
+
+function validateFeatures() {
+  // Tab is checked ONLY when: at least 1 feature exists AND every feature is configured.
+  // If any feature is "Not fully Configured", the tab stays unchecked.
+  const cards = [...document.querySelectorAll('.feature-card')];
+  const allConfigured = cards.length > 0 && cards.every(c => c.querySelector('.feature-card-status.configured'));
+  const pill = document.getElementById('tab-features');
+  const n = document.getElementById('spn-features');
+  if (allConfigured) {
+    pill?.classList.add('validated');
+    if (n) { n.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'; n.style.background = 'var(--green)'; n.style.color = '#fff'; }
+  } else {
+    pill?.classList.remove('validated');
+    if (n) { n.textContent = '3'; n.style.background = ''; n.style.color = ''; }
+  }
+}
+
+let dragSrc = null;
+function initCardDrag(card) {
+  card.addEventListener('dragstart', e => {
+    dragSrc = card;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+    document.querySelectorAll('.feature-card.drag-over').forEach(c => c.classList.remove('drag-over'));
+    dragSrc = null;
+  });
+  card.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragSrc && dragSrc !== card) card.classList.add('drag-over');
+  });
+  card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    card.classList.remove('drag-over');
+    if (!dragSrc || dragSrc === card) return;
+    const list = document.getElementById('featuresList');
+    const cards = [...list.querySelectorAll('.feature-card')];
+    const srcIdx = cards.indexOf(dragSrc);
+    const tgtIdx = cards.indexOf(card);
+    if (srcIdx < tgtIdx) list.insertBefore(dragSrc, card.nextSibling);
+    else list.insertBefore(dragSrc, card);
+  });
+}
+
+function addFeature(type, name, icon) {
+  const id = 'feat-' + (++featureCounter);
+  document.getElementById('featuresEmpty').style.display = 'none';
+  const bg = featureBgs[type] || '#F4F6F8';
+  const card = document.createElement('div');
+  card.className = 'feature-card';
+  card.id = id;
+  card.draggable = true;
+  card.innerHTML = `
+    <div class="feature-drag">
+      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>
+    </div>
+    <div class="feature-card-icon" style="background:${bg};">${icon}</div>
+    <div class="feature-card-info">
+      <div class="feature-card-name" ondblclick="inlineRename(this)">${name}</div>
+      <div class="feature-card-status partial" id="fstat-${id}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
+        Not fully Configured
+      </div>
+    </div>
+    <div class="feature-card-actions">
+      <button data-tip="Rename" onclick="renameFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+      </button>
+      <button data-tip="Configure" onclick="configureFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button data-tip="Delete" class="del" onclick="deleteFeature('${id}')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    </div>
+  `;
+  const list = document.getElementById('featuresList');
+  list.appendChild(card);
+  initCardDrag(card);
+  validateFeatures();
+  toast(name + ' added');
+}
+
+function renameFeature(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  inlineRename(card.querySelector('.feature-card-name'));
+}
+
+function inlineRename(el) {
+  if (!el || el.contentEditable === 'true') return;
+  el.contentEditable = 'true';
+  el.classList.add('editing');
+  el.focus();
+  // select all text
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  function finish() {
+    el.contentEditable = 'false';
+    el.classList.remove('editing');
+    if (!el.textContent.trim()) el.textContent = 'Untitled Feature';
+    el.removeEventListener('blur', finish);
+    el.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) {
+    if (e.key === 'Enter') { e.preventDefault(); finish(); }
+    if (e.key === 'Escape') { el.textContent = el.dataset.prev || el.textContent; finish(); }
+  }
+  el.dataset.prev = el.textContent;
+  el.addEventListener('blur', finish);
+  el.addEventListener('keydown', onKey);
+}
+
+function deleteFeature(id) {
+  document.getElementById(id)?.remove();
+  if (!document.querySelector('.feature-card')) {
+    document.getElementById('featuresEmpty').style.display = 'flex';
+  }
+  validateFeatures();
+}
+
+function configureFeature(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  const name = card.querySelector('.feature-card-name')?.textContent || 'Feature';
+  openFcd(id, name);
+}
+
+/* ══ Feature Config Drawer (v2 — 4-step pool-first flow) ══ */
+let _fcdFeatureId = null;
+let _fcdStep = 'entry';
+let _fcdStepsDone = {};
+let _fcdSchedule = 'sync';
+let _fcdRenewal = 'daily';
+// Pool state — coins selected for the prize pool this leaderboard
+let _fcdPool = []; // [{em, name, type, typeLabel}]
+// Rankings state
+let _fcdRankCount = 0;
+// Coin view context: 'pool' = adding to pool, 'ranking:{idx}' = selecting for a ranking row
+let _fcdCoinViewCtx = 'pool';
+
+function openFcd(featureId, featureName) {
+  _fcdFeatureId = featureId;
+  _fcdStepsDone = {};
+  _fcdPool = [];
+  _fcdRankCount = 0;
+  Object.keys(_poolTypeCounts).forEach(k => _poolTypeCounts[k] = 0);
+  // Reset all step button classes and badge states
+  ['entry','pool','rankings','schedule'].forEach((s, i) => {
+    const btn = document.getElementById('fcd-step-' + s);
+    const n = document.getElementById('fcd-sn-' + s);
+    if (btn) { btn.classList.remove('active','done'); }
+    if (n) { n.textContent = '!'; n.style.background = ''; n.style.color = ''; n.style.border = ''; }
+  });
+  document.getElementById('fcdTitle').textContent = featureName + ' Configuration';
+  // populate entry source dropdown with current triggers
+  const noTriggersNotice = document.getElementById('fcdNoTriggersNotice');
+  const msWrap = document.getElementById('fcdEntryMsWrap');
+  document.getElementById('fcdEntryPreview').innerHTML = '';
+  _fcdMsSelected = [];
+  renderFcdMsChips();
+  if (selectedTriggers.length === 0) {
+    noTriggersNotice.style.display = 'block';
+    msWrap.style.display = 'none';
+  } else {
+    noTriggersNotice.style.display = 'none';
+    msWrap.style.display = 'block';
+    buildFcdMsList();
+  }
+  // reset pool & rankings
+  renderPool();
+  document.getElementById('fcdRankingsList').innerHTML = '';
+  addFcdRanking(); addFcdRanking(); // default 2 rankings
+  // reset schedule — no default selection
+  _fcdSchedule = null;
+  ['sync','renew'].forEach(t => {
+    document.getElementById('fcd-sched-' + t)?.classList.remove('active');
+    document.getElementById('fcd-rdot-' + t)?.classList.remove('active');
+  });
+  // go to first step
+  goFcdStep('entry');
+  // position below sticky bar
+  const bar = document.querySelector('.steps-bar');
+  const top = bar ? bar.getBoundingClientRect().bottom : 0;
+  const overlay = document.getElementById('fcdOverlay');
+  overlay.style.top = top + 'px';
+  overlay.classList.add('open');
+}
+function closeFcd() {
+  document.getElementById('fcdOverlay').classList.remove('open');
+  _fcdFeatureId = null;
+}
+function handleFcdOverlayClick(e) {
+  if (e.target === document.getElementById('fcdOverlay')) closeFcd();
+}
+function goFcdStep(step) {
+  _fcdStep = step;
+  const steps = ['entry','pool','rankings','schedule'];
+  steps.forEach((s, i) => {
+    const btn = document.getElementById('fcd-step-' + s);
+    const panel = document.getElementById('fcd-panel-' + s);
+    if (!btn || !panel) return;
+    const isActive = s === step;
+    btn.classList.toggle('active', isActive);
+    btn.classList.toggle('done', !isActive && isFcdStepValid(s));
+    panel.classList.toggle('active', isActive);
+  });
+  refreshStepBadges();
+  // Update Continue btn label
+  document.getElementById('fcdContinueBtn').textContent = step === 'schedule' ? 'Save' : 'Continue';
+  // When entering rankings, rebuild ranking coin dropdowns to reflect current pool
+  if (step === 'rankings') rebuildRankingCoinDrops();
+  if (step === 'pool') { _poolFilters=[]; _poolSearch=''; if(document.getElementById('fcdPoolSearch')) document.getElementById('fcdPoolSearch').value=''; clearPoolFilters(); renderPoolGrid(); renderPool(); }
+}
+function isFcdStepValid(s) {
+  if (s === 'entry') return _fcdMsSelected.length > 0;
+  if (s === 'pool') return _fcdPool.length > 0;
+  if (s === 'rankings') {
+    const list = document.getElementById('fcdRankingsList');
+    if (!list) return false;
+    const rows = list.querySelectorAll('.fcd-prize-card');
+    if (rows.length === 0) return false;
+    // at least one row must have a coin selected
+    return Array.from(rows).some(row => {
+      const id = row.id.replace('fcd-rank-', '');
+      const name = document.getElementById('fcd-rcsel-name-' + id)?.textContent;
+      return name && name !== 'Select Prize Coin';
+    });
+  }
+  if (s === 'schedule') return !!_fcdSchedule;
+  return false;
+}
+function refreshStepBadges() {
+  ['entry','pool','rankings','schedule'].forEach(s => {
+    const n = document.getElementById('fcd-sn-' + s);
+    const btn = document.getElementById('fcd-step-' + s);
+    if (!n) return;
+    const isActive = s === _fcdStep;
+    const isValid = isFcdStepValid(s);
+    if (isValid && !isActive) {
+      btn?.classList.add('done');
+      n.innerHTML = '<svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
+    } else if (isValid && isActive) {
+      btn?.classList.remove('done');
+      n.textContent = '✓';
+      n.style.background = 'var(--green)'; n.style.color = '#fff'; n.style.border = 'none';
+    } else {
+      btn?.classList.remove('done');
+      n.textContent = '!';
+      n.style.background = ''; n.style.color = ''; n.style.border = '';
+    }
+  });
+}
+function fcdContinue() {
+  const steps = ['entry','pool','rankings','schedule'];
+  const idx = steps.indexOf(_fcdStep);
+  if (_fcdStep === 'entry') {
+    if (!_fcdMsSelected.length) { toast('Please select at least one entry source'); return; }
+  }
+  _fcdStepsDone[_fcdStep] = true;
+  if (idx < steps.length - 1) {
+    goFcdStep(steps[idx + 1]);
+  } else {
+    // all done — mark configured
+    const stat = document.getElementById('fstat-' + _fcdFeatureId);
+    if (stat) {
+      stat.className = 'feature-card-status configured';
+      stat.innerHTML = `<svg width="12" height="12" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#059669" stroke="none"/><polyline points="8 12 11 15 16 9" stroke="white" stroke-width="2"/></svg> Configured`;
+    }
+    validateFeatures();
+    closeFcd();
+    toast('Feature configured ✓');
+  }
+}
+
+/* ── Prize Coins Pool (Step 2) ── */
+const _poolTypeDefaults = {
+  'coin-in':    {em:'🪙', label:'Coin In',    typeLabel:'Coin In',    value:'$0.10'},
+  'promo':      {em:'⭐', label:'Promo Coin', typeLabel:'Promo Coin', value:'$0.15'},
+  'withdrawal': {em:'💸', label:'Withdrawal', typeLabel:'Withdrawal', value:'$0.20'},
+  'asset':      {em:'🔮', label:'Asset',      typeLabel:'Asset',      value:'$0.05'},
+};
+const _poolTypeCounts = {'coin-in':0,'promo':0,'withdrawal':0,'asset':0};
+
+// Template catalog for the grid
+const _poolCatalog = [
+  {name:'Crystal Coins',  type:'coin-in',    typeLabel:'Coin In',    value:'$0.10'},
+  {name:'Flame Tokens',   type:'promo',      typeLabel:'Promo Coin', value:'$0.15'},
+  {name:'Diamond Points', type:'promo',      typeLabel:'Promo Coin', value:'$0.20'},
+  {name:'Lucky Stars',    type:'withdrawal', typeLabel:'Withdrawal', value:'$0.05'},
+  {name:'Mystic Gems',    type:'asset',      typeLabel:'Asset',      value:'$0.12'},
+  {name:'Gold Medals',    type:'coin-in',    typeLabel:'Coin In',    value:'$0.08'},
+];
+let _poolFilters = [];
+let _poolSearch = '';
+
+const _badgeStyle = {
+  'coin-in':    'background:#EDE9FE;color:#6D28D9;',
+  'promo':      'background:#FEF9C3;color:#A16207;',
+  'withdrawal': 'background:#FEF3C7;color:#92400E;',
+  'asset':      'background:#EFF6FF;color:#1D4ED8;',
+};
+
+function togglePoolFilterDrop() {
+  const drop = document.getElementById('fcdPoolFilterDrop');
+  const isOpen = drop.classList.contains('open');
+  drop.classList.toggle('open');
+  if (!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function h(e) {
+        if (!document.getElementById('fcdPoolFilterDrop')?.closest('[style*="position:relative"]')?.contains(e.target)) {
+          document.getElementById('fcdPoolFilterDrop')?.classList.remove('open');
+          document.removeEventListener('click', h);
+        }
+      });
+    }, 10);
+  }
+}
+const _poolFilterLabels = {'coin-in':'Coin In','promo':'Promo Coin','withdrawal':'Withdrawal','asset':'Assets'};
+function togglePoolFilterType(f, label, el) {
+  const idx = _poolFilters.indexOf(f);
+  if (idx === -1) _poolFilters.push(f);
+  else _poolFilters.splice(idx, 1);
+  // sync checkbox states
+  document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => {
+    o.classList.toggle('selected', _poolFilters.includes(o.dataset.filter));
+  });
+  _updatePoolFilterUI();
+  renderPoolGrid();
+}
+function clearPoolFilters() {
+  _poolFilters = [];
+  document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => o.classList.remove('selected'));
+  _updatePoolFilterUI();
+  renderPoolGrid();
+}
+function _updatePoolFilterUI() {
+  const chipsRow = document.getElementById('fcdPoolChipsRow');
+  if (!chipsRow) return;
+  if (_poolFilters.length === 0) {
+    chipsRow.style.display = 'none';
+    chipsRow.innerHTML = '';
+  } else {
+    chipsRow.style.display = 'flex';
+    const chips = _poolFilters.map(f =>
+      `<span class="fcd-pool-chip">${_poolFilterLabels[f]}<span class="fcd-pool-chip-x" onclick="removePoolFilter('${f}')">✕</span></span>`
+    ).join('');
+    chipsRow.innerHTML = chips + `<button class="fcd-pool-clear" onclick="clearPoolFilters()">Clear all</button>`;
+  }
+}
+function removePoolFilter(f) {
+  _poolFilters = _poolFilters.filter(x => x !== f);
+  document.querySelectorAll('.fcd-pool-filter-opt').forEach(o => {
+    o.classList.toggle('selected', _poolFilters.includes(o.dataset.filter));
+  });
+  _updatePoolFilterUI();
+  renderPoolGrid();
+}
+function filterPoolCoins(val) {
+  _poolSearch = val.toLowerCase();
+  renderPoolGrid();
+}
+function renderPoolGrid() {
+  const grid = document.getElementById('fcdPoolCoinGrid');
+  if (!grid) return;
+  const items = _poolCatalog.filter(c => {
+    const matchFilter = _poolFilters.length === 0 || _poolFilters.includes(c.type);
+    const matchSearch = !_poolSearch || c.name.toLowerCase().includes(_poolSearch);
+    return matchFilter && matchSearch;
+  });
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:12px;color:var(--text-muted);">No coins found</div>';
+    return;
+  }
+  grid.innerHTML = items.map(c => `
+    <div class="fcd-pool-coin-card">
+      <div class="fcd-pool-coin-card-top">
+        <div class="fcd-pool-coin-card-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
+        </div>
+        <div>
+          <span class="fcd-pool-coin-card-name">${c.name}</span>
+          <span class="fcd-pool-coin-card-val">Value: ${c.value}</span>
+        </div>
+      </div>
+      <span class="fcd-pool-coin-card-badge" style="${_badgeStyle[c.type]||''}">${c.typeLabel}</span>
+      <button class="fcd-pool-coin-card-add" ${_fcdPool.find(p=>p.name===c.name && !p.edited)?'disabled':''} onclick="addPoolCoinFromCatalog(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        ${_fcdPool.find(p=>p.name===c.name && !p.edited) ? 'Added' : 'Add Coin'}
+      </button>
+    </div>`).join('');
+}
+
+function addPoolCoinFromCatalog(c) {
+  if (_fcdPool.find(p => p.name === c.name)) { toast(`"${c.name}" already in pool`); return; }
+  _fcdPool.push({em:'💎', name:c.name, type:c.type, typeLabel:c.typeLabel});
+  renderPool();
+  renderPoolGrid();
+  toast(`"${c.name}" added to pool`);
+}
+function addPoolCoinFromTemplate(type) {
+  const def = _poolTypeDefaults[type];
+  if (!def) return;
+  _poolTypeCounts[type] = (_poolTypeCounts[type] || 0) + 1;
+  const count = _poolTypeCounts[type];
+  const name = count === 1 ? def.label : `${def.label} ${count}`;
+  _fcdPool.push({em: def.em, name, type, typeLabel: def.typeLabel});
+  renderPool();
+  toast(`${def.em} "${name}" added to pool`);
+}
+function renderPool() {
+  refreshStepBadges();
+  const list = document.getElementById('fcdPoolList');
+  const count = document.getElementById('fcdPoolCount');
+  if (!list) return;
+  if (count) count.textContent = _fcdPool.length;
+  list.innerHTML = _fcdPool.map((c, i) => `
+    <div class="fcd-pool-footer-item">
+      <div class="fcd-pool-footer-item-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
+      </div>
+      <span class="fcd-pool-footer-item-name">${c.name}</span>
+      <span class="fcd-pool-coin-card-badge" style="${_badgeStyle[c.type]||''};font-size:10.5px;">${c.typeLabel}</span>
+      <button class="fcd-pool-footer-item-rm" onclick="editPoolCoin(${i})" title="Edit" style="margin-left:auto;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="fcd-pool-footer-item-rm" onclick="removePoolCoin(${i})" title="Remove">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+function removePoolCoin(i) {
+  _fcdPool.splice(i, 1);
+  renderPool();
+}
+function openNewCoinFromPool() {
+  _fcdCoinViewCtx = 'pool';
+  _prizeTargetIdx = null;
+  _editingPoolIdx = null;
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
+  document.querySelector('.fcd-coin-view-title').textContent = 'Create New Coin';
+  document.getElementById('fcdCoinView').querySelector('.fcd-btn-continue').textContent = 'Add Coin';
+  _openFcdCoinView();
+}
+function editPoolCoin(i) {
+  const c = _fcdPool[i];
+  if (!c) return;
+  _fcdCoinViewCtx = 'pool';
+  _editingPoolIdx = i;
+  _prizeTargetIdx = null;
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Prize Coins';
+  document.querySelector('.fcd-coin-view-title').textContent = 'Edit Coin';
+  document.getElementById('fcdCoinView').querySelector('.fcd-btn-continue').textContent = 'Save Changes';
+  _openFcdCoinView();
+  // Pre-fill form
+  document.getElementById('fcdCoinName').value = c.name;
+  if (c.em && c.em !== '💎') {
+    const emEl = document.getElementById('fcdCoinEm');
+    emEl.textContent = c.em; emEl.style.display = '';
+  }
+  // Select coin type
+  const typeKey = Object.keys({in:'coin-in',promo:'promo',asset:'asset',withdrawal:'withdrawal'}).find(k => ({in:'coin-in',promo:'promo',asset:'asset',withdrawal:'withdrawal'})[k] === c.type) || 'in';
+  fcdSelectCoinType(typeKey);
+}
+
+/* ── Rankings (Step 3) ── */
+function addFcdRanking() {
+  _fcdRankCount++;
+  const idx = _fcdRankCount;
+  // Calculate next From value based on last row
+  let nextFrom = idx;
+  const list = document.getElementById('fcdRankingsList');
+  if (list) {
+    const rows = list.querySelectorAll('.fcd-prize-card');
+    if (rows.length > 0) {
+      const lastRow = rows[rows.length - 1];
+      const lastId = lastRow.id.replace('fcd-rank-', '');
+      const lastTo = parseInt(document.getElementById('fcd-rto-' + lastId)?.value) || 0;
+      const lastFrom = parseInt(document.getElementById('fcd-rfrom-' + lastId)?.value) || 0;
+      nextFrom = (lastTo > 0 ? lastTo : lastFrom) + 1;
+    }
+  }
+  const div = document.createElement('div');
+  div.className = 'fcd-prize-card'; div.id = 'fcd-rank-' + idx;
+  div.innerHTML = `
+    <input class="fcd-rank-input" id="fcd-rfrom-${idx}" type="number" value="${nextFrom}" min="1" placeholder="1" />
+    <input class="fcd-rank-input" id="fcd-rto-${idx}" type="number" min="1" placeholder="-" style="color:var(--text-muted);" />
+    <input class="fcd-rank-amt-input" id="fcd-ramt-${idx}" type="number" value="100" min="1" />
+    <!-- Coin selector -->
+    <div style="position:relative;flex:1;">
+      <div class="fcd-coin-selector" id="fcd-rcoin-sel-${idx}" onclick="toggleRankCoinDrop(${idx})">
+        <div id="fcd-rcsel-icon-${idx}" style="display:none;width:22px;height:22px;border-radius:5px;font-size:14px;align-items:center;justify-content:center;flex-shrink:0;"></div>
+        <div class="fcd-coin-sel-info">
+          <span class="fcd-coin-sel-name" id="fcd-rcsel-name-${idx}" style="color:var(--text-muted);font-weight:400;">Select Prize Coin</span>
+          <span class="fcd-coin-sel-value" id="fcd-rcsel-value-${idx}"></span>
+          <span id="fcd-rcsel-type-${idx}"></span>
+        </div>
+        <svg class="fcd-coin-sel-chev" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fcd-coin-dropdown" id="fcd-rcoin-drop-${idx}">
+        <div id="fcd-rcoin-drop-items-${idx}"></div>
+      </div>
+    </div>
+    <button class="fcd-prize-del" onclick="removeFcdRanking(${idx})" title="Remove rank" style="flex-shrink:0;">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    </button>`;
+  document.getElementById('fcdRankingsList').appendChild(div);
+}
+function removeFcdRanking(idx) {
+  document.getElementById('fcd-rank-' + idx)?.remove();
+}
+function setRankType(idx, type) {
+  document.getElementById('fcd-rpt-single-' + idx).classList.toggle('active', type==='single');
+  document.getElementById('fcd-rpt-range-' + idx).classList.toggle('active', type==='range');
+  const toInput = document.getElementById('fcd-rto-' + idx);
+  const sep = document.getElementById('fcd-rrange-sep-' + idx);
+  toInput.style.display = type==='range' ? '' : 'none';
+  sep.style.display = type==='range' ? '' : 'none';
+}
+function rebuildRankingCoinDrops() {
+  // If a previously selected coin was removed from the pool, reset that row to unselected
+  const list = document.getElementById('fcdRankingsList');
+  if (!list) return;
+  list.querySelectorAll('.fcd-prize-card').forEach(card => {
+    const idx = card.id.replace('fcd-rank-','');
+    const curName = document.getElementById('fcd-rcsel-name-' + idx)?.textContent;
+    if (curName && curName !== 'Select Prize Coin' && !_fcdPool.find(c => c.name === curName)) {
+      // reset to unselected
+      const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
+      if (nameEl) { nameEl.textContent = 'Select Prize Coin'; nameEl.style.color = 'var(--text-muted)'; nameEl.style.fontWeight = '400'; }
+      const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
+      if (iconEl) iconEl.style.display = 'none';
+      const valueEl = document.getElementById('fcd-rcsel-value-' + idx);
+      if (valueEl) valueEl.textContent = '';
+      const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
+      if (typeEl) { typeEl.textContent = ''; typeEl.className = ''; }
+    }
+  });
+}
+function toggleRankCoinDrop(idx) {
+  // Rebuild items grouped by type
+  const itemsEl = document.getElementById('fcd-rcoin-drop-items-' + idx);
+  if (itemsEl) {
+    if (_fcdPool.length === 0) {
+      itemsEl.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text-muted);">No coins in pool. Go back to Prize Coins step.</div>';
+    } else {
+      // Group by type
+      const groups = {};
+      const typeOrder = ['promo','withdrawal','asset','coin-in'];
+      const typeGroupLabel = {'promo':'Promo Coins','withdrawal':'Withdrawal','asset':'Assets','coin-in':'Coin In'};
+      _fcdPool.forEach((c, ci) => {
+        if (!groups[c.type]) groups[c.type] = [];
+        groups[c.type].push({c, ci});
+      });
+      let html = '';
+      typeOrder.forEach(type => {
+        if (!groups[type]) return;
+        html += `<div class="fcd-coin-drop-group">${typeGroupLabel[type]}</div>`;
+        groups[type].forEach(({c, ci}) => {
+          html += `<div class="fcd-coin-drop-item" onclick="selectRankCoin('${idx}',${ci})">
+            <span style="font-size:15px;margin-right:6px;">${c.em}</span>
+            <span class="fcd-coin-drop-name" style="flex:1;">${c.name}${c.value ? `<span style="color:var(--text-muted);font-size:11px;font-weight:400;"> Value: ${c.value}</span>` : ''}</span>
+            <span class="fcd-coin-sel-type fcd-coin-type-${c.type}" style="font-size:10.5px;padding:2px 7px;">${c.typeLabel}</span>
+          </div>`;
+        });
+      });
+      itemsEl.innerHTML = html;
+    }
+  }
+  document.querySelectorAll('.fcd-coin-dropdown').forEach(d => {
+    if (d.id !== 'fcd-rcoin-drop-' + idx) { d.classList.remove('open'); }
+  });
+  const drop = document.getElementById('fcd-rcoin-drop-' + idx);
+  const sel = document.getElementById('fcd-rcoin-sel-' + idx);
+  drop.classList.toggle('open');
+  sel.classList.toggle('open');
+}
+function selectRankCoin(idx, coinIdx, silent) {
+  const c = _fcdPool[coinIdx];
+  if (!c) return;
+  const iconEl = document.getElementById('fcd-rcsel-icon-' + idx);
+  if (iconEl) { iconEl.textContent = c.em; iconEl.style.display = 'inline-flex'; }
+  const nameEl = document.getElementById('fcd-rcsel-name-' + idx);
+  if (nameEl) { nameEl.textContent = c.name; nameEl.style.color = ''; nameEl.style.fontWeight = '600'; }
+  const valueEl = document.getElementById('fcd-rcsel-value-' + idx);
+  if (valueEl) valueEl.textContent = c.value ? 'Value: ' + c.value : '';
+  const typeEl = document.getElementById('fcd-rcsel-type-' + idx);
+  if (typeEl) { typeEl.textContent = c.typeLabel; typeEl.className = `fcd-coin-sel-type fcd-coin-type-${c.type}`; }
+  refreshStepBadges();
+  if (!silent) {
+    document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
+    document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
+  }
+}
+/* ── Entry source multi-select ── */
+let _fcdMsSelected = [];
+
+function buildFcdMsList(filter) {
+  const list = document.getElementById('fcdMsList');
+  list.innerHTML = '';
+  const items = selectedTriggers.map(tid => {
+    const ruleEl = document.getElementById(tid);
+    const rname = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
+    const coinName = ruleEl?.querySelector('.coin-row-name')?.textContent || '';
+    const coinBadge = ruleEl?.querySelector('.coin-pill')?.textContent || '';
+    const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
+    return { id: tid, name: rname, coinName, coinBadge, coinEm, type: 'Earning Rule' };
+  });
+  const filtered = filter ? items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase())) : items;
+  if (!filtered.length) {
+    list.innerHTML = '<div class="fcd-ms-empty">No options found</div>';
+    return;
+  }
+  filtered.forEach(item => {
+    const sel = _fcdMsSelected.includes(item.id);
+    const row = document.createElement('div');
+    row.className = 'fcd-ms-option' + (sel ? ' selected' : '');
+    row.dataset.id = item.id;
+    row.innerHTML = `
+      <div class="fcd-ms-option-check">${sel ? '<svg width="10" height="10" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' : ''}</div>
+      <div class="fcd-ms-option-icon fcd-ms-opt-icon-trigger">🎯</div>
+      <div class="fcd-ms-option-info">
+        <div class="fcd-ms-option-name">${item.name}</div>
+        <div class="fcd-ms-option-meta">
+          <span class="fcd-ms-option-type fcd-ms-type-trigger">Earning Rule</span>
+          ${item.coinName ? `<span class="fcd-ms-option-coin">${item.coinEm} ${item.coinName} · <span style="font-size:10px;font-weight:600;color:#065F46;">${item.coinBadge}</span></span>` : '<span class="fcd-ms-option-coin" style="color:#D1D5DB;">No coin attached</span>'}
+        </div>
+      </div>`;
+    row.onclick = () => toggleFcdMsOption(item.id);
+    list.appendChild(row);
+  });
+}
+
+function toggleFcdMsOption(id) {
+  const idx = _fcdMsSelected.indexOf(id);
+  if (idx === -1) _fcdMsSelected.push(id);
+  else _fcdMsSelected.splice(idx, 1);
+  renderFcdMsChips();
+  buildFcdMsList(document.getElementById('fcdMsSearch')?.value || '');
+  renderFcdEntryPreviews();
+  refreshStepBadges();
+}
+
+function renderFcdMsChips() {
+  const chips = document.getElementById('fcdMsChips');
+  const placeholder = document.getElementById('fcdMsPlaceholder');
+  if (!chips) return;
+  [...chips.querySelectorAll('.fcd-ms-chip')].forEach(c => c.remove());
+  if (_fcdMsSelected.length === 0) {
+    if (placeholder) placeholder.style.display = '';
+    return;
+  }
+  if (placeholder) placeholder.style.display = 'none';
+  _fcdMsSelected.forEach(tid => {
+    const ruleEl = document.getElementById(tid);
+    const rname = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
+    const coinEm = ruleEl?.querySelector('.coin-gem-icon')?.textContent?.trim() || '🎯';
+    const chip = document.createElement('span');
+    chip.className = 'fcd-ms-chip';
+    chip.innerHTML = `<span class="fcd-ms-chip-icon">${coinEm || '🎯'}</span><span class="fcd-ms-chip-label">${rname}<span class="fcd-ms-chip-badge">Rule</span></span><span class="fcd-ms-chip-x" onclick="event.stopPropagation();toggleFcdMsOption('${tid}')">✕</span>`;
+    chips.insertBefore(chip, placeholder);
+  });
+}
+
+function toggleFcdMsDropdown() {
+  const trigger = document.getElementById('fcdMsTrigger');
+  const dropdown = document.getElementById('fcdMsDropdown');
+  const isOpen = dropdown.classList.contains('open');
+  if (isOpen) {
+    dropdown.classList.remove('open');
+    trigger.classList.remove('open');
+  } else {
+    dropdown.classList.add('open');
+    trigger.classList.add('open');
+    document.getElementById('fcdMsSearch').value = '';
+    buildFcdMsList();
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!document.getElementById('fcdEntryMsWrap')?.contains(e.target)) {
+          dropdown.classList.remove('open');
+          trigger.classList.remove('open');
+          document.removeEventListener('click', handler);
+        }
+      });
+    }, 10);
+  }
+}
+
+function filterFcdMsOptions(val) { buildFcdMsList(val); }
+
+function renderFcdEntryPreviews() {
+  const preview = document.getElementById('fcdEntryPreview');
+  if (!preview) return;
+  if (!_fcdMsSelected.length) { preview.innerHTML = ''; return; }
+  preview.innerHTML = `<div class="fcd-entry-cards">${_fcdMsSelected.map(tid => {
+    const ruleEl = document.getElementById(tid);
+    if (!ruleEl) return '';
+    const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
+    const rdesc = ruleEl.querySelector('.rule-desc')?.textContent || '';
+    const tags = [...(ruleEl.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
+    const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
+    const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
+    const tagsHtml = (tags.length ? tags : ['External','Bet','Sum','Bet amount']).map(t=>`<span class="fcd-tag">${t}</span>`).join('');
+    // badge color based on type
+    const badgeLower = (coinBadge||'').toLowerCase();
+    const badgeStyle = badgeLower.includes('promo') ? 'background:#EDE9FE;color:#7C3AED;'
+      : badgeLower.includes('coin in') ? 'background:#EDE9FE;color:#6D28D9;'
+      : badgeLower.includes('withdrawal') ? 'background:#FEF3C7;color:#92400E;'
+      : badgeLower.includes('asset') ? 'background:#EFF6FF;color:#1D4ED8;'
+      : 'background:#F3F4F6;color:#374151;';
+    const coinRow = coinName ? `
+      <div class="fcd-trigger-coin-row">
+        <div class="fcd-trigger-coin-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg></div>
+        <span class="fcd-trigger-coin-name">${coinName}</span>
+        <span class="fcd-trigger-coin-badge" style="${badgeStyle}">${coinBadge}</span>
+      </div>` : `<div style="padding:10px 16px;background:#F8FAFC;border-top:1px solid var(--border);font-size:11.5px;color:#9CA3AF;">No coin attached to this rule</div>`;
+    return `
+      <div class="fcd-trigger-card">
+        <div class="fcd-trigger-card-head">
+          <div class="fcd-trigger-card-info">
+            <div class="fcd-trigger-name">${rname}</div>
+            ${rdesc ? `<div class="fcd-trigger-desc">${rdesc}</div>` : ''}
+            <div class="fcd-tags">${tagsHtml}</div>
+          </div>
+          <button class="fcd-card-remove" onclick="toggleFcdMsOption('${tid}')" title="Remove">
+            <svg width="9" height="9" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        ${coinRow}
+      </div>`;
+  }).join('')}</div>`;
+}
+// Extended coin options with types
+const allPrizeCoins = [
+  {em:'🪙', name:'Crystal Coins',   type:'coin-in',    typeLabel:'Coin In'},
+  {em:'💎', name:'Diamond Points',  type:'promo',      typeLabel:'Promo Coin'},
+  {em:'⭐', name:'Lucky Stars',     type:'promo',      typeLabel:'Promo Coin'},
+  {em:'🔮', name:'Mystic Gems',     type:'asset',      typeLabel:'Asset'},
+  {em:'🔥', name:'Flame Tokens',    type:'withdrawal', typeLabel:'Withdrawal'},
+  {em:'🏅', name:'Gold Medals',     type:'coin-in',    typeLabel:'Coin In'},
+];
+
+// (addFcdPrize removed — v2 uses pool + rankings flow)
+let _prizeTargetIdx = null; // ranking idx that triggered coin creation (null = from pool)
+let _fcdNewCoinType = 'in';
+let _editingPoolIdx = null; // index in _fcdPool being edited (null = creating new)
+
+function _openFcdCoinView() {
+  // reset form
+  document.getElementById('fcdCoinName').value = '';
+  document.getElementById('fcdCoinEm').textContent = '';
+  document.getElementById('fcdCoinEm').style.display = 'none';
+  const descEl = document.getElementById('fcdCoinDesc'); if(descEl) descEl.value = '';
+  document.getElementById('fcdAdvancedBody')?.classList.remove('open');
+  const chev = document.getElementById('fcdAdvChev'); if(chev) chev.style.transform = '';
+  fcdSelectCoinType('in');
+  document.getElementById('fcdCoinView').classList.add('open');
+  document.getElementById('fcdMainFooter').style.display = 'none';
+}
+function openNewCoinFromRanking(idx) {
+  document.getElementById('fcd-rcoin-drop-' + idx)?.classList.remove('open');
+  document.getElementById('fcd-rcoin-sel-' + idx)?.classList.remove('open');
+  _prizeTargetIdx = idx;
+  _fcdCoinViewCtx = 'ranking';
+  document.getElementById('fcdCoinViewBackLabel').textContent = 'Back to Rankings';
+  _openFcdCoinView();
+}
+function closeFcdCoinView() {
+  document.getElementById('fcdCoinView').classList.remove('open');
+  document.getElementById('fcdMainFooter').style.display = '';
+  _editingPoolIdx = null;
+}
+function fcdSelectCoinType(type) {
+  _fcdNewCoinType = type;
+  Object.keys(_coinTypeCardIds).forEach(t => {
+    const id = _coinTypeCardIds[t];
+    document.getElementById(`fcdNewType${id}`)?.classList.toggle('active', t===type);
+    document.getElementById(`fcdNewRadio${id}`)?.classList.toggle('active', t===type);
+  });
+  const info = document.getElementById('fcdCoinInfoText');
+  if (info) info.innerHTML = _coinTypeInfoTexts[type] || '';
+}
+function toggleFcdEmOpts() {
+  const opts = document.getElementById('fcdEmOpts');
+  opts.classList.toggle('open');
+  setTimeout(()=>{ document.addEventListener('click', function h(e){ if(!opts.contains(e.target)){ opts.classList.remove('open'); document.removeEventListener('click',h); } }); }, 10);
+}
+function pickFcdEm(e, em) {
+  e.stopPropagation();
+  const el = document.getElementById('fcdCoinEm');
+  el.textContent = em; el.style.display = 'block';
+  document.getElementById('fcdEmOpts').classList.remove('open');
+}
+function toggleFcdAdvanced() {
+  const body = document.getElementById('fcdAdvancedBody');
+  const chev = document.getElementById('fcdAdvChev');
+  body?.classList.toggle('open');
+  if (chev) chev.style.transform = body?.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+function saveFcdCoin() {
+  const nameEl = document.getElementById('fcdCoinName');
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); return; }
+  nameEl.style.borderColor = '';
+  const em = document.getElementById('fcdCoinEm').textContent || '🪙';
+  const typeMap = {in:{type:'coin-in',label:'Coin In'}, promo:{type:'promo',label:'Promo Coin'}, asset:{type:'asset',label:'Asset'}, withdrawal:{type:'withdrawal',label:'Withdrawal'}};
+  const ct = typeMap[_fcdNewCoinType] || typeMap.in;
+  const newCoin = {em, name, type: ct.type, typeLabel: ct.label};
+
+  // EDIT mode — update existing pool coin in place
+  if (_editingPoolIdx !== null) {
+    _fcdPool[_editingPoolIdx] = {...newCoin, edited: true};
+    // Mark as edited so catalog grid re-enables the original template button
+    renderPool();
+    renderPoolGrid();
+    refreshStepBadges();
+    closeFcdCoinView();
+    toast(`${em} "${name}" updated`);
+    _editingPoolIdx = null;
+    return;
+  }
+
+  // CREATE mode
+  allPrizeCoins.push(newCoin);
+  // Also add to current leaderboard pool if not already there
+  if (!_fcdPool.find(c => c.name === name)) {
+    _fcdPool.push({...newCoin});
+    renderPool();
+    renderPoolGrid();
+  }
+  refreshStepBadges();
+  // If triggered from a ranking row, select this coin there
+  if (_prizeTargetIdx !== null && _fcdCoinViewCtx === 'ranking') {
+    const poolIdx = _fcdPool.findIndex(c => c.name === name);
+    if (poolIdx >= 0) selectRankCoin(_prizeTargetIdx, poolIdx, true);
+    // force-update the selector display
+    const iconEl = document.getElementById('fcd-rcsel-icon-' + _prizeTargetIdx);
+    if (iconEl) iconEl.textContent = em;
+    const nameEl2 = document.getElementById('fcd-rcsel-name-' + _prizeTargetIdx);
+    if (nameEl2) nameEl2.textContent = name;
+    const typeEl2 = document.getElementById('fcd-rcsel-type-' + _prizeTargetIdx);
+    if (typeEl2) { typeEl2.textContent = ct.label; typeEl2.className = `fcd-coin-sel-type fcd-coin-type-${ct.type}`; }
+    const unitEl2 = document.getElementById('fcd-ramt-unit-' + _prizeTargetIdx);
+    if (unitEl2) unitEl2.textContent = em;
+  }
+  closeFcdCoinView();
+  toast(`${em} "${name}" created & added to pool`);
+}
+
+// close coin dropdowns when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.fcd-prize-card') && !e.target.closest('.fcd-pool-item')) {
+    document.querySelectorAll('.fcd-coin-dropdown.open').forEach(d => {
+      d.classList.remove('open');
+      const sel = document.getElementById(d.id.replace('drop','sel'));
+      sel?.classList.remove('open');
+    });
+  }
+});
+function selectFcdSchedule(type) {
+  _fcdSchedule = type;
+  ['sync','renew'].forEach(t => {
+    document.getElementById('fcd-sched-' + t).classList.toggle('active', t===type);
+    document.getElementById('fcd-rdot-' + t).classList.toggle('active', t===type);
+  });
+  document.getElementById('fcdRenewalOpts').style.display = type==='renew' ? 'flex' : 'none';
+  refreshStepBadges();
+}
+function selectRenewal(e, val) {
+  e.stopPropagation();
+  _fcdRenewal = val;
+  document.querySelectorAll('.fcd-renewal-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+}
+
+/* ── Toast ── */
+let _t;
+function toast(msg){
+  const el=document.getElementById('toastEl');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_t); _t=setTimeout(()=>el.classList.remove('show'),2200);
+}
+</script>
+</body>
+</html>

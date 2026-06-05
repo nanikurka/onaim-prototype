@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", ".", "-p", "5191", "-c-1"],
+      "port": 5191,
+      "url": "http://localhost:5191/index-v3.html"
+    }
+  ]
+}
