@@ -301,9 +301,20 @@ input[type="date"].fi:valid{color:var(--text);}
 .cd-tab:hover:not(.active){color:var(--text-sub);}
 /* body */
 .coin-drawer-body{flex:1;overflow-y:auto;padding:16px 20px;}
-/* type toggle (Coin In / Promo Coin) */
+/* type toggle (Coin In / Promo Coin) — legacy, kept for fcd coin view */
 .cd-type-toggle{display:grid;grid-template-columns:1fr 1fr;background:#F4F6F8;border-radius:8px;padding:4px;margin-bottom:14px;}
 .cd-type-btn{padding:8px;border-radius:6px;border:none;background:none;font-size:13px;font-weight:500;font-family:inherit;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+/* coin drawer search */
+.cd-search-wrap{position:relative;margin-bottom:12px;}
+.cd-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+.cd-search-input{width:100%;box-sizing:border-box;padding:9px 12px 9px 34px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;}
+.cd-search-input:focus{border-color:var(--green);}
+/* coin drawer filter bar */
+.cd-filter-bar{display:flex;gap:8px;margin-bottom:16px;}
+.cd-filter-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:#fff;font-size:12.5px;font-weight:500;font-family:inherit;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.cd-filter-btn.active{background:var(--text);border-color:var(--text);color:#fff;}
+/* grouped list section header */
+.cd-group-header{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 8px;}
 .cd-type-btn.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 /* info banner */
 .cd-info-banner{display:flex;gap:10px;background:#EFF6FF;border-radius:8px;padding:12px 14px;margin-bottom:14px;}
@@ -1285,27 +1296,28 @@ input[type="date"].fi:valid{color:var(--text);}
     </div>
     <!-- Tabs -->
     <div class="cd-tabs">
-      <div class="cd-tab active" id="cdTabTemplates" onclick="switchCoinDrawerTab('templates')">Select from icon templates</div>
+      <div class="cd-tab active" id="cdTabTemplates" onclick="switchCoinDrawerTab('templates')">Select From Coin Templates</div>
       <div class="cd-tab" id="cdTabNew" onclick="switchCoinDrawerTab('new')">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Create new coin
+        Create New Coin
       </div>
     </div>
     <!-- Body -->
     <div class="coin-drawer-body" id="coinDrawerBody">
       <!-- Templates tab -->
       <div class="coin-drawer-picker" id="coinDrawerPicker">
-        <!-- Coin In / Promo Coin toggle -->
-        <div class="cd-type-toggle">
-          <button class="cd-type-btn active" id="cdTypeCoinIn" onclick="switchCoinType('in')">Coin In</button>
-          <button class="cd-type-btn" id="cdTypePromo" onclick="switchCoinType('promo')">Promo Coin</button>
+        <!-- Search -->
+        <div class="cd-search-wrap">
+          <svg class="cd-search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="cd-search-input" id="coinDrawerSearch" placeholder="Search by Coin name or type" oninput="renderCoinDrawerList()"/>
         </div>
-        <!-- Info banner -->
-        <div class="cd-info-banner" id="cdInfoBanner">
-          <div class="cd-info-icon">i</div>
-          <div class="cd-info-text"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added more than once inside promotion.</div>
+        <!-- Filter bar: All / Coin In / Promo Coin -->
+        <div class="cd-filter-bar">
+          <button class="cd-filter-btn active" id="cdFilterAll" onclick="setCoinDrawerFilter('all')">All</button>
+          <button class="cd-filter-btn" id="cdFilterIn" onclick="setCoinDrawerFilter('in')">Coin In</button>
+          <button class="cd-filter-btn" id="cdFilterPromo" onclick="setCoinDrawerFilter('promo')">Promo Coin</button>
         </div>
-        <!-- Coin list -->
+        <!-- Grouped coin list -->
         <div class="cd-coin-list" id="coinDrawerTplGrid"></div>
       </div>
       <!-- Create new coin tab (form) -->
@@ -1629,11 +1641,11 @@ function selectTrigger(tcIdx, name, desc, tags) {
 }
 
 const coinTemplates = [
-  {em:'🪙',name:'Crystal Coins',desc:'General-purpose coin for slot bets',amt:'1',per:'1'},
-  {em:'💎',name:'Diamond Points',desc:'Premium points for high-value bets',amt:'2',per:'1'},
-  {em:'⭐',name:'Lucky Stars',desc:'Stars earned per qualifying round',amt:'1',per:'0.50'},
-  {em:'🔮',name:'Mystic Gems',desc:'Rare gems from jackpot activity',amt:'3',per:'1'},
-  {em:'🔥',name:'Flame Tokens',desc:'Tokens from live casino tables',amt:'1',per:'2'},
+  {em:'🪙',name:'Crystal Coins',type:'in',desc:'General-purpose coin for slot bets',amt:'1',per:'1'},
+  {em:'💎',name:'Diamond Points',type:'promo',desc:'Premium points for high-value bets',amt:'2',per:'1'},
+  {em:'⭐',name:'Lucky Stars',type:'in',desc:'Stars earned per qualifying round',amt:'1',per:'0.50'},
+  {em:'🔮',name:'Mystic Gems',type:'promo',desc:'Rare gems from jackpot activity',amt:'3',per:'1'},
+  {em:'🔥',name:'Flame Tokens',type:'in',desc:'Tokens from live casino tables',amt:'1',per:'2'},
   {em:'🏅',name:'Gold Medals',desc:'Medals for sports pre-match bets',amt:'1',per:'5'},
 ];
 
@@ -1665,8 +1677,14 @@ let _coinDrawerRuleId = null;
 
 function openCoinPicker(id) {
   _coinDrawerRuleId = id;
+  _selectedCoinIdx = null;
+  // reset filter + search
+  _coinDrawerFilter = 'all';
+  const srch = document.getElementById('coinDrawerSearch'); if (srch) srch.value = '';
   // populate templates
   renderCoinDrawerList();
+  // reset filter UI
+  ['All','In','Promo'].forEach(f => document.getElementById('cdFilter'+f)?.classList.toggle('active', f==='All'));
   // show picker view (templates tab)
   switchCoinDrawerTab('templates');
   // position overlay below sticky bar
@@ -1688,24 +1706,55 @@ function closeDrawerCoinPicker() {
 function handleDrawerOverlayClick(e) {
   if (e.target === document.getElementById('coinDrawerOverlay')) closeDrawerCoinPicker();
 }
-let _coinDrawerType = 'in'; // 'in' or 'promo'
+let _coinDrawerFilter = 'all'; // 'all' | 'in' | 'promo'
+let _coinDrawerType = 'in'; // kept for form / badge use
 let _selectedCoinIdx = null;
+
+function setCoinDrawerFilter(f) {
+  _coinDrawerFilter = f;
+  document.getElementById('cdFilterAll').classList.toggle('active', f==='all');
+  document.getElementById('cdFilterIn').classList.toggle('active', f==='in');
+  document.getElementById('cdFilterPromo').classList.toggle('active', f==='promo');
+  renderCoinDrawerList();
+}
 
 function renderCoinDrawerList() {
   const grid = document.getElementById('coinDrawerTplGrid');
-  grid.innerHTML = coinTemplates.map((c, i) => `
-    <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
-      <div class="cd-coin-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
-      </div>
-      <div class="cd-coin-info">
-        <div class="cd-coin-name">${c.name}</div>
-        <span class="cd-coin-badge type-${_coinDrawerType==='in'?'in':'promo'}">${_coinDrawerType==='in'?'Coin In':'Promo Coin'}</span>
-      </div>
-      <button class="cd-coin-dots" onclick="event.stopPropagation()">
-        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-      </button>
-    </div>`).join('');
+  const q = (document.getElementById('coinDrawerSearch')?.value || '').toLowerCase();
+  const groups = { in: [], promo: [] };
+  coinTemplates.forEach((c, i) => {
+    if (_coinDrawerFilter !== 'all' && c.type !== _coinDrawerFilter) return;
+    if (q && !c.name.toLowerCase().includes(q) && !c.type.includes(q)) return;
+    groups[c.type]?.push({c, i});
+  });
+  const infoTexts = {
+    in: '<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It can not be added <strong>more than once</strong> inside promotion.',
+    promo: '<strong>Promo Coin</strong> is an internal promotion currency used to reward players within the promotion. It cannot be aggregated from external sources.',
+  };
+  const typeLabels = { in: 'Coin In', promo: 'Promo Coin' };
+  let html = '';
+  ['in','promo'].forEach(type => {
+    if (!groups[type].length) return;
+    html += `<div class="cd-group-header">${typeLabels[type]}</div>`;
+    html += `<div class="cd-info-banner" style="margin-bottom:12px;"><div class="cd-info-icon">i</div><div class="cd-info-text">${infoTexts[type]}</div></div>`;
+    groups[type].forEach(({c, i}) => {
+      html += `
+        <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
+          <div class="cd-coin-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
+          </div>
+          <div class="cd-coin-info">
+            <div class="cd-coin-name">${c.name}</div>
+            <span class="cd-coin-badge type-${type}">${typeLabels[type]}</span>
+          </div>
+          <button class="cd-coin-dots" onclick="event.stopPropagation()">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+          </button>
+        </div>`;
+    });
+  });
+  if (!html) html = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;">No coins found</div>';
+  grid.innerHTML = html;
 }
 
 function selectCoinItem(idx) {
@@ -1759,12 +1808,7 @@ function toggleAdvanced() {
   if (chev) chev.style.transform = body?.classList.contains('open') ? 'rotate(180deg)' : '';
 }
 
-function switchCoinType(type) {
-  _coinDrawerType = type;
-  document.getElementById('cdTypeCoinIn').classList.toggle('active', type==='in');
-  document.getElementById('cdTypePromo').classList.toggle('active', type==='promo');
-  renderCoinDrawerList();
-}
+function switchCoinType(type) { /* legacy no-op */ }
 
 function drawerSelectTpl(em, name, desc, amt, per) {
   document.getElementById('drawerCfpEm').textContent = em;
