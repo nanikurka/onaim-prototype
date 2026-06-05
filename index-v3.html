@@ -2252,7 +2252,7 @@ function openFcd(featureId, featureName) {
   // reset pool & rankings
   renderPool();
   document.getElementById('fcdRankingsList').innerHTML = '';
-  addFcdRanking(); addFcdRanking(); // default 2 rankings
+  addFcdRanking(); // default 1 ranking row
   // reset schedule — no default selection
   _fcdSchedule = null;
   ['sync','renew'].forEach(t => {
