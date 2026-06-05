@@ -448,22 +448,6 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-pool-coin-card-add{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:6px;border:1.5px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s;}
 .fcd-pool-coin-card-add:hover:not(:disabled){border-color:var(--green);color:var(--green);}
 .fcd-pool-coin-card-add:disabled{opacity:.45;cursor:not-allowed;border-color:var(--border);color:var(--text-muted);}
-/* ── Reward Logic ── */
-.rl-trigger-summary{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;}
-.rl-trigger-summary-name{font-size:13px;font-weight:600;color:var(--text);flex:1;}
-.rl-trigger-summary-tags{display:flex;gap:4px;flex-wrap:wrap;}
-.rl-conversion-block{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
-.rl-conversion-header{padding:12px 16px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
-.rl-conversion-body{padding:16px;}
-.rl-field-label{font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
-.rl-coin-select{width:100%;border:1.5px solid var(--border-input);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text);outline:none;background:#fff;cursor:pointer;}
-.rl-coin-select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
-.rl-rate-row{display:flex;align-items:center;gap:8px;margin-top:12px;}
-.rl-rate-input{width:80px;border:1.5px solid var(--border-input);border-radius:8px;padding:9px 10px;font-size:13px;font-family:inherit;color:var(--text);outline:none;text-align:center;}
-.rl-rate-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,195,127,.1);}
-.rl-rate-sep{font-size:13px;color:var(--text-muted);white-space:nowrap;}
-.rl-rate-unit{font-size:13px;color:var(--text-muted);font-weight:600;white-space:nowrap;}
-.rl-warning{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;font-size:12px;color:#C2410C;margin-top:10px;}
 .fcd-pool-footer{border-top:1px solid var(--border);margin:0 -20px;padding:12px 20px 0;}
 .fcd-pool-footer-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px;}
 .fcd-pool-footer-items{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
@@ -733,14 +717,9 @@ input[type="date"].fi:valid{color:var(--text);}
         Participation Rules
       </div>
       <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      <div class="step-pill" id="tab-rewardlogic">
-        <span class="step-n" id="spn-rewardlogic">3</span>
-        Reward Logic
-      </div>
-      <span class="step-sep"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
       <div class="step-pill" id="tab-features">
-        <span class="step-n" id="spn-features">4</span>
-        Features & Prizes
+        <span class="step-n" id="spn-features">3</span>
+        Promotion Features & prizes
       </div>
     </div>
   </div>
@@ -928,26 +907,6 @@ input[type="date"].fi:valid{color:var(--text);}
       <div style="padding:0 24px 20px;" id="selectedRulesSection">
         <div class="sel-rules-label" id="selRulesLabel" style="display:none;">Selected Rules</div>
         <div id="rulesList"></div>
-      </div>
-    </div>
-
-    <!-- ══ REWARD LOGIC ══ -->
-    <div id="sec-rewardlogic" style="margin-top:24px;">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title">Reward Logic</div>
-          <div class="card-sub">Define how players earn coins from each trigger. Set the coin type and conversion rate for each participation rule.</div>
-          <!-- Configured Triggers summary -->
-          <div style="margin-top:16px;">
-            <div class="freq-label">Configured Triggers</div>
-            <div id="rl-triggers-summary" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
-            <div id="rl-no-triggers" style="display:none;padding:12px 16px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;font-size:13px;color:#C2410C;">
-              No triggers configured yet. Go back to <strong>Participation Rules</strong> and add at least one trigger first.
-            </div>
-          </div>
-          <!-- Per-trigger conversion blocks -->
-          <div id="rl-conversion-blocks" style="margin-top:20px;display:flex;flex-direction:column;gap:16px;"></div>
-        </div>
       </div>
     </div>
 
@@ -1444,10 +1403,9 @@ let selectedTriggers = [];
 function initScrollSpy() {
   const contentEl = document.querySelector('.content');
   const sections = [
-    {id:'sec-general',      key:'general'},
+    {id:'sec-general',   key:'general'},
     {id:'sec-participation', key:'participation'},
-    {id:'sec-rewardlogic',  key:'rewardlogic'},
-    {id:'sec-features',     key:'features'},
+    {id:'sec-features',  key:'features'},
   ];
   if (!contentEl) return;
   contentEl.addEventListener('scroll', () => {
@@ -1470,7 +1428,7 @@ function activateTab(tabKey) {
   // Badge is managed by validateGeneral / validateParticipation / validateFeatures.
 }
 
-document.addEventListener('DOMContentLoaded', () => { initScrollSpy(); buildRewardLogic(); });
+document.addEventListener('DOMContentLoaded', initScrollSpy);
 let ruleCounter = 0;
 
 /* ── Step scroll ── */
@@ -1549,7 +1507,6 @@ function selectTrigger(tcIdx, name, desc, tags) {
   const id = 'rule-'+(++ruleCounter);
   selectedTriggers.push(id);
   validateParticipation();
-  buildRewardLogic();
 
   // briefly flash "✓ Selected" feedback on the button then revert
   const card = document.getElementById('tc-'+tcIdx);
@@ -1582,6 +1539,52 @@ function selectTrigger(tcIdx, name, desc, tags) {
           </button>
         </div>
       </div>
+    </div>
+    <!-- Coin row: empty state -->
+    <div class="coin-row" id="coin-row-empty-${id}">
+      <span class="coin-row-empty">No coin attached yet. Players will not earn collectible points from this rule</span>
+      <button class="coin-attach-btn" onclick="openCoinPicker('${id}')">
+        + Attach coin to the rule
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </button>
+    </div>
+    <!-- Coin row: attached state -->
+    <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
+      <div class="coin-row-left">
+        <div class="coin-gem-icon" id="coin-gem-icon-${id}" style="font-size:20px;background:none;border:1px solid var(--border);">💎</div>
+        <div>
+          <div class="coin-row-name" id="coin-pill-name-${id}">Coin Name</div>
+          <span class="coin-pill" id="coin-pill-type-${id}">Promo Coin</span>
+        </div>
+      </div>
+      <div class="coin-row-actions">
+        <button class="c-icon-btn" title="Edit coin" onclick="editCoin('${id}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        </button>
+        <button class="c-icon-btn-del" title="Detach coin" onclick="detachCoin('${id}')">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Coin picker panel -->
+    <div class="coin-picker-panel" id="coin-picker-${id}">
+      <div class="cpp-head">
+        <div class="cpp-title">Select a Coin Template</div>
+        <button class="cpp-close" onclick="closeCoinPicker('${id}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="coin-tpl-grid">
+        ${coinTemplates.map(c=>`
+          <div class="coin-tpl" onclick="selectCoinTpl('${id}','${c.em}','${c.name}','${c.desc}','${c.amt}','${c.per}')">
+            <div class="coin-tpl-row"><div class="coin-tpl-em">${c.em}</div><div class="coin-tpl-name">${c.name}</div></div>
+            <div class="coin-tpl-desc">${c.desc}</div>
+            <div class="coin-tpl-rate">${c.amt} ${c.em} / €${c.per} bet</div>
+          </div>`).join('')}
+      </div>
+      <div class="cpp-div"><span>or build your own</span></div>
+      <button class="cpp-scratch" onclick="openCoinFormBlank('${id}')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Custom Coin from Scratch
+      </button>
     </div>
     <!-- Coin form panel -->
     <div class="coin-form-panel" id="coin-form-${id}">
@@ -1639,7 +1642,6 @@ function deleteRule(id) {
   selectedTriggers = selectedTriggers.filter(x=>x!==id);
   if(!selectedTriggers.length) document.getElementById('selRulesLabel').style.display='none';
   validateParticipation();
-  buildRewardLogic();
   toast('Rule removed');
 }
 
@@ -1656,132 +1658,6 @@ function validateParticipation() {
     pill?.classList.remove('validated');
     if (n) { n.textContent = '2'; n.style.background = ''; n.style.color = ''; }
   }
-}
-
-function validateRewardLogic() {
-  const pill = document.getElementById('tab-rewardlogic');
-  const n = document.getElementById('spn-rewardlogic');
-  const checkSvg = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
-  const blocks = document.querySelectorAll('.rl-conversion-block');
-  const allSet = blocks.length > 0 && [...blocks].every(b => {
-    const sel = b.querySelector('.rl-coin-select');
-    const r1 = b.querySelector('.rl-rate-from');
-    const r2 = b.querySelector('.rl-rate-to');
-    return sel?.value && r1?.value && r2?.value;
-  });
-  if (allSet) {
-    pill?.classList.add('validated');
-    if (n) { n.innerHTML = checkSvg; n.style.background='var(--green)'; n.style.color='#fff'; }
-  } else {
-    pill?.classList.remove('validated');
-    if (n) { n.innerHTML = blocks.length > 0 ? '3' : '3'; n.style.background=''; n.style.color=''; }
-  }
-}
-
-function buildRewardLogic() {
-  const summary = document.getElementById('rl-triggers-summary');
-  const blocks = document.getElementById('rl-conversion-blocks');
-  const noTriggers = document.getElementById('rl-no-triggers');
-  if (!summary || !blocks) return;
-
-  if (selectedTriggers.length === 0) {
-    summary.innerHTML = '';
-    blocks.innerHTML = '';
-    if (noTriggers) noTriggers.style.display = '';
-    validateRewardLogic();
-    return;
-  }
-  if (noTriggers) noTriggers.style.display = 'none';
-
-  // Coin options for the selector
-  const coinOptions = [
-    {value:'promo-coin', label:'Promo Coin', type:'promo'},
-    {value:'coin-in', label:'Coin In', type:'coin-in'},
-    {value:'withdrawal', label:'Withdrawal Coin', type:'withdrawal'},
-    {value:'asset', label:'Asset', type:'asset'},
-  ];
-  const coinOptHtml = coinOptions.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
-
-  // Unit map based on trigger tags
-  const unitMap = {
-    'Bet amount': 'GEL', 'Amount': 'GEL', 'Count': 'events', 'Friend joined': 'referrals',
-  };
-  function getUnit(tags) {
-    for (const t of tags) { if (unitMap[t]) return unitMap[t]; }
-    return 'units';
-  }
-
-  summary.innerHTML = selectedTriggers.map(tid => {
-    const ruleEl = document.getElementById(tid);
-    const name = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
-    const tags = [...(ruleEl?.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
-    const tagsHtml = tags.map(t => `<span class="tpl-tag" style="font-size:11px;">${t}</span>`).join('');
-    return `<div class="rl-trigger-summary"><span class="rl-trigger-summary-name">${name}</span><div class="rl-trigger-summary-tags">${tagsHtml}</div></div>`;
-  }).join('');
-
-  // Keep existing values when rebuilding
-  const existing = {};
-  blocks.querySelectorAll('.rl-conversion-block').forEach(b => {
-    const tid = b.dataset.tid;
-    if (tid) existing[tid] = {
-      coin: b.querySelector('.rl-coin-select')?.value || '',
-      from: b.querySelector('.rl-rate-from')?.value || '',
-      to: b.querySelector('.rl-rate-to')?.value || '',
-    };
-  });
-
-  blocks.innerHTML = selectedTriggers.map(tid => {
-    const ruleEl = document.getElementById(tid);
-    const name = ruleEl?.querySelector('.rule-name')?.textContent || 'Trigger';
-    const tags = [...(ruleEl?.querySelectorAll('.rule-tag') || [])].map(t => t.textContent);
-    const unit = getUnit(tags);
-    const prev = existing[tid] || {};
-    return `
-      <div class="rl-conversion-block" data-tid="${tid}">
-        <div class="rl-conversion-header">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="13 2 13 9 20 9"/><path d="M11 2H4a2 2 0 00-2 2v16a2 2 0 002 2h16a2 2 0 002-2V9l-7-7z"/></svg>
-          ${name}
-        </div>
-        <div class="rl-conversion-body">
-          <div class="rl-field-label">Coin Type</div>
-          <select class="rl-coin-select" onchange="validateRewardLogic()">
-            <option value="">Select coin type…</option>
-            ${coinOptHtml}
-          </select>
-          <div class="rl-field-label" style="margin-top:14px;">Conversion Rate</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">e.g. every 5 GEL = 1 coin</div>
-          <div class="rl-rate-row">
-            <span class="rl-rate-sep">Every</span>
-            <input class="rl-rate-input rl-rate-from" type="number" min="1" placeholder="5" value="${prev.from||''}" oninput="validateRewardLogic()" />
-            <span class="rl-rate-unit">${unit}</span>
-            <span class="rl-rate-sep">=</span>
-            <input class="rl-rate-input rl-rate-to" type="number" min="1" placeholder="1" value="${prev.to||''}" oninput="validateRewardLogic()" />
-            <span class="rl-rate-sep">coins</span>
-          </div>
-          <div class="rl-warning" id="rl-warn-${tid}" style="${prev.coin && prev.from && prev.to ? 'display:none;' : ''}">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Conversion not set — players will not earn coins from this trigger
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-
-  // Restore coin selections
-  blocks.querySelectorAll('.rl-conversion-block').forEach(b => {
-    const tid = b.dataset.tid;
-    if (existing[tid]?.coin) b.querySelector('.rl-coin-select').value = existing[tid].coin;
-  });
-
-  // Hide warnings for already-filled blocks
-  blocks.querySelectorAll('.rl-conversion-block').forEach(b => {
-    const sel = b.querySelector('.rl-coin-select');
-    const r1 = b.querySelector('.rl-rate-from');
-    const r2 = b.querySelector('.rl-rate-to');
-    const warn = b.querySelector('.rl-warning');
-    if (warn) warn.style.display = (sel?.value && r1?.value && r2?.value) ? 'none' : '';
-  });
-
-  validateRewardLogic();
 }
 
 /* ── Coin Drawer ── */
