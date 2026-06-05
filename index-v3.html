@@ -314,7 +314,13 @@ input[type="date"].fi:valid{color:var(--text);}
 .cd-filter-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:#fff;font-size:12.5px;font-weight:500;font-family:inherit;color:var(--text-muted);cursor:pointer;transition:all .15s;}
 .cd-filter-btn.active{background:var(--text);border-color:var(--text);color:#fff;}
 /* grouped list section header */
-.cd-group-header{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 8px;}
+.cd-group-header{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 8px;display:flex;align-items:center;gap:6px;}
+/* info icon + tooltip */
+.cd-info-tip{position:relative;display:inline-flex;align-items:center;cursor:default;}
+.cd-info-tip-icon{width:15px;height:15px;border-radius:50%;background:#3B82F6;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+.cd-info-tip-box{display:none;position:absolute;left:0;top:calc(100% + 6px);width:260px;background:#1E293B;color:#fff;font-size:12px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:8px;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.18);pointer-events:none;}
+.cd-info-tip-box strong{font-weight:700;}
+.cd-info-tip:hover .cd-info-tip-box{display:block;}
 .cd-type-btn.active{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 /* info banner */
 .cd-info-banner{display:flex;gap:10px;background:#EFF6FF;border-radius:8px;padding:12px 14px;margin-bottom:14px;}
@@ -1735,8 +1741,7 @@ function renderCoinDrawerList() {
   let html = '';
   ['in','promo'].forEach(type => {
     if (!groups[type].length) return;
-    html += `<div class="cd-group-header">${typeLabels[type]}</div>`;
-    html += `<div class="cd-info-banner" style="margin-bottom:12px;"><div class="cd-info-icon">i</div><div class="cd-info-text">${infoTexts[type]}</div></div>`;
+    html += `<div class="cd-group-header">${typeLabels[type]}<span class="cd-info-tip"><span class="cd-info-tip-icon">i</span><span class="cd-info-tip-box">${infoTexts[type]}</span></span></div>`;
     groups[type].forEach(({c, i}) => {
       html += `
         <div class="cd-coin-item${_selectedCoinIdx===i?' selected':''}" onclick="selectCoinItem(${i})">
