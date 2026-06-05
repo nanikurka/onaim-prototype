@@ -483,6 +483,30 @@ input[type="date"].fi:valid{color:var(--text);}
 .fcd-pool-footer-item-rm:hover{color:#EF4444;}
 .fcd-pool-create-link{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0;}
 .fcd-pool-create-link:hover{text-decoration:underline;}
+/* new simplified pool buttons */
+.fcd-pool-tpl-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;transition:border-color .15s;}
+.fcd-pool-tpl-btn:hover{border-color:var(--green);color:var(--green);}
+.fcd-pool-create-btn{flex:1;padding:10px 14px;border:none;border-radius:8px;background:var(--green);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;}
+.fcd-pool-create-btn:hover{background:#00a86b;}
+/* pool list item */
+.fcd-pool-list-item{display:flex;align-items:center;gap:10px;background:#F9FAFB;border:1px solid var(--border);border-radius:10px;padding:10px 14px;}
+.fcd-pool-list-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(140deg,#60A5FA,#818CF8);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.fcd-pool-list-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.fcd-pool-list-rm{background:none;border:none;cursor:pointer;color:#9CA3AF;display:flex;align-items:center;padding:2px;border-radius:4px;}
+.fcd-pool-list-rm:hover{color:#EF4444;}
+/* tpl checkbox list */
+.fcd-tpl-item{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;background:#fff;transition:border-color .15s,background .12s;margin-bottom:10px;}
+.fcd-tpl-item:hover{border-color:#C4B5FD;background:#FAFAFF;}
+.fcd-tpl-item.checked{border-color:#6366F1;background:#FAFAFF;}
+.fcd-tpl-cb{width:18px;height:18px;border:2px solid #D1D5DB;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.fcd-tpl-item.checked .fcd-tpl-cb{background:var(--green);border-color:var(--green);}
+.fcd-tpl-cb-tick{display:none;color:#fff;font-size:12px;font-weight:700;line-height:1;}
+.fcd-tpl-item.checked .fcd-tpl-cb-tick{display:block;}
+.fcd-tpl-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(140deg,#60A5FA,#818CF8);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fcd-tpl-info{flex:1;}
+.fcd-tpl-name{font-size:14px;font-weight:700;color:var(--text);}
+.fcd-tpl-val{font-size:12px;color:var(--text-muted);display:inline;margin-left:6px;}
+.fcd-tpl-badge{display:inline-block;margin-top:4px;padding:3px 10px;border-radius:6px;font-size:11.5px;font-weight:600;}
 /* entry source multi-select dropdown */
 .fcd-ms-wrap{position:relative;margin-bottom:16px;}
 .fcd-ms-trigger{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1.5px solid #D1D5DB;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:#374151;transition:border-color .15s,box-shadow .15s;white-space:nowrap;}
@@ -1090,48 +1114,19 @@ input[type="date"].fi:valid{color:var(--text);}
       <div class="fcd-panel" id="fcd-panel-pool">
         <!-- Info notice -->
         <div class="fcd-pool-info">
-          <div class="cd-info-icon" style="flex-shrink:0;margin-top:1px;">i</div>
-          <div class="cd-info-text">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</div>
+          <div class="cd-type-inline-info-icon" style="flex-shrink:0;margin-top:1px;">i</div>
+          <div class="cd-type-inline-info-text" style="color:#0369A1;">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</div>
         </div>
-
-        <!-- Section label -->
-        <div class="fcd-pool-section-label">SELECT FROM COIN TEMPLATES</div>
-
-        <!-- Search + Filter button row -->
-        <div class="fcd-pool-search-row" style="position:relative;">
-          <div class="fcd-pool-search-wrap">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="fcd-pool-search" id="fcdPoolSearch" type="text" placeholder="Search by coin name or type" oninput="filterPoolCoins(this.value)">
-          </div>
-          <div style="position:relative;flex-shrink:0;">
-            <button class="fcd-pool-filter-btn" id="fcdPoolFilterBtn" onclick="togglePoolFilterDrop()">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-              <span id="fcdPoolFilterLabel">Coin Type</span>
-              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="fcd-pool-filter-drop" id="fcdPoolFilterDrop">
-              <div class="fcd-pool-filter-opt" data-filter="coin-in" onclick="togglePoolFilterType('coin-in','Coin In',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Coin In</div>
-              <div class="fcd-pool-filter-opt" data-filter="promo" onclick="togglePoolFilterType('promo','Promo Coin',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Promo Coin</div>
-              <div class="fcd-pool-filter-opt" data-filter="withdrawal" onclick="togglePoolFilterType('withdrawal','Withdrawal',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Withdrawal</div>
-              <div class="fcd-pool-filter-opt" data-filter="asset" onclick="togglePoolFilterType('asset','Assets',this)"><span class="fcd-pool-filter-check"><span class="fcd-pool-filter-check-tick">✓</span></span>Assets</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Active filter chips -->
-        <div class="fcd-pool-chips-row" id="fcdPoolChipsRow" style="display:none;"></div>
-
-        <!-- Coin template grid -->
-        <div class="fcd-pool-coin-grid" id="fcdPoolCoinGrid"></div>
-
-        <!-- Footer: pool list + create -->
-        <div class="fcd-pool-footer" style="margin-top:14px;">
-          <div class="fcd-pool-footer-label">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
-          <div class="fcd-pool-footer-items" id="fcdPoolList"></div>
-          <button class="fcd-pool-create-link" onclick="openNewCoinFromPool()">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Create New Prize Coin
+        <!-- Pool label + list -->
+        <div class="fcd-pool-section-label">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
+        <div id="fcdPoolList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+        <!-- Action buttons -->
+        <div style="display:flex;gap:10px;">
+          <button class="fcd-pool-tpl-btn" onclick="openPoolTemplates()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Coin templates
           </button>
+          <button class="fcd-pool-create-btn" onclick="openNewCoinFromPool()">Create New Prize Coin</button>
         </div>
       </div>
 
@@ -1189,69 +1184,89 @@ input[type="date"].fi:valid{color:var(--text);}
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
           <span id="fcdCoinViewBackLabel">Back to Prize Coins</span>
         </button>
-        <span class="fcd-coin-view-title">Create New Coin</span>
       </div>
       <div class="fcd-coin-view-body">
+        <!-- Page title -->
+        <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px;" id="fcdCoinViewTitle">Create New Prize Coin</div>
         <!-- SELECT COIN TYPE -->
-        <div class="cd-section-label">SELECT COIN TYPE</div>
-        <div class="cd-info-banner" id="fcdCoinInfoBanner">
-          <div class="cd-info-icon">i</div>
-          <div class="cd-info-text" id="fcdCoinInfoText"><strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize. It cannot be added <strong>more than once</strong> inside promotion.</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-sub);margin-bottom:12px;">Select Coin Type</div>
+        <div class="cd-type-cards" style="margin-bottom:20px;">
+          <div class="cd-type-card-wrap">
+            <div class="cd-type-card active" id="fcdNewTypeCoinIn" onclick="fcdSelectCoinType('in')">
+              <div class="cd-type-card-left">
+                <div class="cd-type-card-icon cd-type-icon-in">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2.2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
+                </div>
+                <div>
+                  <div class="cd-type-card-name">Coin In</div>
+                  <div class="cd-type-card-sub">Entry currency</div>
+                </div>
+              </div>
+              <div class="cd-type-radio active" id="fcdNewRadioCoinIn"></div>
+            </div>
+            <div class="cd-type-inline-info visible" id="fcdInfoIn">
+              <div class="cd-type-inline-info-icon">i</div>
+              <div class="cd-type-inline-info-text">Can be aggregated externally. It can not be added <strong>more than once</strong> inside promotion.</div>
+            </div>
+          </div>
+          <div class="cd-type-card-wrap">
+            <div class="cd-type-card" id="fcdNewTypePromo" onclick="fcdSelectCoinType('promo')">
+              <div class="cd-type-card-left">
+                <div class="cd-type-card-icon cd-type-icon-promo">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                </div>
+                <div>
+                  <div class="cd-type-card-name">Promo Coin</div>
+                  <div class="cd-type-card-sub">Inside promotion currency</div>
+                </div>
+              </div>
+              <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
+            </div>
+            <div class="cd-type-inline-info" id="fcdInfoPromo">
+              <div class="cd-type-inline-info-icon">i</div>
+              <div class="cd-type-inline-info-text">In-promotion currency that can't be aggregated outside the promotion.</div>
+            </div>
+          </div>
+          <div class="cd-type-card-wrap">
+            <div class="cd-type-card" id="fcdNewTypeWithdrawal" onclick="fcdSelectCoinType('withdrawal')">
+              <div class="cd-type-card-left">
+                <div class="cd-type-card-icon" style="background:#DBEAFE;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg>
+                </div>
+                <div>
+                  <div class="cd-type-card-name">Withdrawal</div>
+                  <div class="cd-type-card-sub">Cash-out rewards</div>
+                </div>
+              </div>
+              <div class="cd-type-radio" id="fcdNewRadioWithdrawal"></div>
+            </div>
+            <div class="cd-type-inline-info" id="fcdInfoWithdrawal">
+              <div class="cd-type-inline-info-icon">i</div>
+              <div class="cd-type-inline-info-text">Players can withdraw this coin as real money after earning it.</div>
+            </div>
+          </div>
+          <div class="cd-type-card-wrap">
+            <div class="cd-type-card" id="fcdNewTypeAsset" onclick="fcdSelectCoinType('asset')">
+              <div class="cd-type-card-left">
+                <div class="cd-type-card-icon" style="background:#F3F4F6;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                <div>
+                  <div class="cd-type-card-name">Asset</div>
+                  <div class="cd-type-card-sub">Real-value rewards</div>
+                </div>
+              </div>
+              <div class="cd-type-radio" id="fcdNewRadioAsset"></div>
+            </div>
+            <div class="cd-type-inline-info" id="fcdInfoAsset">
+              <div class="cd-type-inline-info-icon">i</div>
+              <div class="cd-type-inline-info-text">Represents free spins, bonuses or vouchers. Cannot be used as entry conditions.</div>
+            </div>
+          </div>
         </div>
-        <div class="cd-type-cards">
-          <div class="cd-type-card active" id="fcdNewTypeCoinIn" onclick="fcdSelectCoinType('in')">
-            <div class="cd-type-card-left">
-              <div class="cd-type-card-icon cd-type-icon-in">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg>
-              </div>
-              <div>
-                <div class="cd-type-card-name">Coin In</div>
-                <div class="cd-type-card-sub">Entry currency</div>
-              </div>
-            </div>
-            <div class="cd-type-radio active" id="fcdNewRadioCoinIn"></div>
-          </div>
-          <div class="cd-type-card" id="fcdNewTypePromo" onclick="fcdSelectCoinType('promo')">
-            <div class="cd-type-card-left">
-              <div class="cd-type-card-icon cd-type-icon-promo">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-              </div>
-              <div>
-                <div class="cd-type-card-name">Promo Coin</div>
-                <div class="cd-type-card-sub">Inside promotion</div>
-              </div>
-            </div>
-            <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
-          </div>
-          <div class="cd-type-card" id="fcdNewTypeAsset" onclick="fcdSelectCoinType('asset')">
-            <div class="cd-type-card-left">
-              <div class="cd-type-card-icon" style="background:#EFF6FF;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-              </div>
-              <div>
-                <div class="cd-type-card-name">Asset</div>
-                <div class="cd-type-card-sub">Real-value rewards</div>
-              </div>
-            </div>
-            <div class="cd-type-radio" id="fcdNewRadioAsset"></div>
-          </div>
-          <div class="cd-type-card" id="fcdNewTypeWithdrawal" onclick="fcdSelectCoinType('withdrawal')">
-            <div class="cd-type-card-left">
-              <div class="cd-type-card-icon" style="background:#FEF3C7;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg>
-              </div>
-              <div>
-                <div class="cd-type-card-name">Withdrawal</div>
-                <div class="cd-type-card-sub">Cash-out rewards</div>
-              </div>
-            </div>
-            <div class="cd-type-radio" id="fcdNewRadioWithdrawal"></div>
-          </div>
-        </div>
-        <div class="cd-form-divider"></div>
         <!-- COIN DESCRIPTION -->
         <div class="cd-section-label">COIN DESCRIPTION</div>
-        <div class="cd-desc-row">
+        <div class="cd-desc-row" style="margin-bottom:12px;">
           <button class="cd-icon-picker" onclick="toggleFcdEmOpts()" style="width:56px;height:56px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
             <div class="em-opts" id="fcdEmOpts" style="z-index:600;">
@@ -1267,27 +1282,53 @@ input[type="date"].fi:valid{color:var(--text);}
             <input class="cfp-fi" id="fcdCoinName" placeholder="Enter coin name" />
           </div>
         </div>
-        <div class="cd-form-divider"></div>
-        <!-- ADVANCED -->
-        <div class="cd-advanced" onclick="toggleFcdAdvanced()">
-          <span class="cd-section-label" style="margin:0;">ADVANCED SETTINGS</span>
-          <svg id="fcdAdvChev" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform .2s;color:var(--text-muted)"><polyline points="6 9 12 15 18 9"/></svg>
+        <div style="margin-bottom:10px;">
+          <label class="cd-name-label">Coin Value <sup style="color:#F04438">*</sup></label>
+          <input class="cfp-fi" id="fcdCoinValue" placeholder="Enter coin name" style="width:100%;box-sizing:border-box;"/>
         </div>
-        <div class="cd-advanced-body" id="fcdAdvancedBody">
-          <div style="margin-bottom:10px;">
-            <label class="cfp-lbl">Description</label>
-            <input class="cfp-fi" id="fcdCoinDesc" placeholder="Short description" />
-          </div>
-          <div class="rate-row">
-            <div><span class="cfp-lbl">Amount</span><input class="cfp-fi" id="fcdCoinAmt" type="number" placeholder="10" /></div>
-            <div class="rate-sep">per €</div>
-            <div><span class="cfp-lbl">Bet (€)</span><input class="cfp-fi" id="fcdCoinPer" type="number" placeholder="1" /></div>
-          </div>
+        <div style="margin-bottom:16px;">
+          <label class="cd-name-label">Campaign Code</label>
+          <input class="cfp-fi" id="fcdCoinCampaign" placeholder="Enter coin name" style="width:100%;box-sizing:border-box;"/>
         </div>
       </div>
       <div class="fcd-footer" style="border-top:1px solid var(--border);">
         <button class="fcd-btn-cancel" onclick="closeFcdCoinView()">Cancel</button>
-        <button class="fcd-btn-continue" onclick="saveFcdCoin()">Add Coin</button>
+        <button class="fcd-btn-continue" onclick="saveFcdCoin()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Coin
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Coin Templates drill-in ── -->
+    <div class="fcd-coin-view" id="fcdTplView">
+      <div class="fcd-coin-view-header">
+        <button class="fcd-back-btn" onclick="closePoolTemplates()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Prize Coins
+        </button>
+        <span class="fcd-coin-view-title">Coin Templates</span>
+      </div>
+      <div class="fcd-coin-view-body">
+        <!-- Search -->
+        <div class="cd-search-wrap" style="margin-bottom:12px;">
+          <svg class="cd-search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="cd-search-input" id="fcdTplSearch" placeholder="Search by promotion or landing page name" oninput="renderFcdTplList()"/>
+        </div>
+        <!-- Filter bar -->
+        <div class="cd-filter-bar" id="fcdTplFilterBar">
+          <button class="cd-filter-btn active" onclick="setFcdTplFilter('all',this)">All</button>
+          <button class="cd-filter-btn" onclick="setFcdTplFilter('coin-in',this)">Coin In</button>
+          <button class="cd-filter-btn" onclick="setFcdTplFilter('promo',this)">Promo Coin</button>
+          <button class="cd-filter-btn" onclick="setFcdTplFilter('withdrawal',this)">Withdrawal</button>
+          <button class="cd-filter-btn" onclick="setFcdTplFilter('asset',this)">Assets</button>
+        </div>
+        <!-- Grouped checkbox list -->
+        <div id="fcdTplList"></div>
+      </div>
+      <div class="fcd-footer" style="border-top:1px solid var(--border);">
+        <button class="fcd-btn-cancel" onclick="closePoolTemplates()">Cancel</button>
+        <button class="fcd-btn-continue" onclick="addSelectedTplCoins()">Add Selected</button>
       </div>
     </div>
 
@@ -2457,19 +2498,93 @@ function renderPool() {
   if (!list) return;
   if (count) count.textContent = _fcdPool.length;
   list.innerHTML = _fcdPool.map((c, i) => `
-    <div class="fcd-pool-footer-item">
-      <div class="fcd-pool-footer-item-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6m6-6l3 6" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/></svg>
-      </div>
-      <span class="fcd-pool-footer-item-name">${c.name}</span>
+    <div class="fcd-pool-list-item">
+      <div class="fcd-pool-list-icon">${c.em||'💎'}</div>
+      <span class="fcd-pool-list-name">${c.name}</span>
       <span class="fcd-pool-coin-card-badge" style="${_badgeStyle[c.type]||''};font-size:10.5px;">${c.typeLabel}</span>
-      <button class="fcd-pool-footer-item-rm" onclick="editPoolCoin(${i})" title="Edit" style="margin-left:auto;">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <button class="fcd-pool-list-rm" onclick="editPoolCoin(${i})" title="Edit">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
-      <button class="fcd-pool-footer-item-rm" onclick="removePoolCoin(${i})" title="Remove">
-        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <button class="fcd-pool-list-rm" onclick="removePoolCoin(${i})" title="Remove">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>`).join('');
+}
+
+// ── Coin Templates drill-in ──
+let _fcdTplFilter = 'all';
+let _fcdTplSelected = new Set();
+function openPoolTemplates() {
+  _fcdTplSelected = new Set();
+  _fcdTplFilter = 'all';
+  document.getElementById('fcdTplSearch').value = '';
+  document.querySelectorAll('#fcdTplFilterBar .cd-filter-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  renderFcdTplList();
+  document.getElementById('fcdTplView').classList.add('open');
+  document.getElementById('fcdMainFooter').style.display = 'none';
+}
+function closePoolTemplates() {
+  document.getElementById('fcdTplView').classList.remove('open');
+  document.getElementById('fcdMainFooter').style.display = '';
+}
+function setFcdTplFilter(f, btn) {
+  _fcdTplFilter = f;
+  document.querySelectorAll('#fcdTplFilterBar .cd-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFcdTplList();
+}
+function renderFcdTplList() {
+  const q = (document.getElementById('fcdTplSearch')?.value || '').toLowerCase();
+  const typeMap = {'coin-in':'Coin In','promo':'Promo Coin','withdrawal':'Withdrawal','asset':'Assets'};
+  const typeOrder = ['coin-in','promo','withdrawal','asset'];
+  const groups = {};
+  _poolCatalog.forEach((c,i) => {
+    if (_fcdTplFilter !== 'all' && c.type !== _fcdTplFilter) return;
+    if (q && !c.name.toLowerCase().includes(q)) return;
+    if (!groups[c.type]) groups[c.type] = [];
+    groups[c.type].push({c,i});
+  });
+  const infoTexts = {
+    'coin-in':'<strong>Coin In</strong> can be aggregated externally and used both as a participation condition and a prize.',
+    'promo':'<strong>Promo Coin</strong> is an internal promotion currency.',
+    'withdrawal':'<strong>Withdrawal Coin</strong> can be converted to real money.',
+    'asset':'<strong>Asset</strong> represents free spins, bonuses or vouchers.',
+  };
+  let html = '';
+  typeOrder.forEach(type => {
+    if (!groups[type]?.length) return;
+    html += `<div class="cd-group-header">${typeMap[type]}<span class="cd-info-tip"><span class="cd-info-tip-icon">i</span><span class="cd-info-tip-box">${infoTexts[type]}</span></span></div>`;
+    groups[type].forEach(({c,i}) => {
+      const checked = _fcdTplSelected.has(i);
+      const badgeClass = c.type==='coin-in'?'type-in':c.type==='promo'?'type-promo':c.type==='withdrawal'?'type-withdrawal':'type-asset';
+      html += `<div class="fcd-tpl-item${checked?' checked':''}" onclick="toggleFcdTpl(${i},this)">
+        <div class="fcd-tpl-cb"><span class="fcd-tpl-cb-tick">✓</span></div>
+        <div class="fcd-tpl-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 3h12l4 6-10 12L2 9z" fill="rgba(255,255,255,0.35)" stroke="rgba(255,255,255,0.95)" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9h20" stroke="rgba(255,255,255,0.95)" stroke-width="1.5"/><path d="M6 3l3 6m6-6l3 6M12 21V9" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/></svg></div>
+        <div class="fcd-tpl-info">
+          <span class="fcd-tpl-name">${c.name}</span><span class="fcd-tpl-val">Value: ${c.value||'$0.15'}</span>
+          <div><span class="fcd-tpl-badge cd-coin-badge ${badgeClass}">${c.typeLabel}</span></div>
+        </div>
+      </div>`;
+    });
+  });
+  if (!html) html = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;">No coins found</div>';
+  document.getElementById('fcdTplList').innerHTML = html;
+}
+function toggleFcdTpl(i, el) {
+  if (_fcdTplSelected.has(i)) _fcdTplSelected.delete(i);
+  else _fcdTplSelected.add(i);
+  el.classList.toggle('checked', _fcdTplSelected.has(i));
+}
+function addSelectedTplCoins() {
+  _fcdTplSelected.forEach(i => {
+    const c = _poolCatalog[i];
+    if (c && !_fcdPool.find(p => p.name === c.name)) {
+      _fcdPool.push({em:'💎', name:c.name, type:c.type, typeLabel:c.typeLabel});
+    }
+  });
+  renderPool();
+  closePoolTemplates();
+  if (_fcdTplSelected.size) toast(`${_fcdTplSelected.size} coin(s) added to prize pool`);
 }
 function removePoolCoin(i) {
   _fcdPool.splice(i, 1);
@@ -2804,9 +2919,8 @@ function _openFcdCoinView() {
   document.getElementById('fcdCoinName').value = '';
   document.getElementById('fcdCoinEm').textContent = '';
   document.getElementById('fcdCoinEm').style.display = 'none';
-  const descEl = document.getElementById('fcdCoinDesc'); if(descEl) descEl.value = '';
-  document.getElementById('fcdAdvancedBody')?.classList.remove('open');
-  const chev = document.getElementById('fcdAdvChev'); if(chev) chev.style.transform = '';
+  const valEl = document.getElementById('fcdCoinValue'); if(valEl) valEl.value = '';
+  const campEl = document.getElementById('fcdCoinCampaign'); if(campEl) campEl.value = '';
   fcdSelectCoinType('in');
   document.getElementById('fcdCoinView').classList.add('open');
   document.getElementById('fcdMainFooter').style.display = 'none';
@@ -2831,8 +2945,12 @@ function fcdSelectCoinType(type) {
     document.getElementById(`fcdNewType${id}`)?.classList.toggle('active', t===type);
     document.getElementById(`fcdNewRadio${id}`)?.classList.toggle('active', t===type);
   });
-  const info = document.getElementById('fcdCoinInfoText');
-  if (info) info.innerHTML = _coinTypeInfoTexts[type] || '';
+  // toggle inline info panels
+  ['In','Promo','Withdrawal','Asset'].forEach(k => {
+    const key = k.toLowerCase() === 'coin in' ? 'in' : k.toLowerCase();
+    const mapKey = {In:'in',Promo:'promo',Withdrawal:'withdrawal',Asset:'asset'}[k];
+    document.getElementById(`fcdInfo${k}`)?.classList.toggle('visible', mapKey === type);
+  });
 }
 function toggleFcdEmOpts() {
   const opts = document.getElementById('fcdEmOpts');
