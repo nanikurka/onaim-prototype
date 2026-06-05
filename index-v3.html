@@ -2642,7 +2642,7 @@ function addFcdRanking() {
   div.innerHTML = `
     <input class="fcd-rank-input" id="fcd-rfrom-${idx}" type="number" value="${nextFrom}" min="1" placeholder="1" />
     <input class="fcd-rank-input" id="fcd-rto-${idx}" type="number" min="1" placeholder="-" style="color:var(--text-muted);" />
-    <input class="fcd-rank-amt-input" id="fcd-ramt-${idx}" type="number" value="100" min="1" />
+    <input class="fcd-rank-amt-input" id="fcd-ramt-${idx}" type="number" value="0" min="0" />
     <!-- Coin selector -->
     <div style="position:relative;flex:1;">
       <div class="fcd-coin-selector" id="fcd-rcoin-sel-${idx}" onclick="toggleRankCoinDrop(${idx})">
