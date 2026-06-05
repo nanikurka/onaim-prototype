@@ -1222,7 +1222,7 @@ input[type="date"].fi:valid{color:var(--text);}
               </div>
               <div class="cd-type-radio" id="fcdNewRadioPromo"></div>
             </div>
-            <div class="cd-type-inline-info visible" id="fcdInfoPromo">
+            <div class="cd-type-inline-info" id="fcdInfoPromo">
               <div class="cd-type-inline-info-icon">i</div>
               <div class="cd-type-inline-info-text">In-promotion currency that <strong>can't be aggregated</strong> outside the promotion.</div>
             </div>
@@ -1240,7 +1240,7 @@ input[type="date"].fi:valid{color:var(--text);}
               </div>
               <div class="cd-type-radio" id="fcdNewRadioWithdrawal"></div>
             </div>
-            <div class="cd-type-inline-info visible" id="fcdInfoWithdrawal">
+            <div class="cd-type-inline-info" id="fcdInfoWithdrawal">
               <div class="cd-type-inline-info-icon">i</div>
               <div class="cd-type-inline-info-text">In-promotion currency that <strong>can't be aggregated</strong> outside the promotion.</div>
             </div>
@@ -1258,7 +1258,7 @@ input[type="date"].fi:valid{color:var(--text);}
               </div>
               <div class="cd-type-radio" id="fcdNewRadioAsset"></div>
             </div>
-            <div class="cd-type-inline-info visible" id="fcdInfoAsset">
+            <div class="cd-type-inline-info" id="fcdInfoAsset">
               <div class="cd-type-inline-info-icon">i</div>
               <div class="cd-type-inline-info-text"><strong>Physical-prize currency</strong> that requires a monetary value when assigned to a promotion.</div>
             </div>
@@ -2945,7 +2945,11 @@ function fcdSelectCoinType(type) {
     document.getElementById(`fcdNewType${id}`)?.classList.toggle('active', t===type);
     document.getElementById(`fcdNewRadio${id}`)?.classList.toggle('active', t===type);
   });
-  // info texts are always visible — nothing to toggle
+  // show info text only for selected type
+  ['In','Promo','Withdrawal','Asset'].forEach(k => {
+    const mapKey = {In:'in',Promo:'promo',Withdrawal:'withdrawal',Asset:'asset'}[k];
+    document.getElementById(`fcdInfo${k}`)?.classList.toggle('visible', mapKey === type);
+  });
 }
 function toggleFcdEmOpts() {
   const opts = document.getElementById('fcdEmOpts');
