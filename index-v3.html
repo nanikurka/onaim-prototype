@@ -246,11 +246,12 @@ input[type="date"].fi:valid{color:var(--text);}
 .create-btn:hover{background:var(--green-dark);}
 
 /* ══ SELECTED RULES ══ */
-.sel-rules-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:18px 0 10px;}
+.sel-rules-label{font-size:14px;font-weight:700;color:var(--text);margin:0 0 14px;}
+.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 
 /* rule card */
-.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow);}
-.rule-card-body{padding:14px 16px;}
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;}
+.rule-card-body{padding:14px 16px;flex:1;}
 .rule-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px;}
 .rule-name{font-size:13px;font-weight:700;color:var(--text);}
 .rule-desc{font-size:12px;color:var(--text-sub);margin-bottom:8px;}
@@ -269,9 +270,9 @@ input[type="date"].fi:valid{color:var(--text);}
 .coin-dot{display:none;}
 .coin-row-name{font-size:13px;font-weight:600;color:var(--text);}
 .coin-pill{display:inline-flex;align-items:center;padding:3px 12px;border-radius:20px;font-size:11.5px;font-weight:600;background:#EDE9FE;color:#6D28D9;border:none;}
-.coin-row-empty{font-size:12px;color:#DC2626;}
-.coin-attach-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
-.coin-attach-btn:hover{color:var(--green-dark);}
+.coin-row-empty{font-size:12px;color:var(--text-muted);}
+.coin-attach-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;color:var(--green);background:none;border:1.5px solid var(--green);border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;padding:8px 16px;width:100%;transition:background .12s;}
+.coin-attach-btn:hover{background:var(--green-light);}
 .coin-row-actions{display:flex;align-items:center;gap:6px;}
 .c-icon-btn{width:28px;height:28px;border-radius:6px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6B7280;transition:background .12s,color .12s;}
 .c-icon-btn:hover{background:#E5E7EB;color:var(--text);}
@@ -859,7 +860,7 @@ input[type="date"].fi:valid{color:var(--text);}
   <div id="sec-participation" style="margin-top:24px;">
     <div class="card">
       <div class="card-body">
-        <div class="card-title">Participation Rules (Triggers)</div>
+        <div class="card-title">Participation Rules & Rewards</div>
         <div class="card-sub">Define how players earn points from external events like bets, deposits, or game actions</div>
 
         <div class="freq-label">Frequently Used Templates</div>
@@ -872,7 +873,7 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
             <div class="tpl-desc">Tracks total bet amount placed on EGT slots</div>
             <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Bet</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Bet amount</span></div>
-            <button class="tpl-btn" onclick="selectTrigger(0,'EGT Bets','Tracks total bet amount placed on EGT slots',['External','Bet','Sum','Bet amount'])">Select Trigger</button>
+            <button class="tpl-btn" onclick="selectTrigger(0,'EGT Bets','Tracks total bet amount placed on EGT slots',['External','Bet','Sum','Bet amount'])<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select Trigger</button>
           </div>
           <div class="tpl-card" id="tc-1">
             <div class="tpl-card-top">
@@ -881,7 +882,7 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
             <div class="tpl-desc">Triggers on each successful player deposit</div>
             <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Deposit</span><span class="tpl-tag">Sum</span><span class="tpl-tag">Amount</span></div>
-            <button class="tpl-btn" onclick="selectTrigger(1,'Deposit','Triggers on each successful player deposit',['External','Deposit','Sum','Amount'])">Select Trigger</button>
+            <button class="tpl-btn" onclick="selectTrigger(1,'Deposit','Triggers on each successful player deposit',['External','Deposit','Sum','Amount'])<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select Trigger</button>
           </div>
           <div class="tpl-card" id="tc-2">
             <div class="tpl-card-top">
@@ -890,7 +891,7 @@ input[type="date"].fi:valid{color:var(--text);}
             </div>
             <div class="tpl-desc">Fires when a referred friend completes registration</div>
             <div class="tpl-tags"><span class="tpl-tag">External</span><span class="tpl-tag">Referral</span><span class="tpl-tag">Count</span><span class="tpl-tag">Friend joined</span></div>
-            <button class="tpl-btn" onclick="selectTrigger(2,'Referral','Fires when a referred friend completes registration',['External','Referral','Count','Friend joined'])">Select Trigger</button>
+            <button class="tpl-btn" onclick="selectTrigger(2,'Referral','Fires when a referred friend completes registration',['External','Referral','Count','Friend joined'])<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select Trigger</button>
           </div>
         </div>
 
@@ -904,9 +905,9 @@ input[type="date"].fi:valid{color:var(--text);}
       </div>
 
       <!-- Selected Rules -->
-      <div style="padding:0 24px 20px;" id="selectedRulesSection">
-        <div class="sel-rules-label" id="selRulesLabel" style="display:none;">Selected Rules</div>
-        <div id="rulesList"></div>
+      <div id="selectedRulesSection" style="display:none;background:#F9FAFB;border-top:1px solid var(--border);padding:20px 24px 24px;">
+        <div class="sel-rules-label" id="selRulesLabel">Selected Rules</div>
+        <div id="rulesList" class="rules-grid"></div>
       </div>
     </div>
 
@@ -1514,10 +1515,10 @@ function selectTrigger(tcIdx, name, desc, tags) {
     const btn = card.querySelector('.tpl-btn');
     btn.textContent='✓ Added!';
     btn.style.cssText='color:var(--green);border-color:var(--green);background:var(--green-light);';
-    setTimeout(()=>{ btn.textContent='Select Trigger'; btn.style.cssText=''; }, 1200);
+    setTimeout(()=>{ btn.innerHTML='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select Trigger'; btn.style.cssText=''; }, 1200);
   }
 
-  document.getElementById('selRulesLabel').style.display='block';
+  document.getElementById('selectedRulesSection').style.display='block';
 
   const list = document.getElementById('rulesList');
   const wrap = document.createElement('div');
@@ -1541,11 +1542,10 @@ function selectTrigger(tcIdx, name, desc, tags) {
       </div>
     </div>
     <!-- Coin row: empty state -->
-    <div class="coin-row" id="coin-row-empty-${id}">
-      <span class="coin-row-empty">No coin attached yet. Players will not earn collectible points from this rule</span>
+    <div class="coin-row" id="coin-row-empty-${id}" style="padding:12px 16px;">
       <button class="coin-attach-btn" onclick="openCoinPicker('${id}')">
-        + Attach coin to the rule
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Attach Coin Currency
       </button>
     </div>
     <!-- Coin row: attached state -->
@@ -1640,7 +1640,7 @@ const coinTemplates = [
 function deleteRule(id) {
   document.getElementById(id)?.remove();
   selectedTriggers = selectedTriggers.filter(x=>x!==id);
-  if(!selectedTriggers.length) document.getElementById('selRulesLabel').style.display='none';
+  if(!selectedTriggers.length) document.getElementById('selectedRulesSection').style.display='none';
   validateParticipation();
   toast('Rule removed');
 }
