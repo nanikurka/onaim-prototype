@@ -1124,9 +1124,10 @@ input[type="date"].fi:valid{color:var(--text);}
           <div class="cd-type-inline-info-icon" style="flex-shrink:0;margin-top:1px;">i</div>
           <div class="cd-type-inline-info-text" style="color:#0369A1;">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</div>
         </div>
-        <!-- Pool label + add button row -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <div class="fcd-pool-section-label" style="margin-bottom:0;">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
+        <!-- Pool label -->
+        <div class="fcd-pool-section-label">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
+        <!-- Add button right-aligned -->
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
           <button class="fcd-pool-tpl-btn" onclick="openPoolTemplates()">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Prize coin
