@@ -1065,7 +1065,7 @@ input[type="date"].fi:valid{color:var(--text);}
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-pool" onclick="goFcdStep('pool')">
         <div class="fcd-step-n" id="fcd-sn-pool">!</div>
-        Prize Coins
+        Prize Pool
       </div>
       <span class="fcd-step-sep">›</span>
       <div class="fcd-step" id="fcd-step-rankings" onclick="goFcdStep('rankings')">
@@ -1117,24 +1117,22 @@ input[type="date"].fi:valid{color:var(--text);}
         <div id="fcdEntryPreview" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
-      <!-- PANEL 2: Prize Coins Pool -->
+      <!-- PANEL 2: Prize Pool -->
       <div class="fcd-panel" id="fcd-panel-pool">
         <!-- Info notice -->
         <div class="fcd-pool-info">
           <div class="cd-type-inline-info-icon" style="flex-shrink:0;margin-top:1px;">i</div>
           <div class="cd-type-inline-info-text" style="color:#0369A1;">Select which coins can be awarded in this leaderboard. You'll assign amounts per rank in the next step.</div>
         </div>
-        <!-- Pool label + list -->
-        <div class="fcd-pool-section-label">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
-        <div id="fcdPoolList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
-        <!-- Action buttons -->
-        <div style="display:flex;gap:10px;">
+        <!-- Pool label + add button row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="fcd-pool-section-label" style="margin-bottom:0;">PRIZE POOL (<span id="fcdPoolCount">0</span>)</div>
           <button class="fcd-pool-tpl-btn" onclick="openPoolTemplates()">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Coin templates
+            Add Prize coin
           </button>
-          <button class="fcd-pool-create-btn" onclick="openNewCoinFromPool()">Create New Prize Coin</button>
         </div>
+        <div id="fcdPoolList" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
       <!-- PANEL 3: Rankings -->
