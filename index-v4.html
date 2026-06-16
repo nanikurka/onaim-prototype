@@ -1743,6 +1743,7 @@ function validateParticipation() {
 
 /* ── Coin Drawer ── */
 let _coinDrawerRuleId = null;
+let _coinDrawerCallback = null; // optional fn(name, em, badge) called instead of DOM write
 
 function openCoinPicker(id) {
   _coinDrawerRuleId = id;
@@ -1771,6 +1772,7 @@ function closeDrawerCoinPicker() {
     if (attached && empty && attached.style.display === 'none') empty.style.display = 'flex';
   }
   _coinDrawerRuleId = null;
+  _coinDrawerCallback = null;
 }
 function handleDrawerOverlayClick(e) {
   if (e.target === document.getElementById('coinDrawerOverlay')) closeDrawerCoinPicker();
@@ -1903,10 +1905,14 @@ function saveDrawerCoin() {
     name = c.name; em = c.em;
   }
   const id = _coinDrawerRuleId;
-  if (id) {
+  const badge = _coinDrawerType === 'in' ? 'Coin In' : _coinDrawerType === 'promo' ? 'Promo Coin' : _coinDrawerType === 'withdrawal' ? 'Withdrawal' : 'Asset';
+  if (_coinDrawerCallback) {
+    _coinDrawerCallback(name, em, badge);
+    _coinDrawerCallback = null;
+  } else if (id) {
     document.getElementById(`coin-pill-name-${id}`).textContent = name;
     const typeEl = document.getElementById(`coin-pill-type-${id}`);
-    if (typeEl) typeEl.textContent = _coinDrawerType === 'in' ? 'Coin In' : 'Promo Coin';
+    if (typeEl) typeEl.textContent = badge;
     const iconEl = document.getElementById(`coin-gem-icon-${id}`);
     if (iconEl) iconEl.textContent = em;
     document.getElementById(`coin-row-attached-${id}`).style.display = 'flex';
@@ -2927,12 +2933,13 @@ function fcdDetachEntryCoin(tid) {
 }
 
 function fcdAttachEntryCoin(tid) {
-  // Open coin drawer; on selection, store coin in _fcdEntryConfig[tid].coin
-  _fcdEntryCoinTarget = tid;
-  openCoinDrawer('entry');
+  _coinDrawerCallback = (name, em, badge) => {
+    if (!_fcdEntryConfig[tid]) _fcdEntryConfig[tid] = {};
+    _fcdEntryConfig[tid].coin = { name, em, badge };
+    renderFcdEntryPreviews();
+  };
+  openCoinPicker(null);
 }
-
-let _fcdEntryCoinTarget = null;
 // Extended coin options with types
 const allPrizeCoins = [
   {em:'🪙', name:'Crystal Coins',   type:'coin-in',    typeLabel:'Coin In'},
