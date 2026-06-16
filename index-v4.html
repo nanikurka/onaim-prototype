@@ -640,6 +640,20 @@ input[type="date"].fi:valid{color:var(--text);}
 /* schedule */
 .fcd-radio-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s;}
 .fcd-radio-card.active{border-color:var(--green);background:#F0FDF9;}
+/* Schedule panel */
+.fcd-sched-type-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .15s,background .15s;background:#fff;}
+.fcd-sched-type-card.active{border-color:var(--green);background:#F0FDF9;}
+.fcd-sched-type-label{font-size:14px;font-weight:600;color:var(--text);}
+.fcd-renew-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;background:#F9FAFB;transition:border-color .15s,background .15s;}
+.fcd-renew-card.active{border-color:var(--green);background:#F0FDF9;}
+.fcd-renew-card-title{font-size:13px;font-weight:600;color:var(--text);}
+.fcd-sched-select{border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;cursor:pointer;}
+.fcd-next-exec-panel{background:#F9FAFB;border-radius:10px;padding:14px 16px;}
+.fcd-next-exec-label{font-size:11px;font-weight:700;color:var(--text-sub);letter-spacing:.06em;margin-bottom:10px;}
+.fcd-next-exec-item{font-size:13px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--border);}
+.fcd-next-exec-item:last-child{border-bottom:none;}
+.fcd-adv-settings{display:flex;align-items:center;justify-content:space-between;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;background:#fff;user-select:none;}
+.fcd-adv-settings:hover{background:#F9FAFB;}
 .fcd-radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;margin-top:1px;transition:all .15s;}
 .fcd-radio-dot.active{border-color:var(--green);border-width:5px;}
 .fcd-radio-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
@@ -1159,25 +1173,68 @@ input[type="date"].fi:valid{color:var(--text);}
 
       <!-- PANEL 4: Schedule -->
       <div class="fcd-panel" id="fcd-panel-schedule">
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Define when this leaderboard resets.</p>
-        <div class="fcd-radio-card" id="fcd-sched-sync" onclick="selectFcdSchedule('sync')">
-          <div class="fcd-radio-dot" id="fcd-rdot-sync"></div>
-          <div>
-            <div class="fcd-radio-title">Sync with Promotion</div>
-            <div class="fcd-radio-sub">Leaderboard runs for the full duration of the promotion (start & end dates from General Details)</div>
+        <!-- Top: Single Execution / Recurrence -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+          <div class="fcd-sched-type-card" id="fcdSchedSingle" onclick="selectFcdSchedType('single')">
+            <span class="fcd-sched-type-label">Single Execution</span>
+            <div class="fcd-radio-dot" id="fcdSchedRadioSingle"></div>
+          </div>
+          <div class="fcd-sched-type-card active" id="fcdSchedRecurr" onclick="selectFcdSchedType('recurrence')">
+            <span class="fcd-sched-type-label">Recurrence</span>
+            <div class="fcd-radio-dot active" id="fcdSchedRadioRecurr"></div>
           </div>
         </div>
-        <div class="fcd-radio-card" id="fcd-sched-renew" onclick="selectFcdSchedule('renew')">
-          <div class="fcd-radio-dot" id="fcd-rdot-renew"></div>
-          <div style="flex:1;">
-            <div class="fcd-radio-title">Recurring Reset</div>
-            <div class="fcd-radio-sub">Leaderboard resets on a fixed schedule within the promotion period</div>
-            <div class="fcd-renewal-opts" id="fcdRenewalOpts" style="display:none;">
-              <button class="fcd-renewal-btn active" onclick="selectRenewal(event,'daily')">Daily</button>
-              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'weekly')">Weekly</button>
-              <button class="fcd-renewal-btn" onclick="selectRenewal(event,'monthly')">Monthly</button>
+        <!-- Recurrence options -->
+        <div id="fcdRecurrPanel" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+          <!-- Left: renewal options -->
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <!-- Every Day -->
+            <div class="fcd-renew-card active" id="fcdRenewDay" onclick="selectFcdRenew('day')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span class="fcd-renew-card-title">Renew Every Day</span>
+                <div class="fcd-radio-dot active" id="fcdRenewRadioDay"></div>
+              </div>
+              <select class="fcd-sched-select" onclick="event.stopPropagation()">
+                <option>10:00</option><option>00:00</option><option>06:00</option><option>12:00</option><option>18:00</option>
+              </select>
+            </div>
+            <!-- Every Week -->
+            <div class="fcd-renew-card" id="fcdRenewWeek" onclick="selectFcdRenew('week')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span class="fcd-renew-card-title">Renew Every Week</span>
+                <div class="fcd-radio-dot" id="fcdRenewRadioWeek"></div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <select class="fcd-sched-select" onclick="event.stopPropagation()" style="flex:1;">
+                  <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+                </select>
+                <select class="fcd-sched-select" onclick="event.stopPropagation()" style="width:80px;">
+                  <option>00:00</option><option>06:00</option><option>10:00</option><option>12:00</option><option>18:00</option>
+                </select>
+              </div>
             </div>
           </div>
+          <!-- Right: next executions -->
+          <div class="fcd-next-exec-panel">
+            <div class="fcd-next-exec-label">NEXT EXECUTIONS</div>
+            <div class="fcd-next-exec-list" id="fcdNextExecList">
+              <div class="fcd-next-exec-item">Monday, June 9, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Tuesday, June 10, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Wednesday, June 11, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Thursday, June 12, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Friday, June 13, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Saturday, June 14, 2026, 10:00</div>
+              <div class="fcd-next-exec-item">Sunday, June 15, 2026, 10:00</div>
+            </div>
+          </div>
+        </div>
+        <!-- Advanced Settings -->
+        <div class="fcd-adv-settings" onclick="toggleFcdAdvSettings()">
+          <span style="font-size:12px;font-weight:700;color:var(--text-sub);letter-spacing:.05em;">ADVANCED SETTINGS</span>
+          <svg id="fcdAdvChevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="fcdAdvSettingsBody" style="display:none;padding:14px 0 4px;font-size:13px;color:var(--text-muted);">
+          Advanced configuration options will appear here.
         </div>
       </div>
 
@@ -3221,6 +3278,38 @@ function selectRenewal(e, val) {
   _fcdRenewal = val;
   document.querySelectorAll('.fcd-renewal-btn').forEach(b => b.classList.remove('active'));
   e.target.classList.add('active');
+}
+
+let _fcdSchedType = 'recurrence';
+let _fcdRenewType = 'day';
+
+function selectFcdSchedType(type) {
+  _fcdSchedType = type;
+  _fcdSchedule = type;
+  ['single','recurrence'].forEach(t => {
+    const card = document.getElementById(t==='single'?'fcdSchedSingle':'fcdSchedRecurr');
+    const radio = document.getElementById(t==='single'?'fcdSchedRadioSingle':'fcdSchedRadioRecurr');
+    card?.classList.toggle('active', t===type);
+    radio?.classList.toggle('active', t===type);
+  });
+  document.getElementById('fcdRecurrPanel').style.display = type==='recurrence' ? 'grid' : 'none';
+  refreshStepBadges();
+}
+
+function selectFcdRenew(type) {
+  _fcdRenewType = type;
+  ['day','week'].forEach(t => {
+    document.getElementById(t==='day'?'fcdRenewDay':'fcdRenewWeek')?.classList.toggle('active', t===type);
+    document.getElementById(t==='day'?'fcdRenewRadioDay':'fcdRenewRadioWeek')?.classList.toggle('active', t===type);
+  });
+}
+
+function toggleFcdAdvSettings() {
+  const body = document.getElementById('fcdAdvSettingsBody');
+  const chevron = document.getElementById('fcdAdvChevron');
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  chevron.style.transform = open ? 'rotate(180deg)' : '';
 }
 
 /* ── Toast ── */
