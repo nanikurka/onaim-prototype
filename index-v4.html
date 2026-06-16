@@ -248,7 +248,7 @@ input[type="date"].fi:valid{color:var(--text);}
 
 /* ══ SELECTED RULES ══ */
 .sel-rules-label{font-size:14px;font-weight:700;color:var(--text);margin:0 0 14px;}
-.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.rules-grid{display:flex;flex-direction:column;gap:12px;}
 
 /* rule card */
 .rule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;}
@@ -1763,31 +1763,6 @@ function selectTrigger(tcIdx, name, desc, tags) {
             <svg width="13" height="13" fill="none" stroke="#F04438" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
         </div>
-      </div>
-    </div>
-    <!-- Coin row: empty state -->
-    <div class="coin-row" id="coin-row-empty-${id}" style="padding:12px 16px;">
-      <button class="coin-attach-btn" onclick="openCoinPicker('${id}')">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Attach Coin Currency
-      </button>
-    </div>
-    <!-- Coin row: attached state -->
-    <div class="coin-row" id="coin-row-attached-${id}" style="display:none;">
-      <div class="coin-row-left">
-        <div class="coin-gem-icon" id="coin-gem-icon-${id}" style="font-size:20px;background:none;border:1px solid var(--border);">💎</div>
-        <div>
-          <div class="coin-row-name" id="coin-pill-name-${id}">Coin Name</div>
-          <span class="coin-pill" id="coin-pill-type-${id}">Promo Coin</span>
-        </div>
-      </div>
-      <div class="coin-row-actions">
-        <button class="c-icon-btn" title="Edit coin" onclick="editCoin('${id}')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-        </button>
-        <button class="c-icon-btn-del" title="Detach coin" onclick="detachCoin('${id}')">
-          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
       </div>
     </div>
     <!-- Coin picker panel -->
