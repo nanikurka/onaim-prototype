@@ -2867,31 +2867,28 @@ function renderFcdEntryPreviews() {
     const ruleEl = document.getElementById(tid);
     if (!ruleEl) return '';
     const rname = ruleEl.querySelector('.rule-name')?.textContent || 'Trigger';
-    const coinName = ruleEl.querySelector('.coin-row-name')?.textContent || '';
-    const coinBadge = ruleEl.querySelector('.coin-pill')?.textContent || '';
-    const coinEm = ruleEl.querySelector('.coin-gem-icon')?.textContent?.trim() || '';
     const cfg = _fcdEntryConfig[tid] || {};
-    const badgeLower = (coinBadge||'').toLowerCase();
+    const coin = cfg.coin || null; // {name, badge, em} stored explicitly
+    const actionMap = {'EGT Bets':'Bet placed','Deposit':'Deposit made','Referral':'Friend joined'};
+    const actionText = actionMap[rname] || (rname + ' completed');
+    const badgeLower = (coin?.badge||'').toLowerCase();
     const badgeClass = badgeLower.includes('promo') ? 'type-promo'
       : badgeLower.includes('coin in') ? 'type-in'
       : badgeLower.includes('withdrawal') ? 'type-withdrawal'
       : badgeLower.includes('asset') ? 'type-asset' : '';
-    // derive action text from rule name
-    const actionMap = {'EGT Bets':'Bet placed','Deposit':'Deposit made','Referral':'Friend joined'};
-    const actionText = actionMap[rname] || (rname + ' completed');
-    const coinPill = coinName ? `
+    const coinPill = coin ? `
       <div class="fcd-entry-coin-pill">
-        <div class="fcd-entry-coin-icon">${coinEm||'💎'}</div>
-        <span class="fcd-entry-coin-name">${coinName}</span>
-        <span class="cd-coin-badge ${badgeClass}" style="font-size:11px;padding:2px 8px;">${coinBadge}</span>
+        <div class="fcd-entry-coin-icon">${coin.em||'💎'}</div>
+        <span class="fcd-entry-coin-name">${coin.name}</span>
+        <span class="cd-coin-badge ${badgeClass}" style="font-size:11px;padding:2px 8px;">${coin.badge}</span>
         <button class="r-icon-btn" style="width:24px;height:24px;border-radius:6px;" title="Edit coin">
           <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
         <button class="fcd-entry-coin-x" onclick="fcdDetachEntryCoin('${tid}')">✕</button>
       </div>` : `
-      <button class="coin-attach-btn" style="font-size:12px;padding:6px 12px;" onclick="alert('Coin attach coming soon')">
+      <button class="coin-attach-btn" style="font-size:12px;padding:6px 12px;" onclick="fcdAttachEntryCoin('${tid}')">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Attach Coin
+        Attach Coin Currency
       </button>`;
     return `
       <div class="fcd-entry-card">
@@ -2924,15 +2921,18 @@ function renderFcdEntryPreviews() {
 }
 
 function fcdDetachEntryCoin(tid) {
-  const ruleEl = document.getElementById(tid);
-  if (!ruleEl) return;
-  // detach coin from participation rule card so preview reflects it
-  const coinRowEl = ruleEl.querySelector('.coin-row');
-  if (coinRowEl) {
-    coinRowEl.querySelector('.coin-row-name') && (coinRowEl.innerHTML = '<button class="coin-attach-btn">+ Attach Coin Currency</button>');
-  }
+  if (!_fcdEntryConfig[tid]) _fcdEntryConfig[tid] = {};
+  _fcdEntryConfig[tid].coin = null;
   renderFcdEntryPreviews();
 }
+
+function fcdAttachEntryCoin(tid) {
+  // Open coin drawer; on selection, store coin in _fcdEntryConfig[tid].coin
+  _fcdEntryCoinTarget = tid;
+  openCoinDrawer('entry');
+}
+
+let _fcdEntryCoinTarget = null;
 // Extended coin options with types
 const allPrizeCoins = [
   {em:'🪙', name:'Crystal Coins',   type:'coin-in',    typeLabel:'Coin In'},
