@@ -682,6 +682,52 @@ input[type="date"].fi:valid{color:var(--text);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:4px;}
+
+/* ── Browse Templates Modal ── */
+.btpl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.btpl-overlay.open{opacity:1;pointer-events:all;}
+.btpl-modal{background:#fff;border-radius:16px;width:780px;max-width:95vw;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.18);}
+.btpl-header{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 24px 16px;border-bottom:1px solid var(--border);}
+.btpl-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.btpl-subtitle{font-size:13px;color:var(--text-muted);}
+.btpl-close{width:32px;height:32px;border:none;background:none;font-size:18px;color:var(--text-muted);cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.btpl-close:hover{background:#F3F4F6;}
+.btpl-filters{display:flex;align-items:center;gap:8px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.btpl-search-wrap{position:relative;flex:1;min-width:160px;}
+.btpl-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9CA3AF;}
+.btpl-search-input{width:100%;padding:8px 10px 8px 32px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;}
+.btpl-search-input:focus{border-color:#9CA3AF;}
+.btpl-filter-dropdown{position:relative;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;color:var(--text);background:#fff;cursor:pointer;white-space:nowrap;user-select:none;}
+.btpl-filter-dropdown:hover{border-color:#9CA3AF;}
+.btpl-drop-menu{display:none;position:absolute;top:calc(100%+4px);left:0;min-width:160px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:600;overflow:hidden;}
+.btpl-drop-menu.open{display:block;}
+.btpl-drop-opt{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--text);}
+.btpl-drop-opt:hover{background:#F9FAFB;}
+.btpl-filter-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;font-family:inherit;color:var(--text);background:#fff;cursor:pointer;}
+.btpl-filter-btn:hover{border-color:#9CA3AF;}
+.btpl-chips-row{display:flex;align-items:center;gap:8px;padding:10px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.btpl-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#F3F4F6;border-radius:20px;font-size:12px;font-weight:500;color:var(--text);}
+.btpl-chip-x{cursor:pointer;color:#9CA3AF;font-size:12px;line-height:1;}
+.btpl-chip-x:hover{color:#374151;}
+.btpl-clear-all{background:none;border:none;font-size:12px;font-weight:600;color:#EF4444;cursor:pointer;font-family:inherit;white-space:nowrap;padding:0;}
+.btpl-clear-all:hover{text-decoration:underline;}
+.btpl-list{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:10px;}
+.btpl-item{display:flex;align-items:flex-start;gap:12px;}
+.btpl-cb{width:18px;height:18px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.btpl-cb.checked{background:var(--green);border-color:var(--green);}
+.btpl-cb.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700;}
+.btpl-card{flex:1;border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:#fff;}
+.btpl-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.btpl-card-name{font-size:14px;font-weight:700;color:var(--text);}
+.btpl-card-desc{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
+.btpl-card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.btpl-card-tag{padding:3px 9px;border-radius:6px;background:#F4F6F8;border:1px solid var(--border);font-size:11.5px;color:var(--text-sub);}
+.btpl-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border);}
+.btpl-btn-cancel{padding:9px 20px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;}
+.btpl-btn-cancel:hover{background:#F9FAFB;}
+.btpl-btn-add{padding:9px 20px;border:none;border-radius:8px;background:var(--green);color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;}
+.btpl-btn-add:hover{background:#00a86b;}
+.btpl-btn-add:disabled{background:#D1D5DB;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -965,7 +1011,7 @@ input[type="date"].fi:valid{color:var(--text);}
         </div>
 
         <div class="tpl-bottom-row">
-          <a class="browse-link" onclick="toast('Browsing all templates…')">Browse All Templates</a>
+          <a class="browse-link" onclick="openBrowseTemplates()">Browse All Templates</a>
           <button class="create-btn" onclick="toast('Opening rule builder…')">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Create From Scratch
@@ -1486,6 +1532,62 @@ input[type="date"].fi:valid{color:var(--text);}
     <div class="fcd-footer" id="fcdMainFooter">
       <button class="fcd-btn-cancel" onclick="closeFcd()">Cancel</button>
       <button class="fcd-btn-continue" id="fcdContinueBtn" onclick="fcdContinue()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BROWSE TEMPLATES MODAL ══ -->
+<div class="btpl-overlay" id="btplOverlay" onclick="if(event.target===this)closeBrowseTemplates()">
+  <div class="btpl-modal" id="btplModal">
+    <!-- Header -->
+    <div class="btpl-header">
+      <div>
+        <div class="btpl-title">Participation Rule Templates</div>
+        <div class="btpl-subtitle">Define how players earn points from external events like bets, deposits, or game actions</div>
+      </div>
+      <button class="btpl-close" onclick="closeBrowseTemplates()">✕</button>
+    </div>
+    <!-- Filters row -->
+    <div class="btpl-filters">
+      <div class="btpl-search-wrap">
+        <svg class="btpl-search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="btpl-search-input" id="btplSearch" placeholder="Search by promotion or lan..." oninput="renderBtplList()"/>
+      </div>
+      <div class="btpl-filter-dropdown" onclick="toggleBtplDrop('type')">
+        Select Event Type
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="btpl-drop-menu" id="btplDropType">
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'External')">External</div>
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Bet')">Bet</div>
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Deposit')">Deposit</div>
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Referral')">Referral</div>
+        </div>
+      </div>
+      <div class="btpl-filter-dropdown" onclick="toggleBtplDrop('cond')">
+        Select Conditions
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="btpl-drop-menu" id="btplDropCond">
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Sum')">Sum</div>
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Count')">Count</div>
+          <div class="btpl-drop-opt" onclick="btplAddChip(event,'Amount')">Amount</div>
+        </div>
+      </div>
+      <button class="btpl-filter-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters
+      </button>
+    </div>
+    <!-- Active chips -->
+    <div class="btpl-chips-row" id="btplChipsRow" style="display:none;">
+      <div id="btplChips" style="display:flex;flex-wrap:wrap;gap:6px;flex:1;"></div>
+      <button class="btpl-clear-all" onclick="btplClearAll()">Clear all</button>
+    </div>
+    <!-- List -->
+    <div class="btpl-list" id="btplList"></div>
+    <!-- Footer -->
+    <div class="btpl-footer">
+      <button class="btpl-btn-cancel" onclick="closeBrowseTemplates()">Cancel</button>
+      <button class="btpl-btn-add" id="btplAddBtn" onclick="btplAddSelected()">Add Trigger</button>
     </div>
   </div>
 </div>
@@ -3283,7 +3385,114 @@ function toggleFcdAdvSettings() {
   chevron.style.transform = open ? 'rotate(180deg)' : '';
 }
 
-/* ── Toast ── */
+/* ── Browse Templates Modal JS ── */
+const _btplData = [
+  {name:'EGT Bets',    desc:'Tracks total bet amount placed on EGT slots',     tags:['External','Bet','Sum','Bet amount']},
+  {name:'Deposit',     desc:'Triggers on each successful player deposit',        tags:['External','Deposit','Sum','Amount']},
+  {name:'Referral',    desc:'Fires when a referred friend completes registration', tags:['External','Referral','Count','Friend joined']},
+  {name:'Spin Count',  desc:'Counts the number of spins on any slot machine',   tags:['External','Spin','Count','Spin count']},
+  {name:'Win Amount',  desc:'Triggers when cumulative winnings exceed threshold', tags:['External','Win','Sum','Win amount']},
+  {name:'Login Streak',desc:'Fires after N consecutive daily logins',           tags:['External','Login','Count','Days']},
+];
+let _btplSelected = new Set();
+let _btplChips = [];
+
+function openBrowseTemplates() {
+  _btplSelected = new Set();
+  _btplChips = [];
+  document.getElementById('btplSearch').value = '';
+  renderBtplChips();
+  renderBtplList();
+  document.getElementById('btplOverlay').classList.add('open');
+}
+function closeBrowseTemplates() {
+  document.getElementById('btplOverlay').classList.remove('open');
+}
+function renderBtplList() {
+  const q = document.getElementById('btplSearch').value.toLowerCase();
+  const activeChips = _btplChips.map(c => c.toLowerCase());
+  const filtered = _btplData.filter(t => {
+    if (q && !t.name.toLowerCase().includes(q) && !t.desc.toLowerCase().includes(q)) return false;
+    if (activeChips.length && !activeChips.every(ch => t.tags.some(tg => tg.toLowerCase().includes(ch)))) return false;
+    return true;
+  });
+  const html = filtered.map((t, i) => {
+    const idx = _btplData.indexOf(t);
+    const checked = _btplSelected.has(idx);
+    const tagsHtml = t.tags.map(tg => `<span class="btpl-card-tag">${tg}</span>`).join('');
+    return `<div class="btpl-item">
+      <div class="btpl-cb${checked?' checked':''}" onclick="toggleBtpl(${idx},this)"></div>
+      <div class="btpl-card">
+        <div class="btpl-card-top">
+          <div>
+            <div class="btpl-card-name">${t.name}</div>
+            <div class="btpl-card-desc">${t.desc}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="r-icon-btn" title="Edit"><svg width="13" height="13" fill="none" stroke="#6B7280" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            <button class="r-icon-btn del" title="Delete"><svg width="13" height="13" fill="none" stroke="#F04438" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+          </div>
+        </div>
+        <div class="btpl-card-tags">${tagsHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('btplList').innerHTML = html || '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:24px 0;">No templates found</div>';
+  updateBtplAddBtn();
+}
+function toggleBtpl(idx, cbEl) {
+  if (_btplSelected.has(idx)) _btplSelected.delete(idx);
+  else _btplSelected.add(idx);
+  cbEl.classList.toggle('checked', _btplSelected.has(idx));
+  updateBtplAddBtn();
+}
+function updateBtplAddBtn() {
+  const btn = document.getElementById('btplAddBtn');
+  const n = _btplSelected.size;
+  btn.textContent = n > 0 ? `Add Trigger (${n})` : 'Add Trigger';
+  btn.disabled = n === 0;
+}
+function btplAddSelected() {
+  _btplSelected.forEach(idx => {
+    const t = _btplData[idx];
+    const ruleId = 'rule-' + (++_ruleCounter);
+    selectTrigger(idx, t.name, t.desc, t.tags);
+  });
+  closeBrowseTemplates();
+}
+function toggleBtplDrop(which) {
+  const id = which === 'type' ? 'btplDropType' : 'btplDropCond';
+  const menu = document.getElementById(id);
+  const isOpen = menu.classList.contains('open');
+  document.querySelectorAll('.btpl-drop-menu').forEach(m => m.classList.remove('open'));
+  if (!isOpen) {
+    menu.classList.add('open');
+    setTimeout(() => document.addEventListener('click', function h(e) {
+      if (!menu.contains(e.target)) { menu.classList.remove('open'); document.removeEventListener('click', h); }
+    }), 10);
+  }
+}
+function btplAddChip(e, label) {
+  e.stopPropagation();
+  if (!_btplChips.includes(label)) { _btplChips.push(label); renderBtplChips(); renderBtplList(); }
+  document.querySelectorAll('.btpl-drop-menu').forEach(m => m.classList.remove('open'));
+}
+function btplRemoveChip(label) {
+  _btplChips = _btplChips.filter(c => c !== label);
+  renderBtplChips(); renderBtplList();
+}
+function btplClearAll() { _btplChips = []; renderBtplChips(); renderBtplList(); }
+function renderBtplChips() {
+  const row = document.getElementById('btplChipsRow');
+  const container = document.getElementById('btplChips');
+  if (!_btplChips.length) { row.style.display = 'none'; return; }
+  row.style.display = 'flex';
+  container.innerHTML = _btplChips.map(c =>
+    `<div class="btpl-chip">${c}<span class="btpl-chip-x" onclick="btplRemoveChip('${c}')">✕</span></div>`
+  ).join('');
+}
+let _ruleCounter = 0;
+
 let _t;
 function toast(msg){
   const el=document.getElementById('toastEl');
