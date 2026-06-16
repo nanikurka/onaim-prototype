@@ -114,6 +114,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 /* Inline name edit */
 .feature-card-name{cursor:default;}
 .feature-card-name.editing{outline:none;border-bottom:1.5px solid var(--green);cursor:text;}
+.feature-name-wrap{display:flex;align-items:center;gap:6px;}
+.feature-rename-btn{background:none;border:none;cursor:pointer;padding:3px;border-radius:4px;color:var(--text-muted);display:flex;align-items:center;opacity:0;transition:opacity .15s,background .1s,color .1s;flex-shrink:0;}
+.feature-rename-btn:hover{background:var(--bg);color:var(--text);}
+.feature-card:hover .feature-rename-btn{opacity:1;}
 
 /* ══ CARD ══ */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);max-width:1440px;width:calc(100% - 56px);margin:0 auto;}
@@ -2371,16 +2375,18 @@ function addFeature(type, name, icon) {
     </div>
     <div class="feature-card-icon" style="background:${bg};">${icon}</div>
     <div class="feature-card-info">
-      <div class="feature-card-name" ondblclick="inlineRename(this)">${name}</div>
+      <div class="feature-name-wrap">
+        <div class="feature-card-name" ondblclick="inlineRename(this)">${name}</div>
+        <button class="feature-rename-btn" data-tip="Rename" onclick="renameFeature('${id}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        </button>
+      </div>
       <div class="feature-card-status partial" id="fstat-${id}">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#FF5630"/><line x1="12" y1="9" x2="12" y2="13" stroke="white" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="white" stroke-width="2"/></svg>
         Not fully Configured
       </div>
     </div>
     <div class="feature-card-actions">
-      <button data-tip="Rename" onclick="renameFeature('${id}')">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-      </button>
       <button data-tip="Configure" onclick="configureFeature('${id}')">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
